@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choi Hanmin — Soodal Games &amp; Beyond</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F1119;
+    --ink-2:#171A26;
+    --paper:#EDE8DD;
+    --paper-dim:#B9B4A8;
+    --amber:#E3A548;
+    --teal:#5FB88F;
+    --rose:#C97064;
+    --line: rgba(237,232,221,0.12);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Pretendard', -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--sans);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--amber); color:var(--ink);}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:880px; margin:0 auto; padding:0 24px;}
+
+  /* ---------- HERO / TERMINAL ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:80px 0 60px;
+    position:relative;
+  }
+  .hero::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 600px 300px at 15% 0%, rgba(227,165,72,0.10), transparent 60%),
+      radial-gradient(ellipse 500px 400px at 90% 100%, rgba(95,184,143,0.08), transparent 60%);
+    pointer-events:none;
+  }
+  .term{
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.6);
+  }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line);
+    background:rgba(255,255,255,0.02);
+  }
+  .term-dot{width:10px; height:10px; border-radius:50%;}
+  .term-bar span{
+    margin-left:8px; font-family:var(--mono); font-size:12px; color:var(--paper-dim);
+  }
+  .term-body{
+    padding:28px 24px 32px;
+    font-family:var(--mono);
+    font-size:14px;
+    color:var(--paper-dim);
+  }
+  .term-body .prompt{color:var(--teal);}
+  .term-body .cmd{color:var(--paper);}
+  .term-line{margin-bottom:6px; opacity:0; animation:appear 0.4s forwards;}
+  .out{margin:2px 0 18px; color:var(--paper-dim);}
+  .out b{color:var(--paper); font-weight:600;}
+  .out .amber{color:var(--amber);}
+  .out .teal{color:var(--teal);}
+  .caret{display:inline-block; width:8px; height:16px; background:var(--amber); vertical-align:middle; animation:blink 1s step-end infinite;}
+  @keyframes appear{to{opacity:1;}}
+  @keyframes blink{50%{opacity:0;}}
+
+  h1.name{
+    font-size:clamp(38px, 8vw, 64px);
+    font-weight:800;
+    letter-spacing:-0.02em;
+    margin:36px 0 6px;
+  }
+  .role{
+    font-family:var(--mono);
+    font-size:14px;
+    color:var(--amber);
+    letter-spacing:0.02em;
+    margin-bottom:22px;
+  }
+  .lede{
+    max-width:560px;
+    color:var(--paper-dim);
+    font-size:16px;
+  }
+
+  /* ---------- STATS ---------- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    margin:56px 0;
+  }
+  .stat{padding:24px 8px; text-align:center; border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat b{
+    display:block; font-family:var(--mono); font-size:clamp(24px,5vw,34px);
+    color:var(--amber); font-weight:700;
+  }
+  .stat span{font-size:12px; color:var(--paper-dim);}
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{padding:70px 0;}
+  .sec-head{
+    display:flex; align-items:baseline; gap:12px;
+    margin-bottom:32px;
+  }
+  .sec-head .tag{
+    font-family:var(--mono); font-size:12px; color:var(--ink);
+    background:var(--amber); padding:2px 8px; border-radius:4px; font-weight:700;
+  }
+  .sec-head h2{font-size:26px; font-weight:800; letter-spacing:-0.01em;}
+  .sec-sub{color:var(--paper-dim); font-size:14px; margin:-20px 0 32px; font-family:var(--mono);}
+
+  /* ---------- GAMES (release cards) ---------- */
+  .games{display:flex; flex-direction:column; gap:14px;}
+  .game{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px 22px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    transition:border-color .2s, transform .2s;
+  }
+  .game:hover{border-color:rgba(227,165,72,0.4); transform:translateY(-2px);}
+  .game-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;}
+  .game-title{font-size:18px; font-weight:700;}
+  .game-ver{font-family:var(--mono); font-size:12px; color:var(--teal);}
+  .game-desc{color:var(--paper-dim); font-size:14px; margin:8px 0 12px; max-width:600px;}
+  .game.has-shot{display:flex; gap:18px; align-items:stretch;}
+  .game-thumb{
+    flex:0 0 130px; width:130px; height:130px;
+    border-radius:8px; overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .game-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+  .game-body{flex:1; min-width:0;}
+  @media(max-width:520px){
+    .game.has-shot{flex-direction:column;}
+    .game-thumb{width:100%; height:180px;}
+  }
+  .badges{display:flex; gap:8px; flex-wrap:wrap;}
+  .badge{
+    font-family:var(--mono); font-size:11px; padding:3px 8px; border-radius:4px;
+    border:1px solid var(--line); color:var(--paper-dim);
+  }
+  .badge.play{border-color:rgba(95,184,143,0.4); color:var(--teal);}
+  .badge.steam{border-color:rgba(201,112,100,0.4); color:var(--rose);}
+  .game-links{margin-top:12px; display:flex; gap:16px; font-family:var(--mono); font-size:12px;}
+  .game-links a{color:var(--amber); border-bottom:1px solid transparent;}
+  .game-links a:hover{border-color:var(--amber);}
+
+  /* ---------- GALLERY ---------- */
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    grid-auto-rows:130px;
+    gap:8px;
+  }
+  @media(max-width:700px){
+    .gallery-grid{grid-template-columns:repeat(2, 1fr); grid-auto-rows:150px;}
+  }
+  .gitem{
+    position:relative;
+    overflow:hidden;
+    border-radius:8px;
+    background:var(--ink-2);
+  }
+  .gitem.tall{grid-row: span 2;}
+  .gitem img{
+    width:100%; height:100%; object-fit:cover;
+    display:block;
+    transition:transform .4s ease;
+  }
+  .gitem:hover img{transform:scale(1.06);}
+  .gitem .gcap{
+    position:absolute; left:0; right:0; bottom:0;
+    padding:10px 10px 8px;
+    font-size:11px; line-height:1.3;
+    color:var(--paper);
+    background:linear-gradient(0deg, rgba(0,0,0,0.75), transparent);
+    opacity:0; transform:translateY(6px);
+    transition:opacity .25s, transform .25s;
+  }
+  .gitem:hover .gcap{opacity:1; transform:translateY(0);}
+  @media (hover:none){
+    .gitem .gcap{opacity:1; transform:translateY(0); background:linear-gradient(0deg, rgba(0,0,0,0.7), transparent 70%);}
+  }
+
+  /* ---------- COMMIT LOG (activities) ---------- */
+  .log{position:relative; padding-left:28px;}
+  .log::before{
+    content:''; position:absolute; left:6px; top:6px; bottom:6px; width:1px;
+    background:var(--line);
+  }
+  .commit{position:relative; padding-bottom:28px;}
+  .commit::before{
+    content:''; position:absolute; left:-28px; top:4px;
+    width:11px; height:11px; border-radius:50%;
+    background:var(--ink); border:2px solid var(--amber);
+  }
+  .commit.active::before{background:var(--teal); border-color:var(--teal); box-shadow:0 0 0 4px rgba(95,184,143,0.15);}
+  .commit-hash{font-family:var(--mono); font-size:12px; color:var(--paper-dim);}
+  .commit-hash b{color:var(--amber);}
+  .commit-msg{font-size:15px; font-weight:600; margin:4px 0 4px;}
+  .commit-meta{font-family:var(--mono); font-size:12px; color:var(--paper-dim); display:flex; gap:10px; flex-wrap:wrap;}
+  .commit-meta .status{color:var(--teal);}
+
+  /* ---------- CREDENTIALS ---------- */
+  .creds{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media(max-width:600px){.creds{grid-template-columns:1fr;}}
+  .cred{
+    border:1px solid var(--line); border-radius:8px; padding:16px 18px;
+    font-size:14px;
+  }
+  .cred .k{font-family:var(--mono); font-size:11px; color:var(--rose); display:block; margin-bottom:4px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:56px 0 40px;
+    font-family:var(--mono);
+  }
+  footer .prompt-line{color:var(--teal);}
+  footer .links{display:flex; gap:20px; flex-wrap:wrap; margin-top:18px; font-size:13px;}
+  footer a{color:var(--amber);}
+  footer a:hover{text-decoration:underline;}
+  footer .copyright{margin-top:30px; color:var(--paper-dim); font-size:12px;}
+
+  @media (prefers-reduced-motion: reduce){
+    .term-line, .caret{animation:none !important; opacity:1;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="term">
+      <div class="term-bar">
+        <div class="term-dot" style="background:#ff5f57"></div>
+        <div class="term-dot" style="background:#febc2e"></div>
+        <div class="term-dot" style="background:#28c840"></div>
+        <span>hanmin@soodal — zsh</span>
+      </div>
+      <div class="term-body">
+        <div class="term-line" style="animation-delay:.1s"><span class="prompt">~$</span> <span class="cmd">whoami</span></div>
+        <div class="out" style="animation:appear .4s forwards; animation-delay:.3s; opacity:0">
+          <b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>
+          인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 · 7개 게임 출시<br>
+          동시에 <span class="teal">15+ 대내외 활동</span>, 20+ 조직과 협업 중
+        </div>
+        <div class="term-line" style="animation-delay:.6s"><span class="prompt">~$</span> <span class="cmd">git log --oneline -1</span></div>
+        <div class="out" style="animation:appear .4s forwards; animation-delay:.8s; opacity:0">
+          <span class="amber">a1c9f2e</span> feat: LiNK English Buddy 활동 진행 중 — 탈북 청년 대상 1:1 영어 코칭<span class="caret"></span>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="name">최한민 — Choi Hanmin</h1>
+    <div class="role">CES STUDENT @ HUFS · GAME DEVELOPER · SERIAL COLLABORATOR</div>
+    <p class="lede">
+      학교에서는 컴퓨터공학을, 밤에는 게임을 만듭니다. 낮에는 삼성, LG CNS 같은 조직들과
+      캠퍼스 프로그램을 함께 굴립니다. 코드 한 줄, 활동 하나하나를 커밋처럼 기록해왔습니다.
+    </p>
+
+    <div class="stats">
+      <div class="stat"><b>7</b><span>출시 게임 (Play / Steam)</span></div>
+      <div class="stat"><b>15+</b><span>대내외 활동</span></div>
+      <div class="stat"><b>20+</b><span>협업 조직</span></div>
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section id="games">
+    <div class="sec-head"><span class="tag">RELEASES</span><h2>출시한 게임들</h2></div>
+    <p class="sec-sub">Soodal Games (Choi Hanmin) · 단일 HTML/CSS/JS PWA → TWA 빌드 파이프라인</p>
+    <div class="games">
+
+      <div class="game has-shot">
+        <div class="game-thumb"><img src="images/games/web/minicourt.jpg" loading="lazy" alt="미니법정 스크린샷"></div>
+        <div class="game-body">
+          <div class="game-top">
+            <div><span class="game-title">미니법정 (Mini Court)</span> <span class="game-ver">v2.x — bilingual</span></div>
+          </div>
+          <p class="game-desc">55개 사건, 한/영 지원, 항소심 모드와 데일리 챌린지, 경력 XP 시스템까지 갖춘 법정 시뮬레이션. Electron으로 패키징해 Steam에도 올렸습니다.</p>
+          <div class="badges">
+            <span class="badge play">Google Play</span>
+            <span class="badge steam">Steam · App ID 5113110</span>
+          </div>
+          <div class="game-links">
+            <a href="https://store.steampowered.com/app/5113110" target="_blank" rel="noopener">Steam →</a>
+            <a href="https://play.google.com/store/apps/details?id=com.choehanmin.minicourt" target="_blank" rel="noopener">Google Play →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="game has-shot">
+        <div class="game-thumb"><img src="images/games/web/stealthops.jpg" loading="lazy" alt="Stealth Ops 스크린샷"></div>
+        <div class="game-body">
+          <div class="game-top">
+            <div><span class="game-title">Stealth Ops</span> <span class="game-ver">v4.3.0.0</span></div>
+          </div>
+          <p class="game-desc">9종 무기, 스테이지별 6개 미니게임, 듀얼 스테이지 맵 구조의 잠입 액션. Electron/Steam 빌드로도 제공.</p>
+          <div class="badges"><span class="badge play">Google Play</span><span class="badge steam">Steam</span></div>
+          <div class="game-links">
+            <a href="https://play.google.com/store/apps/details?id=com.choehanmin.stealthops" target="_blank" rel="noopener">Google Play →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="game">
+        <div class="game-top">
+          <div><span class="game-title">Time Heist 24</span> <span class="game-ver">GitHub: time-heist</span></div>
+        </div>
+        <p class="game-desc">시간이 곧 체력이자 행동력이자 점수가 되는 턴제 전략 게임.</p>
+        <div class="badges"><span class="badge play">Google Play</span></div>
+        <div class="game-links">
+          <a href="https://play.google.com/store/apps/details?id=com.choehanmin.timeheist24" target="_blank" rel="noopener">Google Play →</a>
+          <a href="https://github.com/ChoeHanMin/time-heist" target="_blank" rel="noopener">GitHub →</a>
+        </div>
+      </div>
+
+      <div class="game has-shot">
+        <div class="game-thumb"><img src="images/games/web/seathunter.jpg" loading="lazy" alt="자리 사냥 스크린샷"></div>
+        <div class="game-body">
+          <div class="game-top"><div><span class="game-title">자리 사냥 (Seat Hunter)</span></div></div>
+          <p class="game-desc">지하철 승객을 관찰해 곧 내릴 사람을 맞히는 관찰력 캐주얼 게임.</p>
+          <div class="badges"><span class="badge play">Google Play</span></div>
+        </div>
+      </div>
+
+      <div class="game">
+        <div class="game-top"><div><span class="game-title">Stress Smash</span></div></div>
+        <p class="game-desc">가볍게 스트레스를 날리는 타격감 중심 캐주얼 게임.</p>
+        <div class="badges"><span class="badge play">Google Play</span></div>
+      </div>
+
+      <div class="game has-shot">
+        <div class="game-thumb"><img src="images/games/web/colordebt.jpg" loading="lazy" alt="Color Debt 스크린샷"></div>
+        <div class="game-body">
+          <div class="game-top"><div><span class="game-title">Color Debt</span></div></div>
+          <p class="game-desc">같은 색 얼굴을 합치고 터뜨려 빚을 늘리지 않는 캐주얼 퍼즐 게임.</p>
+          <div class="badges"><span class="badge play">Google Play</span></div>
+        </div>
+      </div>
+
+      <div class="game">
+        <div class="game-top"><div><span class="game-title">Maze Escape</span></div></div>
+        <p class="game-desc">미로 탈출형 캐주얼 게임, 초기작 중 하나.</p>
+        <div class="badges"><span class="badge play">Google Play</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2>일상 갤러리</h2></div>
+    <p class="sec-sub">$ ls ~/photos --recent</p>
+    <div class="gallery-grid">
+      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="gcap">LG CNS AI Genius 서포터즈 16기</span></div>
+      <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="코드하나 코더스 강의"><span class="gcap">코드하나 코더스 서포터즈 — 파이썬 강의 중</span></div>
+      <div class="gitem"><img src="images/web/photo04.jpg" loading="lazy" alt="AI 육성센터"><span class="gcap">용인 다우디지털스퀘어 AI 육성센터</span></div>
+      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="gcap">여름 계곡에서 돌탑 쌓기</span></div>
+      <div class="gitem tall"><img src="images/web/photo12.jpg" loading="lazy" alt="농촌 봉사활동"><span class="gcap">가평 농촌 봉사활동 — 고추 수확</span></div>
+      <div class="gitem"><img src="images/web/photo01.jpg" loading="lazy" alt="봉사활동"><span class="gcap">지역 봉사활동 현장</span></div>
+      <div class="gitem"><img src="images/web/photo08.jpg" loading="lazy" alt="산림 봉사"><span class="gcap">숲 속 봉사활동</span></div>
+      <div class="gitem"><img src="images/web/photo06.jpg" loading="lazy" alt="화이트보드 알고리즘"><span class="gcap">화이트보드에 알고리즘 정리 중</span></div>
+      <div class="gitem"><img src="images/web/photo17.jpg" loading="lazy" alt="물놀이"><span class="gcap">여름 워터 액티비티</span></div>
+      <div class="gitem"><img src="images/web/photo02.jpg" loading="lazy" alt="다우디지털스퀘어 작업"><span class="gcap">TutoGen 작업 공간에서</span></div>
+      <div class="gitem"><img src="images/web/photo07.jpg" loading="lazy" alt="공군 복무"><span class="gcap">공군 무선통신장비 정비병 복무 시절</span></div>
+      <div class="gitem"><img src="images/web/photo20.jpg" loading="lazy" alt="친구들과"><span class="gcap">동료들과 함께</span></div>
+      <div class="gitem"><img src="images/web/photo05.jpg" loading="lazy" alt="캠퍼스 축제"><span class="gcap">HUFS 캠퍼스 축제 현장</span></div>
+      <div class="gitem"><img src="images/web/photo19.jpg" loading="lazy" alt="사무실 작업"><span class="gcap">사무실에서 개발 작업 중</span></div>
+      <div class="gitem"><img src="images/web/photo10.jpg" loading="lazy" alt="발표"><span class="gcap">컴퓨팅사고 TA 발표 중</span></div>
+      <div class="gitem"><img src="images/web/photo13.jpg" loading="lazy" alt="개발 작업"><span class="gcap">밤샘 개발 중</span></div>
+    </div>
+  </section>
+
+  <!-- ACTIVITY LOG -->
+  <section id="log">
+    <div class="sec-head"><span class="tag">COMMIT LOG</span><h2>활동 이력</h2></div>
+    <p class="sec-sub">$ git log --oneline --graph --all</p>
+    <div class="log">
+
+      <div class="commit active">
+        <div class="commit-hash"><b>a1c9f2e</b> HEAD</div>
+        <div class="commit-msg">LiNK English Language Program(LELP) — English Buddy</div>
+        <div class="commit-meta"><span class="status">● 진행 중</span><span>탈북 청년 대상 1:1 영어 회화 코칭</span></div>
+      </div>
+
+      <div class="commit active">
+        <div class="commit-hash"><b>7d4e0b1</b></div>
+        <div class="commit-msg">LG CNS AI Genius 서포터즈 16기</div>
+        <div class="commit-meta"><span class="status">● 온보딩 완료</span></div>
+      </div>
+
+      <div class="commit active">
+        <div class="commit-hash"><b>62f3a90</b></div>
+        <div class="commit-msg">멈블 앰버서더 5기 — 팀장</div>
+        <div class="commit-meta"><span>2026.08.31 – 10.25</span></div>
+      </div>
+
+      <div class="commit active">
+        <div class="commit-hash"><b>5b1c88d</b></div>
+        <div class="commit-msg">코드하나 코더스 서포터즈 — 주강사</div>
+        <div class="commit-meta"><span>2026.08 – 2027.01</span><span>초등 SW/AI 교육</span></div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-hash"><b>3aa721c</b></div>
+        <div class="commit-msg">시대에듀 에듀메이트 서포터즈 2기</div>
+        <div class="commit-meta"><span>2026.08.11 – 09.06</span><span>청소년상담사 3급 블로깅</span></div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-hash"><b>f09d215</b></div>
+        <div class="commit-msg">삼성 갤럭시 대학생 서포터즈 6기 — 스마트폰 채널 방장 &amp; 팀 칠공주파 팀장</div>
+        <div class="commit-meta"><span class="status">🏆 우수방장상 수상</span></div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-hash"><b>c412e7a</b></div>
+        <div class="commit-msg">2026 농촌 홍보 — 가평군 설악면 초롱이둥지마을</div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-hash"><b>91bd044</b></div>
+        <div class="commit-msg">하나 소셜벤처 유니버시티 5기 — TutoGen (팀 A-Invest)</div>
+        <div class="commit-meta"><span>CTO / 프론트엔드 리드</span></div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-hash"><b>2f0a5c9</b></div>
+        <div class="commit-msg">모아진 서포터즈 — 해외 SNS 홍보</div>
+        <div class="commit-meta"><span>2026.05.01 – 05.31</span></div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-hash"><b>b6e13f0</b></div>
+        <div class="commit-msg">컴퓨팅사고 TA</div>
+        <div class="commit-meta"><span>Python 실습 자료 설계</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CREDENTIALS -->
+  <section id="creds">
+    <div class="sec-head"><span class="tag">TESTS</span><h2>자격 · 수상</h2></div>
+    <div class="creds">
+      <div class="cred"><span class="k">AWARD · 2026.06</span>HUFS 여행 공모전 은상</div>
+      <div class="cred"><span class="k">CERT · 2026.03</span>외국어연수평가원 영어특별과정 수료 (99.00/100)</div>
+      <div class="cred"><span class="k">CERT · 2026.07</span>AI 상상그라운드 상상클래스 수료 (KT&amp;G 주최)</div>
+      <div class="cred"><span class="k">TOEIC · 2023.07</span>810점</div>
+      <div class="cred"><span class="k">MILITARY</span>공군 무선통신장비 정비병 (2022.01 – 2023.10)</div>
+      <div class="cred"><span class="k">LANGUAGE</span>영어 원어민 수준 — 캐나다 2년, 남아공 6개월 거주</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="prompt-line">~$ contact --send</div>
+    <div class="links">
+      <a href="mailto:1228hanmin@gmail.com">1228hanmin@gmail.com</a>
+      <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">github.com/ChoeHanMin</a>
+      <a href="https://choehanmin.github.io/portfolio/" target="_blank" rel="noopener">전체 포트폴리오 →</a>
+      <a href="https://choehanmin.github.io/request/" target="_blank" rel="noopener">문의 / 요청 →</a>
+    </div>
+    <div class="copyright">© 2026 Choi Hanmin · Soodal Games</div>
+  </footer>
+</div>
+
+</body>
+</html>
