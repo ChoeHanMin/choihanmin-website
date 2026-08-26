@@ -6,19 +6,20 @@
 <title>Choi Hanmin — Soodal Games &amp; Beyond</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0F1119;
-    --ink-2:#171A26;
-    --paper:#EDE8DD;
-    --paper-dim:#B9B4A8;
-    --amber:#E3A548;
-    --teal:#5FB88F;
-    --rose:#C97064;
-    --line: rgba(237,232,221,0.12);
+    --ink:#0D0E12;
+    --ink-2:#16171F;
+    --paper:#EDEAE2;
+    --paper-dim:#9E9A91;
+    --amber:#C6A15B;
+    --teal:#6E9C89;
+    --rose:#B77E68;
+    --line: rgba(237,234,226,0.10);
     --mono: 'JetBrains Mono', monospace;
     --sans: 'Pretendard', -apple-system, sans-serif;
+    --serif: 'Noto Serif KR', serif;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
@@ -85,10 +86,11 @@
   @keyframes blink{50%{opacity:0;}}
 
   h1.name{
-    font-size:clamp(38px, 8vw, 64px);
-    font-weight:800;
-    letter-spacing:-0.02em;
-    margin:36px 0 6px;
+    font-family:var(--serif);
+    font-size:clamp(38px, 8vw, 62px);
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin:40px 0 8px;
   }
   .role{
     font-family:var(--mono);
@@ -126,10 +128,10 @@
     margin-bottom:32px;
   }
   .sec-head .tag{
-    font-family:var(--mono); font-size:12px; color:var(--ink);
-    background:var(--amber); padding:2px 8px; border-radius:4px; font-weight:700;
+    font-family:var(--mono); font-size:11px; color:var(--amber);
+    letter-spacing:0.08em; font-weight:600;
   }
-  .sec-head h2{font-size:26px; font-weight:800; letter-spacing:-0.01em;}
+  .sec-head h2{font-family:var(--serif); font-size:27px; font-weight:700; letter-spacing:-0.005em;}
   .sec-sub{color:var(--paper-dim); font-size:14px; margin:-20px 0 32px; font-family:var(--mono);}
 
   /* ---------- GAMES (release cards) ---------- */
@@ -237,14 +239,26 @@
   /* ---------- FOOTER ---------- */
   footer{
     border-top:1px solid var(--line);
-    padding:56px 0 40px;
-    font-family:var(--mono);
+    padding:64px 0 48px;
+    text-align:center;
   }
-  footer .prompt-line{color:var(--teal);}
-  footer .links{display:flex; gap:20px; flex-wrap:wrap; margin-top:18px; font-size:13px;}
-  footer a{color:var(--amber);}
-  footer a:hover{text-decoration:underline;}
-  footer .copyright{margin-top:30px; color:var(--paper-dim); font-size:12px;}
+  footer .footer-title{
+    font-family:var(--serif); font-size:22px; font-weight:600;
+    color:var(--paper); margin-bottom:20px;
+  }
+  footer .links{display:flex; gap:28px; flex-wrap:wrap; justify-content:center; font-size:14px;}
+  footer a{color:var(--paper-dim); transition:color .2s;}
+  footer a:hover{color:var(--amber);}
+  footer .request-link{
+    display:inline-block; margin-top:28px;
+    font-family:var(--mono); font-size:13px;
+    color:var(--ink); background:var(--amber);
+    padding:10px 22px; border-radius:999px;
+    letter-spacing:0.01em;
+    transition:opacity .2s;
+  }
+  footer .request-link:hover{opacity:.85;}
+  footer .copyright{margin-top:36px; color:var(--paper-dim); font-size:11px; font-family:var(--mono); opacity:.6;}
 
   @media (prefers-reduced-motion: reduce){
     .term-line, .caret{animation:none !important; opacity:1;}
@@ -328,15 +342,18 @@
         </div>
       </div>
 
-      <div class="game">
-        <div class="game-top">
-          <div><span class="game-title">Time Heist 24</span> <span class="game-ver">GitHub: time-heist</span></div>
-        </div>
-        <p class="game-desc">시간이 곧 체력이자 행동력이자 점수가 되는 턴제 전략 게임.</p>
-        <div class="badges"><span class="badge play">Google Play</span></div>
-        <div class="game-links">
-          <a href="https://play.google.com/store/apps/details?id=com.choehanmin.timeheist24" target="_blank" rel="noopener">Google Play →</a>
-          <a href="https://github.com/ChoeHanMin/time-heist" target="_blank" rel="noopener">GitHub →</a>
+      <div class="game has-shot">
+        <div class="game-thumb"><img src="images/games/web/timeheist24.jpg" loading="lazy" alt="Time Heist 24 스크린샷"></div>
+        <div class="game-body">
+          <div class="game-top">
+            <div><span class="game-title">Time Heist 24</span> <span class="game-ver">GitHub: time-heist</span></div>
+          </div>
+          <p class="game-desc">시간이 곧 체력이자 행동력이자 점수가 되는 턴제 전략 게임.</p>
+          <div class="badges"><span class="badge play">Google Play</span></div>
+          <div class="game-links">
+            <a href="https://play.google.com/store/apps/details?id=com.choehanmin.timeheist24" target="_blank" rel="noopener">Google Play →</a>
+            <a href="https://github.com/ChoeHanMin/time-heist" target="_blank" rel="noopener">GitHub →</a>
+          </div>
         </div>
       </div>
 
@@ -349,10 +366,13 @@
         </div>
       </div>
 
-      <div class="game">
-        <div class="game-top"><div><span class="game-title">Stress Smash</span></div></div>
-        <p class="game-desc">가볍게 스트레스를 날리는 타격감 중심 캐주얼 게임.</p>
-        <div class="badges"><span class="badge play">Google Play</span></div>
+      <div class="game has-shot">
+        <div class="game-thumb"><img src="images/games/web/stresssmash.jpg" loading="lazy" alt="Stress Smash 스크린샷"></div>
+        <div class="game-body">
+          <div class="game-top"><div><span class="game-title">Stress Smash</span></div></div>
+          <p class="game-desc">화면을 두드려 스트레스를 날리는 타격감 중심 캐주얼 게임.</p>
+          <div class="badges"><span class="badge play">Google Play</span></div>
+        </div>
       </div>
 
       <div class="game has-shot">
@@ -364,10 +384,13 @@
         </div>
       </div>
 
-      <div class="game">
-        <div class="game-top"><div><span class="game-title">Maze Escape</span></div></div>
-        <p class="game-desc">미로 탈출형 캐주얼 게임, 초기작 중 하나.</p>
-        <div class="badges"><span class="badge play">Google Play</span></div>
+      <div class="game has-shot">
+        <div class="game-thumb"><img src="images/games/web/mazeescape.jpg" loading="lazy" alt="Maze Escape 스크린샷"></div>
+        <div class="game-body">
+          <div class="game-top"><div><span class="game-title">Maze Escape</span></div></div>
+          <p class="game-desc">열쇠를 모아 미로를 탈출하는 캐주얼 게임, 초기작 중 하나.</p>
+          <div class="badges"><span class="badge play">Google Play</span></div>
+        </div>
       </div>
 
     </div>
@@ -397,95 +420,14 @@
     </div>
   </section>
 
-  <!-- ACTIVITY LOG -->
-  <section id="log">
-    <div class="sec-head"><span class="tag">COMMIT LOG</span><h2>활동 이력</h2></div>
-    <p class="sec-sub">$ git log --oneline --graph --all</p>
-    <div class="log">
-
-      <div class="commit active">
-        <div class="commit-hash"><b>a1c9f2e</b> HEAD</div>
-        <div class="commit-msg">LiNK English Language Program(LELP) — English Buddy</div>
-        <div class="commit-meta"><span class="status">● 진행 중</span><span>탈북 청년 대상 1:1 영어 회화 코칭</span></div>
-      </div>
-
-      <div class="commit active">
-        <div class="commit-hash"><b>7d4e0b1</b></div>
-        <div class="commit-msg">LG CNS AI Genius 서포터즈 16기</div>
-        <div class="commit-meta"><span class="status">● 온보딩 완료</span></div>
-      </div>
-
-      <div class="commit active">
-        <div class="commit-hash"><b>62f3a90</b></div>
-        <div class="commit-msg">멈블 앰버서더 5기 — 팀장</div>
-        <div class="commit-meta"><span>2026.08.31 – 10.25</span></div>
-      </div>
-
-      <div class="commit active">
-        <div class="commit-hash"><b>5b1c88d</b></div>
-        <div class="commit-msg">코드하나 코더스 서포터즈 — 주강사</div>
-        <div class="commit-meta"><span>2026.08 – 2027.01</span><span>초등 SW/AI 교육</span></div>
-      </div>
-
-      <div class="commit">
-        <div class="commit-hash"><b>3aa721c</b></div>
-        <div class="commit-msg">시대에듀 에듀메이트 서포터즈 2기</div>
-        <div class="commit-meta"><span>2026.08.11 – 09.06</span><span>청소년상담사 3급 블로깅</span></div>
-      </div>
-
-      <div class="commit">
-        <div class="commit-hash"><b>f09d215</b></div>
-        <div class="commit-msg">삼성 갤럭시 대학생 서포터즈 6기 — 스마트폰 채널 방장 &amp; 팀 칠공주파 팀장</div>
-        <div class="commit-meta"><span class="status">🏆 우수방장상 수상</span></div>
-      </div>
-
-      <div class="commit">
-        <div class="commit-hash"><b>c412e7a</b></div>
-        <div class="commit-msg">2026 농촌 홍보 — 가평군 설악면 초롱이둥지마을</div>
-      </div>
-
-      <div class="commit">
-        <div class="commit-hash"><b>91bd044</b></div>
-        <div class="commit-msg">하나 소셜벤처 유니버시티 5기 — TutoGen (팀 A-Invest)</div>
-        <div class="commit-meta"><span>CTO / 프론트엔드 리드</span></div>
-      </div>
-
-      <div class="commit">
-        <div class="commit-hash"><b>2f0a5c9</b></div>
-        <div class="commit-msg">모아진 서포터즈 — 해외 SNS 홍보</div>
-        <div class="commit-meta"><span>2026.05.01 – 05.31</span></div>
-      </div>
-
-      <div class="commit">
-        <div class="commit-hash"><b>b6e13f0</b></div>
-        <div class="commit-msg">컴퓨팅사고 TA</div>
-        <div class="commit-meta"><span>Python 실습 자료 설계</span></div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- CREDENTIALS -->
-  <section id="creds">
-    <div class="sec-head"><span class="tag">TESTS</span><h2>자격 · 수상</h2></div>
-    <div class="creds">
-      <div class="cred"><span class="k">AWARD · 2026.06</span>HUFS 여행 공모전 은상</div>
-      <div class="cred"><span class="k">CERT · 2026.03</span>외국어연수평가원 영어특별과정 수료 (99.00/100)</div>
-      <div class="cred"><span class="k">CERT · 2026.07</span>AI 상상그라운드 상상클래스 수료 (KT&amp;G 주최)</div>
-      <div class="cred"><span class="k">TOEIC · 2023.07</span>810점</div>
-      <div class="cred"><span class="k">MILITARY</span>공군 무선통신장비 정비병 (2022.01 – 2023.10)</div>
-      <div class="cred"><span class="k">LANGUAGE</span>영어 원어민 수준 — 캐나다 2년, 남아공 6개월 거주</div>
-    </div>
-  </section>
-
   <footer>
-    <div class="prompt-line">~$ contact --send</div>
+    <div class="footer-title">계속 이야기하고 싶다면</div>
     <div class="links">
-      <a href="mailto:1228hanmin@gmail.com">1228hanmin@gmail.com</a>
-      <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">github.com/ChoeHanMin</a>
+      <a href="mailto:rokafhanmin@gmail.com">rokafhanmin@gmail.com</a>
+      <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
       <a href="https://choehanmin.github.io/portfolio/" target="_blank" rel="noopener">전체 포트폴리오 →</a>
-      <a href="https://choehanmin.github.io/request/" target="_blank" rel="noopener">문의 / 요청 →</a>
     </div>
+    <a class="request-link" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener">최한민에게 요청하기 →</a>
     <div class="copyright">© 2026 Choi Hanmin · Soodal Games</div>
   </footer>
 </div>
