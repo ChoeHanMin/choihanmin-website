@@ -98,14 +98,16 @@
     flex-wrap:wrap;
   }
   .mascot{
-    width:64px; height:64px; border-radius:50%;
+    width:clamp(96px, 20vw, 190px);
+    height:clamp(96px, 20vw, 190px);
+    border-radius:50%;
     object-fit:cover;
-    border:1px solid var(--line);
-    box-shadow:0 8px 24px -8px rgba(0,0,0,0.5);
+    border:2px solid var(--amber);
+    box-shadow:0 20px 50px -14px rgba(0,0,0,0.65);
     transform:rotate(-6deg);
     transition:transform .35s ease;
   }
-  .name-row:hover .mascot{transform:rotate(4deg) scale(1.06);}
+  .name-row:hover .mascot{transform:rotate(4deg) scale(1.05);}
   .role{
     font-family:var(--mono);
     font-size:14px;
@@ -134,6 +136,66 @@
     color:var(--amber); font-weight:700;
   }
   .stat span{font-size:12px; color:var(--paper-dim);}
+
+  /* ---------- STAMINA GAUGE ---------- */
+  .gauge-wrap{
+    display:flex; align-items:center; gap:32px; flex-wrap:wrap;
+    padding:8px 0 12px;
+  }
+  .gauge{width:220px; height:130px; flex:0 0 220px;}
+  .gauge-caption{
+    flex:1; min-width:220px;
+    color:var(--paper-dim); font-size:14px; line-height:1.7;
+  }
+  .status-line{
+    display:block;
+    margin-top:12px;
+    font-family:var(--mono); font-size:12px;
+    color:var(--paper);
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:8px 12px;
+  }
+
+  /* ---------- MOTTO ---------- */
+  .motto{
+    margin:26px 0 0;
+    padding-left:20px;
+    border-left:2px solid var(--amber);
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(16px, 2.6vw, 20px);
+    color:var(--paper);
+    max-width:520px;
+  }
+
+  /* ---------- INTERESTS ---------- */
+  .interests-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:560px){ .interests-grid{grid-template-columns:1fr;} }
+  .interest{
+    display:flex; align-items:flex-start; gap:14px;
+    border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px;
+  }
+  .interest .ic{font-size:26px; line-height:1;}
+  .interest b{display:block; font-size:15px; margin-bottom:4px;}
+  .interest span{font-size:13px; color:var(--paper-dim);}
+
+  /* ---------- GUESTBOOK ---------- */
+  .guestbook-desc{color:var(--paper-dim); font-size:14px; margin-bottom:20px; max-width:460px;}
+  .guestbook-link{
+    display:inline-block;
+    font-family:var(--mono); font-size:13px;
+    color:var(--ink); background:var(--teal);
+    padding:10px 22px; border-radius:999px;
+    transition:opacity .2s;
+  }
+  .guestbook-link:hover{opacity:.85;}
 
   /* ---------- SECTION HEADERS ---------- */
   section{padding:70px 0;}
@@ -356,11 +418,63 @@
       밤에는 게임을 만들며, 새벽에는 버그를 고칩니다. 참 재밌는 인생 같습니다.
     </p>
 
+    <blockquote class="motto">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</blockquote>
+
     <div class="stats">
       <div class="stat"><b>7</b><span>출시 게임 (Play / Steam)</span></div>
       <div class="stat"><b>15+</b><span>대내외 활동</span></div>
       <div class="stat"><b>20+</b><span>협업 조직</span></div>
     </div>
+  </section>
+
+  <!-- STAMINA GAUGE -->
+  <section id="stamina" class="reveal">
+    <div class="sec-head"><span class="tag">STATUS</span><h2>최한민의 체력바</h2></div>
+    <p class="sec-sub">현재 상태: 방전 직전 · 재충전 필요</p>
+    <div class="gauge-wrap">
+      <svg viewBox="0 0 220 130" class="gauge">
+        <path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M 20 110 A 90 90 0 0 1 66 34" fill="none" stroke="var(--rose)" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 7"/>
+        <g stroke="var(--paper-dim)" stroke-width="2">
+          <line x1="20" y1="110" x2="30" y2="103"/>
+          <line x1="35" y1="63" x2="44" y2="69"/>
+          <line x1="66" y1="34" x2="72" y2="42"/>
+          <line x1="110" y1="20" x2="110" y2="30"/>
+          <line x1="154" y1="34" x2="148" y2="42"/>
+          <line x1="185" y1="63" x2="176" y2="69"/>
+          <line x1="200" y1="110" x2="190" y2="103"/>
+        </g>
+        <text x="24" y="128" font-family="var(--mono)" font-size="13" fill="var(--rose)">E</text>
+        <text x="190" y="128" font-family="var(--mono)" font-size="13" fill="var(--paper-dim)">F</text>
+        <g transform="rotate(-68 110 110)">
+          <line x1="110" y1="110" x2="110" y2="38" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <circle cx="110" cy="110" r="8" fill="var(--amber)"/>
+      </svg>
+      <p class="gauge-caption">밤새 게임 만들고, 새벽에 버그 고치고, 아침엔 수업 듣고 나니… 바늘이 E 근처에 있습니다. 그래도 재밌어서 계속하는 중.
+        <span class="status-line">🔧 이번 주 작업 중: Stealth Ops 신규 스테이지 밸런싱</span>
+        <span class="status-line">📚 이번 달 배운 것: 스크롤 리빌 애니메이션 (Intersection Observer)</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- INTERESTS -->
+  <section id="interests" class="reveal">
+    <div class="sec-head"><span class="tag">OFFLINE</span><h2>좋아하는 것들</h2></div>
+    <div class="interests-grid">
+      <div class="interest"><span class="ic">🎯</span><div><b>FPS 게임</b><span>Overwatch, Rainbow Six Siege로 밤새는 중</span></div></div>
+      <div class="interest"><span class="ic">🤿</span><div><b>스쿠버다이빙</b><span>물속에서는 모든 게 느려져서 좋음</span></div></div>
+      <div class="interest"><span class="ic">⛳</span><div><b>골프</b><span>스코어보다 스윙 폼에 집착하는 편</span></div></div>
+      <div class="interest"><span class="ic">🐴</span><div><b>승마</b><span>말이 내 마음보다 눈치가 빠름</span></div></div>
+    </div>
+  </section>
+
+  <!-- GUESTBOOK -->
+  <section id="guestbook" class="reveal">
+    <div class="sec-head"><span class="tag">GUESTBOOK</span><h2>방명록</h2></div>
+    <p class="sec-sub">$ echo "한마디 남기기" | mail -s "방명록"</p>
+    <p class="guestbook-desc">이 사이트까지 와주셨다면, 짧게라도 한마디 남겨주세요. 이름 하나만 남기셔도 반갑습니다.</p>
+    <a class="guestbook-link" href="https://forms.gle/JfN6Vd65476TEj6x8" target="_blank" rel="noopener">한마디 남기기 →</a>
   </section>
 
   <!-- GAMES -->
@@ -484,7 +598,6 @@
     <div class="links">
       <a href="mailto:rokafhanmin@gmail.com">rokafhanmin@gmail.com</a>
       <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://choehanmin.github.io/portfolio/" target="_blank" rel="noopener">전체 포트폴리오 →</a>
     </div>
     <a class="request-link" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener">최한민에게 요청하기 →</a>
     <div class="copyright">© 2026 Choi Hanmin · Soodal Games</div>
