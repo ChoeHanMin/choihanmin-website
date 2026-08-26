@@ -90,8 +90,22 @@
     font-size:clamp(38px, 8vw, 62px);
     font-weight:700;
     letter-spacing:-0.01em;
-    margin:40px 0 8px;
+    margin:0;
   }
+  .name-row{
+    display:flex; align-items:center; gap:22px;
+    margin:40px 0 8px;
+    flex-wrap:wrap;
+  }
+  .mascot{
+    width:64px; height:64px; border-radius:50%;
+    object-fit:cover;
+    border:1px solid var(--line);
+    box-shadow:0 8px 24px -8px rgba(0,0,0,0.5);
+    transform:rotate(-6deg);
+    transition:transform .35s ease;
+  }
+  .name-row:hover .mascot{transform:rotate(4deg) scale(1.06);}
   .role{
     font-family:var(--mono);
     font-size:14px;
@@ -263,9 +277,51 @@
   @media (prefers-reduced-motion: reduce){
     .term-line, .caret{animation:none !important; opacity:1;}
   }
+
+  /* ---------- SIDE ORNAMENT ---------- */
+  .side-rail{
+    position:fixed; top:0; bottom:0;
+    width:64px;
+    display:none;
+    align-items:center; justify-content:center;
+    pointer-events:none;
+    z-index:1;
+  }
+  .side-rail.left{left:0;}
+  .side-rail.right{right:0;}
+  .side-rail .rail-line{
+    position:absolute; top:12%; bottom:12%;
+    width:1px; background:linear-gradient(180deg, transparent, var(--line) 15%, var(--line) 85%, transparent);
+  }
+  .side-rail.left .rail-line{left:32px;}
+  .side-rail.right .rail-line{right:32px;}
+  .side-rail .rail-label{
+    writing-mode:vertical-rl;
+    font-family:var(--mono); font-size:10px; letter-spacing:0.25em;
+    color:var(--paper-dim); opacity:.45;
+  }
+  .side-rail.right .rail-label{transform:rotate(180deg);}
+  @media(min-width:1180px){ .side-rail{display:flex;} }
+
+  /* ---------- SCROLL REVEAL ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in-view{
+    opacity:1;
+    transform:translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+  }
 </style>
 </head>
 <body>
+
+<div class="side-rail left"><div class="rail-line"></div><span class="rail-label">SOODAL GAMES</span></div>
+<div class="side-rail right"><div class="rail-line"></div><span class="rail-label">CHOI HANMIN</span></div>
 
 <div class="wrap">
   <section class="hero">
@@ -290,11 +346,14 @@
       </div>
     </div>
 
-    <h1 class="name">최한민 — Choi Hanmin</h1>
+    <div class="name-row">
+      <h1 class="name">최한민 — Choi Hanmin</h1>
+      <img class="mascot" src="images/otter.jpg" alt="마스코트 수달" loading="lazy">
+    </div>
     <div class="role">CES STUDENT @ HUFS · GAME DEVELOPER · SERIAL COLLABORATOR</div>
     <p class="lede">
-      학교에서는 컴퓨터공학을, 밤에는 게임을 만듭니다. 낮에는 삼성, LG CNS 같은 조직들과
-      캠퍼스 프로그램을 함께 굴립니다. 코드 한 줄, 활동 하나하나를 커밋처럼 기록해왔습니다.
+      아침에는 컴퓨터공학 수업을 듣고, 낮에는 대외활동을 다니며, 저녁에는 운동을 하고,
+      밤에는 게임을 만들며, 새벽에는 버그를 고칩니다. 참 재밌는 인생 같습니다.
     </p>
 
     <div class="stats">
@@ -305,7 +364,7 @@
   </section>
 
   <!-- GAMES -->
-  <section id="games">
+  <section id="games" class="reveal">
     <div class="sec-head"><span class="tag">RELEASES</span><h2>출시한 게임들</h2></div>
     <p class="sec-sub">Soodal Games (Choi Hanmin) · 단일 HTML/CSS/JS PWA → TWA 빌드 파이프라인</p>
     <div class="games">
@@ -397,12 +456,12 @@
   </section>
 
   <!-- GALLERY -->
-  <section id="gallery">
+  <section id="gallery" class="reveal">
     <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2>일상 갤러리</h2></div>
     <p class="sec-sub">$ ls ~/photos --recent</p>
     <div class="gallery-grid">
       <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="gcap">LG CNS AI Genius 서포터즈 16기</span></div>
-      <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="코드하나 코더스 강의"><span class="gcap">코드하나 코더스 서포터즈 — 파이썬 강의 중</span></div>
+      <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="외대 조교"><span class="gcap">외대 조교</span></div>
       <div class="gitem"><img src="images/web/photo04.jpg" loading="lazy" alt="AI 육성센터"><span class="gcap">용인 다우디지털스퀘어 AI 육성센터</span></div>
       <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="gcap">여름 계곡에서 돌탑 쌓기</span></div>
       <div class="gitem tall"><img src="images/web/photo12.jpg" loading="lazy" alt="농촌 봉사활동"><span class="gcap">가평 농촌 봉사활동 — 고추 수확</span></div>
@@ -411,7 +470,7 @@
       <div class="gitem"><img src="images/web/photo06.jpg" loading="lazy" alt="화이트보드 알고리즘"><span class="gcap">화이트보드에 알고리즘 정리 중</span></div>
       <div class="gitem"><img src="images/web/photo17.jpg" loading="lazy" alt="물놀이"><span class="gcap">여름 워터 액티비티</span></div>
       <div class="gitem"><img src="images/web/photo02.jpg" loading="lazy" alt="다우디지털스퀘어 작업"><span class="gcap">TutoGen 작업 공간에서</span></div>
-      <div class="gitem"><img src="images/web/photo07.jpg" loading="lazy" alt="공군 복무"><span class="gcap">공군 무선통신장비 정비병 복무 시절</span></div>
+      <div class="gitem"><img src="images/web/photo07.jpg" loading="lazy" alt="예비군 훈련"><span class="gcap">예비군 가는 나 ㅠㅠ</span></div>
       <div class="gitem"><img src="images/web/photo20.jpg" loading="lazy" alt="친구들과"><span class="gcap">동료들과 함께</span></div>
       <div class="gitem"><img src="images/web/photo05.jpg" loading="lazy" alt="캠퍼스 축제"><span class="gcap">HUFS 캠퍼스 축제 현장</span></div>
       <div class="gitem"><img src="images/web/photo19.jpg" loading="lazy" alt="사무실 작업"><span class="gcap">사무실에서 개발 작업 중</span></div>
@@ -420,7 +479,7 @@
     </div>
   </section>
 
-  <footer>
+  <footer class="reveal">
     <div class="footer-title">계속 이야기하고 싶다면</div>
     <div class="links">
       <a href="mailto:rokafhanmin@gmail.com">rokafhanmin@gmail.com</a>
@@ -432,5 +491,18 @@
   </footer>
 </div>
 
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
 </body>
 </html>
