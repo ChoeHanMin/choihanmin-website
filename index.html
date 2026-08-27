@@ -110,8 +110,8 @@
     flex-wrap:wrap;
   }
   .mascot{
-    width:clamp(144px, 30vw, 285px);
-    height:clamp(144px, 30vw, 285px);
+    width:clamp(220px, 45vw, 460px);
+    height:clamp(220px, 45vw, 460px);
     border-radius:50%;
     object-fit:cover;
     border:2px solid var(--amber);
@@ -409,16 +409,39 @@
     display:block; margin:28px auto 0;
     border-radius:8px; border:1px solid var(--line);
   }
-  .shortcut-toast{
-    position:fixed; left:50%; bottom:22px; transform:translate(-50%, 20px);
-    background:var(--ink-2); border:1px solid var(--line);
-    color:var(--paper-dim); font-family:var(--mono); font-size:12px;
-    padding:10px 18px; border-radius:999px;
-    opacity:0; transition:opacity .4s, transform .4s;
-    pointer-events:none; z-index:15;
+  .shortcut-panel{
+    position:fixed; right:14px; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:8px;
+    z-index:15;
   }
-  .shortcut-toast b{color:var(--amber);}
-  .shortcut-toast.show{opacity:1; transform:translate(-50%, 0);}
+  .shortcut-panel button{
+    font-family:var(--mono); font-size:11px;
+    background:var(--ink-2); color:var(--paper-dim);
+    border:1px solid var(--line); border-radius:8px;
+    padding:9px 10px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    transition:color .2s, border-color .2s, transform .15s;
+  }
+  .shortcut-panel button b{color:var(--amber); font-size:13px;}
+  .shortcut-panel button:hover{color:var(--paper); border-color:var(--amber); transform:scale(1.05);}
+  @media(max-width:640px){
+    .shortcut-panel{ right:8px; gap:6px; }
+    .shortcut-panel button{ padding:7px 8px; font-size:9px; }
+  }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox{
+    position:fixed; inset:0; background:rgba(0,0,0,.92);
+    display:none; align-items:center; justify-content:center;
+    z-index:200; cursor:zoom-out; padding:24px;
+  }
+  .lightbox.show{display:flex;}
+  .lightbox img{max-width:92vw; max-height:88vh; border-radius:10px; box-shadow:0 30px 80px -20px rgba(0,0,0,0.8);}
+  .lightbox-close{
+    position:absolute; top:20px; right:26px;
+    color:var(--paper); font-size:28px; cursor:pointer;
+    width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+  }
 
   /* ---------- CURSOR TRAIL ---------- */
   .trail-canvas{
@@ -728,7 +751,7 @@
       <div class="stack-item"><b>서체</b><span>Pretendard + Noto Serif KR</span></div>
       <div class="stack-item"><b>호스팅</b><span>GitHub Pages</span></div>
       <div class="stack-item"><b>도메인</b><span>Porkbun · DNS ALIAS/CNAME</span></div>
-      <div class="stack-item"><b>제작 방식</b><span>AI와 대화하며 만드는 바이브 코딩</span></div>
+      <div class="stack-item"><b>제작 방식</b><span>최한민의 피 땀 눈물</span></div>
       <div class="stack-item"><b>날씨/커밋</b><span>Open-Meteo · GitHub Public API 실시간 연동</span></div>
     </div>
   </section>
@@ -748,7 +771,16 @@
   </footer>
 </div>
 
-<div id="shortcutToast" class="shortcut-toast">⌨️ <b>g</b> 게임 · <b>p</b> 갤러리 · <b>Home</b> 맨 위로</div>
+<div id="shortcutPanel" class="shortcut-panel">
+  <button id="scGames"><b>G</b>게임</button>
+  <button id="scGallery"><b>P</b>갤러리</button>
+  <button id="scHome"><b>⌂</b>맨위</button>
+</div>
+
+<div id="lightbox" class="lightbox">
+  <span class="lightbox-close" id="lightboxClose">✕</span>
+  <img id="lightboxImg" src="" alt="확대 이미지">
+</div>
 
 
 <script>
@@ -939,16 +971,35 @@
     renderTrail();
   }
 
-  /* ---- KEYBOARD SHORTCUTS ---- */
-  const toast = document.getElementById('shortcutToast');
-  setTimeout(() => { toast.classList.add('show'); }, 1200);
-  setTimeout(() => { toast.classList.remove('show'); }, 5500);
+  /* ---- SHORTCUT PANEL (persistent, click or key) ---- */
+  function goGames(){ document.getElementById('games').scrollIntoView({ behavior: 'smooth' }); }
+  function goGallery(){ document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' }); }
+  function goHome(){ window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  document.getElementById('scGames').addEventListener('click', goGames);
+  document.getElementById('scGallery').addEventListener('click', goGallery);
+  document.getElementById('scHome').addEventListener('click', goHome);
   document.addEventListener('keydown', (e) => {
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea') return;
-    if (e.key === 'g') document.getElementById('games').scrollIntoView({ behavior: 'smooth' });
-    if (e.key === 'p') document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
-    if (e.key === 'Home') window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (e.key === 'g') goGames();
+    if (e.key === 'p') goGallery();
+    if (e.key === 'Home') goHome();
+  });
+
+  /* ---- LIGHTBOX ---- */
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  document.querySelectorAll('.gitem img, .game-thumb img').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => {
+      lightboxImg.src = img.src;
+      lightbox.classList.add('show');
+    });
+  });
+  lightbox.addEventListener('click', () => lightbox.classList.remove('show'));
+  document.getElementById('lightboxClose').addEventListener('click', (e) => {
+    e.stopPropagation();
+    lightbox.classList.remove('show');
   });
 </script>
 </body>
