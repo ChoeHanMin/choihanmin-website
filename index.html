@@ -70,6 +70,23 @@
   .orb1{ width:260px; height:260px; top:8%; left:6%; background:var(--amber); animation:orbFloat1 16s ease-in-out infinite; }
   .orb2{ width:200px; height:200px; bottom:10%; right:8%; background:var(--teal); animation:orbFloat2 20s ease-in-out infinite; }
   .orb3{ width:150px; height:150px; top:45%; right:20%; background:var(--rose); animation:orbFloat1 13s ease-in-out infinite reverse; opacity:.3; }
+  .orb{ will-change:transform; }
+
+  /* ---------- AURORA (dark mode only) ---------- */
+  .aurora{
+    position:fixed; top:0; left:0; right:0; height:280px;
+    z-index:0; pointer-events:none;
+    background:linear-gradient(120deg, rgba(198,161,91,0.12), rgba(110,156,137,0.10), rgba(183,126,104,0.10), rgba(198,161,91,0.12));
+    background-size:300% 300%;
+    animation:auroraShift 22s ease-in-out infinite;
+    filter:blur(50px);
+    opacity:.6;
+  }
+  html[data-theme="light"] .aurora{ display:none; }
+  @keyframes auroraShift{
+    0%,100%{ background-position:0% 50%; }
+    50%{ background-position:100% 50%; }
+  }
   @keyframes orbFloat1{
     0%,100%{ transform:translate(0,0) scale(1); }
     50%{ transform:translate(40px,30px) scale(1.15); }
@@ -267,6 +284,51 @@
     transition:opacity .2s;
   }
   .guestbook-link:hover{opacity:.85;}
+  .magnetic{ transition:transform .15s ease-out; display:inline-block; }
+
+  /* ---------- ACHIEVEMENT TOAST ---------- */
+  .achievement-toast{
+    position:fixed; bottom:22px; left:50%;
+    transform:translate(-50%, 20px);
+    background:var(--ink-2); border:1px solid var(--amber);
+    color:var(--paper); font-family:var(--mono); font-size:13px;
+    padding:14px 22px; border-radius:12px;
+    opacity:0; transition:opacity .4s, transform .4s;
+    pointer-events:none; z-index:250;
+    display:flex; align-items:center; gap:10px;
+    box-shadow:0 20px 50px -14px rgba(0,0,0,.6);
+  }
+  .achievement-toast.show{ opacity:1; transform:translate(-50%, 0); }
+  .achievement-toast .ach-icon{ font-size:20px; }
+
+  /* ---------- GUESTBOOK LIVE TOAST ---------- */
+  .guestbook-toast{
+    position:fixed; top:70px; right:18px;
+    background:var(--ink-2); border:1px solid var(--teal);
+    color:var(--paper); font-family:var(--mono); font-size:12px;
+    padding:10px 16px; border-radius:10px;
+    opacity:0; transform:translateX(20px);
+    transition:opacity .4s, transform .4s;
+    pointer-events:none; z-index:250;
+    max-width:220px;
+  }
+  .guestbook-toast.show{ opacity:1; transform:translateX(0); }
+
+  /* ---------- REFERRER GREETING ---------- */
+  .referrer-greeting{
+    font-family:var(--mono); font-size:12px; color:var(--teal);
+    margin-bottom:6px; opacity:.85;
+  }
+
+  /* ---------- GAME FILTER SHUFFLE ---------- */
+  .game{ transition:border-color .2s, box-shadow .3s, transform .1s, opacity .3s; }
+  .games.shuffling .game:not(.filtered-out){
+    animation:cardSettle .4s ease both;
+  }
+  @keyframes cardSettle{
+    0%{ opacity:0; transform:translateY(10px) scale(.98); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
   .guestbook-preview{margin-top:24px; display:flex; flex-direction:column; gap:8px;}
   .guestbook-empty{font-family:var(--mono); font-size:12px; color:var(--paper-dim); opacity:.7;}
   .guestbook-entry{
@@ -527,6 +589,152 @@
     .term-line, .caret{animation:none !important; opacity:1;}
   }
 
+  /* ---------- INTRO OVERLAY ---------- */
+  .intro-overlay{
+    position:fixed; inset:0; z-index:1000;
+    background:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity .6s ease;
+  }
+  .intro-overlay.hide{ opacity:0; pointer-events:none; }
+  .intro-content{
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    animation:introPulse 1.1s ease-in-out;
+  }
+  .intro-name{
+    font-family:var(--serif); font-weight:700;
+    font-size:clamp(28px, 6vw, 46px); color:var(--paper);
+    letter-spacing:0.01em;
+  }
+  .intro-sub{
+    font-family:var(--mono); font-size:13px; color:var(--amber);
+    letter-spacing:0.12em;
+  }
+  @keyframes introPulse{
+    0%{ opacity:0; transform:scale(.85); }
+    40%{ opacity:1; transform:scale(1.04); }
+    100%{ opacity:1; transform:scale(1); }
+  }
+
+  /* ---------- STAR CANVAS (dark mode only) ---------- */
+  .star-canvas{
+    position:fixed; inset:0; z-index:0;
+    pointer-events:none;
+  }
+  html[data-theme="light"] .star-canvas{ display:none; }
+
+  /* ---------- CUSTOM CURSOR ---------- */
+  .custom-cursor{
+    position:fixed; top:0; left:0; z-index:400;
+    width:22px; height:22px; border-radius:50%;
+    border:1.5px solid var(--amber);
+    pointer-events:none;
+    transform:translate(-50%,-50%);
+    transition:width .18s, height .18s, background .18s, opacity .2s;
+    opacity:0;
+  }
+  .custom-cursor.active{ opacity:1; }
+  .custom-cursor.grow{
+    width:38px; height:38px;
+    background:rgba(198,161,91,0.15);
+  }
+  @media(min-width:901px) and (pointer:fine){
+    body.cursor-ready, body.cursor-ready a, body.cursor-ready button, body.cursor-ready .mascot{ cursor:none; }
+  }
+
+  /* ---------- NAME GLOW ---------- */
+  h1.name{ transition:text-shadow .3s; }
+  h1.name:hover{
+    text-shadow:0 0 14px rgba(198,161,91,0.55), 0 0 32px rgba(198,161,91,0.3);
+  }
+
+  /* ---------- NAV DOTS ---------- */
+  .nav-dots{
+    position:fixed; left:14px; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:14px;
+    z-index:15;
+  }
+  @media(max-width:900px){ .nav-dots{ display:none; } }
+  .nav-dots button{
+    width:9px; height:9px; border-radius:50%;
+    background:var(--line); border:none; cursor:pointer;
+    padding:0; position:relative;
+    transition:background .2s, transform .2s;
+  }
+  .nav-dots button:hover{ transform:scale(1.3); }
+  .nav-dots button.active{ background:var(--amber); }
+  .nav-dots button .dot-label{
+    position:absolute; left:18px; top:50%; transform:translateY(-50%);
+    font-family:var(--mono); font-size:10px; color:var(--paper-dim);
+    white-space:nowrap; opacity:0; transition:opacity .2s;
+  }
+  .nav-dots button:hover .dot-label{ opacity:1; }
+
+  /* ---------- GAME FILTER ---------- */
+  .game-filters{ display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+  .game-filters button{
+    font-family:var(--mono); font-size:11px;
+    background:transparent; color:var(--paper-dim);
+    border:1px solid var(--line); border-radius:999px;
+    padding:6px 14px; cursor:pointer;
+    transition:color .2s, border-color .2s, background .2s;
+  }
+  .game-filters button.active{
+    color:var(--ink); background:var(--amber); border-color:var(--amber);
+  }
+  .game.filtered-out{ display:none; }
+
+  /* ---------- LANG TOGGLE ---------- */
+  .lang-toggle{
+    position:fixed; top:18px; right:66px; z-index:20;
+    width:40px; height:40px; border-radius:50%;
+    background:var(--ink-2); border:1px solid var(--line);
+    color:var(--paper); font-family:var(--mono); font-size:11px; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .2s;
+  }
+  .lang-toggle:hover{ transform:scale(1.08); }
+
+  /* ---------- FONT SIZE TOGGLE ---------- */
+  .fontsize-panel{
+    position:fixed; top:18px; right:114px; z-index:20;
+    display:flex; gap:4px;
+    background:var(--ink-2); border:1px solid var(--line);
+    border-radius:999px; padding:4px;
+  }
+  .fontsize-panel button{
+    width:26px; height:26px; border-radius:50%;
+    background:transparent; border:none; color:var(--paper-dim);
+    font-family:var(--sans); cursor:pointer;
+    transition:color .2s, background .2s;
+  }
+  .fontsize-panel button.active{ background:var(--amber); color:var(--ink); }
+  @media(max-width:700px){
+    .lang-toggle{ top:auto; bottom:18px; right:66px; }
+    .fontsize-panel{ top:auto; bottom:18px; right:114px; }
+  }
+
+  /* ---------- SONG WIDGET ---------- */
+  .song-widget{
+    margin-top:14px;
+    font-family:var(--mono); font-size:12px; color:var(--paper-dim);
+    opacity:.75;
+  }
+
+  /* ---------- PRINT ---------- */
+  @media print{
+    .side-rail, .shortcut-panel, .theme-toggle, .lang-toggle, .fontsize-panel,
+    .trail-canvas, .star-canvas, .scroll-progress, .grain-overlay, .orb,
+    .lightbox, .intro-overlay, .mascot-bubble, .custom-cursor, .nav-dots,
+    #liveVisitors, .game-filters, .divider{
+      display:none !important;
+    }
+    body{ background:#fff !important; color:#111 !important; }
+    .reveal{ opacity:1 !important; transform:none !important; }
+    a{ color:#111 !important; text-decoration:underline; }
+    .game.filtered-out{ display:block !important; }
+  }
+
   /* ---------- SIDE ORNAMENT ---------- */
   .side-rail{
     position:fixed; top:0; bottom:0;
@@ -581,18 +789,44 @@
 </style>
 </head>
 <body>
+<div id="introOverlay" class="intro-overlay">
+  <div class="intro-content">
+    <span class="intro-name">Choi Hanmin</span>
+    <span class="intro-sub">(Dev Soodal)</span>
+  </div>
+</div>
 
 <canvas id="trailCanvas" class="trail-canvas"></canvas>
+<canvas id="starCanvas" class="star-canvas"></canvas>
 <div id="scrollProgress" class="scroll-progress"></div>
 <div class="grain-overlay"></div>
+<div class="aurora"></div>
+<div id="customCursor" class="custom-cursor"></div>
 
 <div class="side-rail left"><div class="rail-line"></div><span class="rail-label">SOODAL GAMES</span></div>
 <div class="side-rail right"><div class="rail-line"></div><span class="rail-label">CHOI HANMIN</span></div>
 
 <button id="themeToggle" class="theme-toggle" aria-label="테마 전환">🌙</button>
+<button id="langToggle" class="lang-toggle" aria-label="언어 전환">EN</button>
+<div class="fontsize-panel">
+  <button id="fsSmall" data-size="sm">가</button>
+  <button id="fsMedium" data-size="md" class="active">가</button>
+  <button id="fsLarge" data-size="lg">가</button>
+</div>
+
+<nav id="navDots" class="nav-dots">
+  <button data-target="hero-top"><span class="dot-label">home</span></button>
+  <button data-target="stamina"><span class="dot-label">체력바</span></button>
+  <button data-target="interests"><span class="dot-label">관심사</span></button>
+  <button data-target="guestbook"><span class="dot-label">방명록</span></button>
+  <button data-target="games"><span class="dot-label">게임</span></button>
+  <button data-target="gallery"><span class="dot-label">갤러리</span></button>
+  <button data-target="commits"><span class="dot-label">커밋</span></button>
+  <button data-target="madewith"><span class="dot-label">제작기</span></button>
+</nav>
 
 <div class="wrap">
-  <section class="hero">
+  <section class="hero" id="hero-top">
     <div class="orb orb1"></div>
     <div class="orb orb2"></div>
     <div class="orb orb3"></div>
@@ -626,8 +860,9 @@
         <span class="mascot-bubble" id="mascotBubble"></span>
       </div>
     </div>
+    <p id="referrerGreeting" class="referrer-greeting"></p>
     <div class="role">CES STUDENT @ HUFS · GAME DEVELOPER · SERIAL COLLABORATOR</div>
-    <p class="lede">
+    <p class="lede" id="ledeText" data-en="I attend computer engineering classes in the morning, join outside programs in the afternoon, work out in the evening, build games at night, and fix bugs before dawn. Life feels pretty fun this way.">
       아침에는 컴퓨터공학 수업을 듣고, 낮에는 대외활동을 다니며, 저녁에는 운동을 하고,
       밤에는 게임을 만들며, 새벽에는 버그를 고칩니다. 참 재밌는 인생 같습니다.
     </p>
@@ -635,9 +870,9 @@
     <blockquote class="motto" id="mottoText">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</blockquote>
 
     <div class="stats">
-      <div class="stat"><b data-target="7" data-suffix="">0</b><span>출시 게임 (Play / Steam)</span></div>
-      <div class="stat"><b data-target="15" data-suffix="+">0</b><span>대내외 활동</span></div>
-      <div class="stat"><b data-target="20" data-suffix="+">0</b><span>협업 조직</span></div>
+      <div class="stat"><b data-target="7" data-suffix="">0</b><span data-en="Games shipped (Play / Steam)">출시 게임 (Play / Steam)</span></div>
+      <div class="stat"><b data-target="15" data-suffix="+">0</b><span data-en="Outside activities">대내외 활동</span></div>
+      <div class="stat"><b data-target="20" data-suffix="+">0</b><span data-en="Organizations collaborated">협업 조직</span></div>
     </div>
     <div id="liveVisitors" class="live-visitors"></div>
   </section>
@@ -649,7 +884,7 @@
 
   <!-- STAMINA GAUGE -->
   <section id="stamina" class="reveal slide-right">
-    <div class="sec-head"><span class="tag">STATUS</span><h2>최한민의 체력바</h2></div>
+    <div class="sec-head"><span class="tag">STATUS</span><h2 data-en="Hanmin's Battery Level">최한민의 체력바</h2></div>
     <p class="sec-sub">현재 상태: 방전 직전 · 재충전 필요</p>
     <div class="gauge-wrap">
       <svg viewBox="0 0 220 130" class="gauge">
@@ -684,13 +919,14 @@
 
   <!-- INTERESTS -->
   <section id="interests" class="reveal slide-left">
-    <div class="sec-head"><span class="tag">OFFLINE</span><h2>좋아하는 것들</h2></div>
+    <div class="sec-head"><span class="tag">OFFLINE</span><h2 data-en="Things I Enjoy">좋아하는 것들</h2></div>
     <div class="interests-grid">
-      <div class="interest"><span class="ic">🎯</span><div><b>FPS 게임</b><span>Overwatch, Rainbow Six Siege로 밤새는 중</span></div></div>
-      <div class="interest"><span class="ic">🤿</span><div><b>스쿠버다이빙</b><span>물속에서는 모든 게 느려져서 좋음</span></div></div>
-      <div class="interest"><span class="ic">⛳</span><div><b>골프</b><span>스코어보다 스윙 폼에 집착하는 편</span></div></div>
-      <div class="interest"><span class="ic">🐴</span><div><b>승마</b><span>말이 내 마음보다 눈치가 빠름</span></div></div>
+      <div class="interest"><span class="ic">🎯</span><div><b data-en="FPS Games">FPS 게임</b><span data-en="Staying up all night with Overwatch, Rainbow Six Siege">Overwatch, Rainbow Six Siege로 밤새는 중</span></div></div>
+      <div class="interest"><span class="ic">🤿</span><div><b data-en="Scuba Diving">스쿠버다이빙</b><span data-en="Everything slows down underwater, and I like that">물속에서는 모든 게 느려져서 좋음</span></div></div>
+      <div class="interest"><span class="ic">⛳</span><div><b data-en="Golf">골프</b><span data-en="More obsessed with swing form than the score">스코어보다 스윙 폼에 집착하는 편</span></div></div>
+      <div class="interest"><span class="ic">🐴</span><div><b data-en="Horseback Riding">승마</b><span data-en="The horse reads the room faster than I do">말이 내 마음보다 눈치가 빠름</span></div></div>
     </div>
+    <p class="song-widget" id="songWidget">🎧 요즘 듣는 노래: (여기에 곡명 - 아티스트를 채워주세요)</p>
   </section>
 
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
@@ -700,10 +936,10 @@
 
   <!-- GUESTBOOK -->
   <section id="guestbook" class="reveal slide-left">
-    <div class="sec-head"><span class="tag">GUESTBOOK</span><h2>방명록</h2></div>
+    <div class="sec-head"><span class="tag">GUESTBOOK</span><h2 data-en="Guestbook">방명록</h2></div>
     <p class="sec-sub">$ echo "한마디 남기기" | mail -s "방명록"</p>
-    <p class="guestbook-desc">이 사이트까지 와주셨다면, 짧게라도 한마디 남겨주세요. 이름 하나만 남기셔도 반갑습니다.</p>
-    <a class="guestbook-link" href="https://forms.gle/JfN6Vd65476TEj6x8" target="_blank" rel="noopener">한마디 남기기 →</a>
+    <p class="guestbook-desc" data-en="If you made it all the way here, please leave even a short note. Just your name is more than welcome.">이 사이트까지 와주셨다면, 짧게라도 한마디 남겨주세요. 이름 하나만 남기셔도 반갑습니다.</p>
+    <a class="guestbook-link magnetic" href="https://forms.gle/JfN6Vd65476TEj6x8" target="_blank" rel="noopener" data-en="Leave a note →">한마디 남기기 →</a>
     <div id="guestbookPreview" class="guestbook-preview">
       <p class="guestbook-empty">아직 방명록 미리보기 연동 전이에요. (설정하면 최근 답변이 여기 뜹니다)</p>
     </div>
@@ -716,17 +952,22 @@
 
   <!-- GAMES -->
   <section id="games" class="reveal slide-left">
-    <div class="sec-head"><span class="tag">RELEASES</span><h2>출시한 게임들</h2></div>
+    <div class="sec-head"><span class="tag">RELEASES</span><h2 data-en="Games I've Shipped">출시한 게임들</h2></div>
     <p class="sec-sub">Soodal Games (Choi Hanmin) · 단일 HTML/CSS/JS PWA → TWA 빌드 파이프라인</p>
+    <div class="game-filters">
+      <button class="active" data-filter="all">전체</button>
+      <button data-filter="play">Google Play만</button>
+      <button data-filter="steam">Steam만</button>
+    </div>
     <div class="games">
 
-      <div class="game has-shot">
-        <div class="game-thumb"><img src="images/games/web/minicourt.jpg" loading="lazy" alt="미니법정 스크린샷"></div>
+      <div class="game has-shot" data-platforms="play steam">
+        <div class="game-thumb" data-shots="images/games/web/minicourt.jpg,images/games/web/minicourt2.jpg,images/games/web/minicourt3.jpg,images/games/web/minicourt4.jpg"><img src="images/games/web/minicourt.jpg" loading="lazy" alt="미니법정 스크린샷"></div>
         <div class="game-body">
           <div class="game-top">
             <div><span class="game-title">미니법정 (Mini Court)</span> <span class="game-ver">v2.x — bilingual</span></div>
           </div>
-          <p class="game-desc">55개 사건, 한/영 지원, 항소심 모드와 데일리 챌린지, 경력 XP 시스템까지 갖춘 법정 시뮬레이션. Electron으로 패키징해 Steam에도 올렸습니다.</p>
+          <p class="game-desc" data-en="A courtroom sim with 55 cases, Korean/English support, an appeals mode, daily challenges, and a career XP system. Packaged with Electron and released on Steam too.">55개 사건, 한/영 지원, 항소심 모드와 데일리 챌린지, 경력 XP 시스템까지 갖춘 법정 시뮬레이션. Electron으로 패키징해 Steam에도 올렸습니다.</p>
           <p class="game-behind">비하인드: 55번째 사건 쓰다가 판사 이름 짓는 데 제일 오래 걸렸음.</p>
           <div class="badges">
             <span class="badge play">Google Play</span>
@@ -739,13 +980,13 @@
         </div>
       </div>
 
-      <div class="game has-shot">
-        <div class="game-thumb"><img src="images/games/web/stealthops.jpg" loading="lazy" alt="Stealth Ops 스크린샷"></div>
+      <div class="game has-shot" data-platforms="play steam">
+        <div class="game-thumb" data-shots="images/games/web/stealthops.jpg,images/games/web/stealthops2.jpg,images/games/web/stealthops3.jpg,images/games/web/stealthops4.jpg"><img src="images/games/web/stealthops.jpg" loading="lazy" alt="Stealth Ops 스크린샷"></div>
         <div class="game-body">
           <div class="game-top">
             <div><span class="game-title">Stealth Ops</span> <span class="game-ver">v4.3.0.0</span></div>
           </div>
-          <p class="game-desc">9종 무기, 스테이지별 6개 미니게임, 듀얼 스테이지 맵 구조의 잠입 액션. Electron/Steam 빌드로도 제공.</p>
+          <p class="game-desc" data-en="A stealth action game with 9 weapons, 6 mini-games per stage, and dual-stage maps. Also shipped as an Electron/Steam build.">9종 무기, 스테이지별 6개 미니게임, 듀얼 스테이지 맵 구조의 잠입 액션. Electron/Steam 빌드로도 제공.</p>
           <p class="game-behind">비하인드: 무기 밸런싱한다고 새벽 4시까지 잡혀있었음.</p>
           <div class="badges"><span class="badge play">Google Play</span><span class="badge steam">Steam</span></div>
           <div class="game-links">
@@ -754,13 +995,13 @@
         </div>
       </div>
 
-      <div class="game has-shot">
-        <div class="game-thumb"><img src="images/games/web/timeheist24.jpg" loading="lazy" alt="Time Heist 24 스크린샷"></div>
+      <div class="game has-shot" data-platforms="play">
+        <div class="game-thumb" data-shots="images/games/web/timeheist24.jpg,images/games/web/timeheist24_2.jpg,images/games/web/timeheist24_3.jpg"><img src="images/games/web/timeheist24.jpg" loading="lazy" alt="Time Heist 24 스크린샷"></div>
         <div class="game-body">
           <div class="game-top">
             <div><span class="game-title">Time Heist 24</span> <span class="game-ver">GitHub: time-heist</span></div>
           </div>
-          <p class="game-desc">시간이 곧 체력이자 행동력이자 점수가 되는 턴제 전략 게임.</p>
+          <p class="game-desc" data-en="A turn-based strategy game where time is your HP, action points, and score all at once.">시간이 곧 체력이자 행동력이자 점수가 되는 턴제 전략 게임.</p>
           <p class="game-behind">비하인드: 턴제 규칙 짜다가 정작 내 턴을 다 써버림.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
           <div class="game-links">
@@ -770,41 +1011,41 @@
         </div>
       </div>
 
-      <div class="game has-shot">
-        <div class="game-thumb"><img src="images/games/web/seathunter.jpg" loading="lazy" alt="자리 사냥 스크린샷"></div>
+      <div class="game has-shot" data-platforms="play">
+        <div class="game-thumb" data-shots="images/games/web/seathunter.jpg,images/games/web/seathunter2.jpg,images/games/web/seathunter3.jpg"><img src="images/games/web/seathunter.jpg" loading="lazy" alt="자리 사냥 스크린샷"></div>
         <div class="game-body">
           <div class="game-top"><div><span class="game-title">자리 사냥 (Seat Hunter)</span></div></div>
-          <p class="game-desc">지하철 승객을 관찰해 곧 내릴 사람을 맞히는 관찰력 캐주얼 게임.</p>
+          <p class="game-desc" data-en="A casual observation game — watch subway passengers and guess who's about to get off.">지하철 승객을 관찰해 곧 내릴 사람을 맞히는 관찰력 캐주얼 게임.</p>
           <p class="game-behind">비하인드: 관찰력 테스트하다가 정작 내가 내릴 역을 놓침.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
         </div>
       </div>
 
-      <div class="game has-shot">
-        <div class="game-thumb"><img src="images/games/web/stresssmash.jpg" loading="lazy" alt="Stress Smash 스크린샷"></div>
+      <div class="game has-shot" data-platforms="play">
+        <div class="game-thumb" data-shots="images/games/web/stresssmash.jpg,images/games/web/stresssmash2.jpg"><img src="images/games/web/stresssmash.jpg" loading="lazy" alt="Stress Smash 스크린샷"></div>
         <div class="game-body">
           <div class="game-top"><div><span class="game-title">Stress Smash</span></div></div>
-          <p class="game-desc">화면을 두드려 스트레스를 날리는 타격감 중심 캐주얼 게임.</p>
+          <p class="game-desc" data-en="A punchy casual game — tap the screen to smash your stress away.">화면을 두드려 스트레스를 날리는 타격감 중심 캐주얼 게임.</p>
           <p class="game-behind">비하인드: 테스트하다가 진짜로 스트레스가 풀렸음.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
         </div>
       </div>
 
-      <div class="game has-shot">
-        <div class="game-thumb"><img src="images/games/web/colordebt.jpg" loading="lazy" alt="Color Debt 스크린샷"></div>
+      <div class="game has-shot" data-platforms="play">
+        <div class="game-thumb" data-shots="images/games/web/colordebt.jpg,images/games/web/colordebt2.jpg,images/games/web/colordebt3.jpg"><img src="images/games/web/colordebt.jpg" loading="lazy" alt="Color Debt 스크린샷"></div>
         <div class="game-body">
           <div class="game-top"><div><span class="game-title">Color Debt</span></div></div>
-          <p class="game-desc">같은 색 얼굴을 합치고 터뜨려 빚을 늘리지 않는 캐주얼 퍼즐 게임.</p>
+          <p class="game-desc" data-en="A casual puzzle game — merge and pop same-colored faces to keep your debt from growing.">같은 색 얼굴을 합치고 터뜨려 빚을 늘리지 않는 캐주얼 퍼즐 게임.</p>
           <p class="game-behind">비하인드: 빚 갚는 게임 만들다가 내 통장 잔고가 떠올랐음.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
         </div>
       </div>
 
-      <div class="game has-shot">
-        <div class="game-thumb"><img src="images/games/web/mazeescape.jpg" loading="lazy" alt="Maze Escape 스크린샷"></div>
+      <div class="game has-shot" data-platforms="play">
+        <div class="game-thumb" data-shots="images/games/web/mazeescape.jpg,images/games/web/mazeescape2.jpg,images/games/web/mazeescape3.jpg"><img src="images/games/web/mazeescape.jpg" loading="lazy" alt="Maze Escape 스크린샷"></div>
         <div class="game-body">
           <div class="game-top"><div><span class="game-title">Maze Escape</span></div></div>
-          <p class="game-desc">열쇠를 모아 미로를 탈출하는 캐주얼 게임, 초기작 중 하나.</p>
+          <p class="game-desc" data-en="A casual maze-escape game where you collect keys to get out — one of my earliest releases.">열쇠를 모아 미로를 탈출하는 캐주얼 게임, 초기작 중 하나.</p>
           <p class="game-behind">비하인드: 미로 디자인하다가 정작 나가는 길을 못 찾았음.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
         </div>
@@ -820,7 +1061,7 @@
 
   <!-- GALLERY -->
   <section id="gallery" class="reveal slide-right">
-    <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2>일상 갤러리</h2></div>
+    <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2 data-en="Daily Gallery">일상 갤러리</h2></div>
     <p class="sec-sub">$ ls ~/photos --recent</p>
     <div class="gallery-grid">
       <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="new-tag">NEW</span><span class="gcap">LG CNS AI Genius 서포터즈 16기</span></div>
@@ -849,7 +1090,7 @@
 
   <!-- RECENT COMMITS -->
   <section id="commits" class="reveal slide-left">
-    <div class="sec-head"><span class="tag">LIVE</span><h2>최근 커밋</h2></div>
+    <div class="sec-head"><span class="tag">LIVE</span><h2 data-en="Recent Commits">최근 커밋</h2></div>
     <p class="sec-sub">$ git log --author=ChoeHanMin -5</p>
     <div id="commitList" class="commit-list">
       <p class="commit-loading">불러오는 중...</p>
@@ -863,24 +1104,24 @@
 
   <!-- MADE WITH -->
   <section id="madewith" class="reveal slide-right">
-    <div class="sec-head"><span class="tag">STACK</span><h2>이 사이트는 이렇게 만들었다</h2></div>
+    <div class="sec-head"><span class="tag">STACK</span><h2 data-en="How This Site Was Made">이 사이트는 이렇게 만들었다</h2></div>
     <div class="stack-grid">
-      <div class="stack-item"><b>Frontend</b><span>순수 HTML / CSS / JS, 단일 파일</span></div>
-      <div class="stack-item"><b>서체</b><span>Pretendard + Noto Serif KR</span></div>
-      <div class="stack-item"><b>호스팅</b><span>GitHub Pages</span></div>
-      <div class="stack-item"><b>도메인</b><span>Porkbun · DNS ALIAS/CNAME</span></div>
-      <div class="stack-item"><b>제작 방식</b><span>최한민의 피 땀 눈물</span></div>
-      <div class="stack-item"><b>날씨/커밋</b><span>Open-Meteo · GitHub Public API 실시간 연동</span></div>
+      <div class="stack-item"><b>Frontend</b><span data-en="Plain HTML / CSS / JS, single file">순수 HTML / CSS / JS, 단일 파일</span></div>
+      <div class="stack-item"><b data-en="Typefaces">서체</b><span>Pretendard + Noto Serif KR</span></div>
+      <div class="stack-item"><b data-en="Hosting">호스팅</b><span>GitHub Pages</span></div>
+      <div class="stack-item"><b data-en="Domain">도메인</b><span>Porkbun · DNS ALIAS/CNAME</span></div>
+      <div class="stack-item"><b data-en="How it's made">제작 방식</b><span data-en="Blood, sweat, and tears of Choi Hanmin">최한민의 피 땀 눈물</span></div>
+      <div class="stack-item"><b data-en="Weather / Commits">날씨/커밋</b><span data-en="Live via Open-Meteo & GitHub Public API">Open-Meteo · GitHub Public API 실시간 연동</span></div>
     </div>
   </section>
 
   <footer class="reveal">
-    <div class="footer-title">계속 이야기하고 싶다면</div>
+    <div class="footer-title" data-en="If you want to keep in touch">계속 이야기하고 싶다면</div>
     <div class="links">
       <a href="mailto:rokafhanmin@gmail.com">rokafhanmin@gmail.com</a>
       <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
     </div>
-    <a class="request-link" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener">최한민에게 요청하기 →</a>
+    <a class="request-link magnetic" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener" data-en="Request something from Hanmin →">최한민에게 요청하기 →</a>
     <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy">
     <div class="copyright">
       © 2026 Choi Hanmin · Soodal Games
@@ -899,6 +1140,9 @@
   <span class="lightbox-close" id="lightboxClose">✕</span>
   <img id="lightboxImg" src="" alt="확대 이미지">
 </div>
+
+<div id="achievementToast" class="achievement-toast"><span class="ach-icon">🏆</span><span id="achievementText"></span></div>
+<div id="guestbookToast" class="guestbook-toast"></div>
 
 
 <script>
@@ -1204,6 +1448,301 @@
     if (navigator.sendBeacon) {
       navigator.sendBeacon('https://api.countapi.xyz/update/choihanmin-com/online?amount=-1');
     }
+  });
+
+  /* ---- INTRO OVERLAY ---- */
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const intro = document.getElementById('introOverlay');
+      intro.classList.add('hide');
+      setTimeout(() => intro.remove(), 700);
+    }, 900);
+  });
+
+  /* ---- STAR CANVAS (dark mode background) ---- */
+  const starCanvas = document.getElementById('starCanvas');
+  const starCtx = starCanvas.getContext('2d');
+  let stars = [];
+  function initStars(){
+    starCanvas.width = window.innerWidth;
+    starCanvas.height = window.innerHeight;
+    stars = Array.from({ length: 90 }, () => ({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height,
+      r: Math.random() * 1.2 + 0.3,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.008 + Math.random() * 0.012
+    }));
+  }
+  initStars();
+  window.addEventListener('resize', initStars);
+  function renderStars(t){
+    starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+    stars.forEach(s => {
+      const twinkle = (Math.sin(t * s.speed + s.phase) + 1) / 2;
+      starCtx.beginPath();
+      starCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      starCtx.fillStyle = `rgba(237,234,226,${0.15 + twinkle * 0.5})`;
+      starCtx.fill();
+    });
+    requestAnimationFrame(renderStars);
+  }
+  requestAnimationFrame(renderStars);
+
+  /* ---- CUSTOM CURSOR ---- */
+  const customCursor = document.getElementById('customCursor');
+  if (window.matchMedia('(min-width: 901px) and (pointer: fine)').matches) {
+    document.body.classList.add('cursor-ready');
+    window.addEventListener('mousemove', (e) => {
+      customCursor.style.left = e.clientX + 'px';
+      customCursor.style.top = e.clientY + 'px';
+      customCursor.classList.add('active');
+    });
+    document.querySelectorAll('a, button, .mascot, .game, .gitem').forEach(el => {
+      el.addEventListener('mouseenter', () => customCursor.classList.add('grow'));
+      el.addEventListener('mouseleave', () => customCursor.classList.remove('grow'));
+    });
+  }
+
+  /* ---- NAV DOTS ---- */
+  const navDots = document.querySelectorAll('#navDots button');
+  const navSections = Array.from(navDots).map(btn => document.getElementById(btn.dataset.target)).filter(Boolean);
+  navDots.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  const navIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const idx = navSections.indexOf(entry.target);
+      if (idx === -1) return;
+      if (entry.isIntersecting) {
+        navDots.forEach(b => b.classList.remove('active'));
+        navDots[idx].classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+  navSections.forEach(sec => navIO.observe(sec));
+
+  /* ---- GAME FILTER ---- */
+  document.querySelectorAll('.game-filters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.game-filters button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.game').forEach(card => {
+        const platforms = (card.dataset.platforms || '').split(' ');
+        const show = filter === 'all' || platforms.includes(filter);
+        card.classList.toggle('filtered-out', !show);
+      });
+    });
+  });
+
+  /* ---- LANG TOGGLE (KR / EN) ---- */
+  const langBtn = document.getElementById('langToggle');
+  const enMottos = [
+    'It\'s better to regret doing something than to regret not doing it.',
+    'Shipped code beats perfect code.',
+    'A bug isn\'t a failure — it\'s material for the next commit.',
+    'Direction over speed, starting over direction.',
+    'Even a failed project becomes part of your portfolio.'
+  ];
+  let currentLang = 'kr';
+  langBtn.addEventListener('click', () => {
+    currentLang = currentLang === 'kr' ? 'en' : 'kr';
+    langBtn.textContent = currentLang === 'kr' ? 'EN' : '한';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      if (!el.dataset.kr) el.dataset.kr = el.textContent;
+      el.textContent = currentLang === 'en' ? el.dataset.en : el.dataset.kr;
+    });
+    if (mottoEl) {
+      const dayIndex = Math.floor(Date.now() / 86400000) % quotes.length;
+      mottoEl.textContent = currentLang === 'en' ? enMottos[dayIndex] : quotes[dayIndex];
+    }
+  });
+
+  /* ---- FONT SIZE TOGGLE (zoom-based, Chrome/Safari/Edge) ---- */
+  const fsButtons = document.querySelectorAll('.fontsize-panel button');
+  const wrapEl = document.querySelector('.wrap');
+  const zoomMap = { sm: 0.9, md: 1, lg: 1.15 };
+  fsButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      fsButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const z = zoomMap[btn.dataset.size];
+      document.body.style.zoom = z;
+    });
+  });
+
+  /* ---- 1. PARALLAX SCROLL (orbs) ---- */
+  const orbEls = document.querySelectorAll('.orb');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    orbEls.forEach((orb, i) => {
+      const factor = 0.08 + i * 0.04;
+      orb.style.transform = `translateY(${y * factor}px)`;
+    });
+  });
+
+  /* ---- 2. MAGNETIC BUTTONS ---- */
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const relX = e.clientX - rect.left - rect.width / 2;
+      const relY = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${relX * 0.25}px, ${relY * 0.4}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0,0)';
+    });
+  });
+
+  /* ---- 3. GAME FILTER SHUFFLE (already filters; add settle animation) ---- */
+  const gamesContainer = document.querySelector('.games');
+  document.querySelectorAll('.game-filters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!gamesContainer) return;
+      gamesContainer.classList.remove('shuffling');
+      void gamesContainer.offsetWidth;
+      gamesContainer.classList.add('shuffling');
+    });
+  });
+
+  /* ---- 4. TEXT SCRAMBLE ON SECTION TITLES ---- */
+  const scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ가나다라마바사아자차카타파하#$%&';
+  function scrambleInto(el, finalText, duration){
+    const steps = 14;
+    let step = 0;
+    const iv = setInterval(() => {
+      step++;
+      const revealCount = Math.floor((step / steps) * finalText.length);
+      let out = '';
+      for (let i = 0; i < finalText.length; i++) {
+        if (i < revealCount || finalText[i] === ' ') {
+          out += finalText[i];
+        } else {
+          out += scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+        }
+      }
+      el.textContent = out;
+      if (step >= steps) { clearInterval(iv); el.textContent = finalText; }
+    }, duration / steps);
+  }
+  const scrambleTargets = document.querySelectorAll('.sec-head h2');
+  const scrambleIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const finalText = el.textContent;
+        scrambleInto(el, finalText, 500);
+        scrambleIO.unobserve(el);
+      }
+    });
+  }, { threshold: 0.6 });
+  scrambleTargets.forEach(el => scrambleIO.observe(el));
+
+  /* ---- 6. GUESTBOOK LIVE TOAST (polling, only if sheet connected) ---- */
+  if (typeof GUESTBOOK_SHEET_ID !== 'undefined' && GUESTBOOK_SHEET_ID) {
+    let lastSeenCount = parseInt(sessionStorage.getItem('gbLastCount') || '0', 10);
+    function pollGuestbook(){
+      fetch(`https://opensheet.elk.sh/${GUESTBOOK_SHEET_ID}/1`)
+        .then(r => r.json())
+        .then(rows => {
+          if (lastSeenCount === 0) { lastSeenCount = rows.length; sessionStorage.setItem('gbLastCount', rows.length); return; }
+          if (rows.length > lastSeenCount) {
+            const newest = rows[rows.length - 1];
+            const vals = Object.values(newest);
+            const name = vals[1] || '누군가';
+            const gbToast = document.getElementById('guestbookToast');
+            gbToast.textContent = `📝 ${name}님이 방명록에 남겼어요`;
+            gbToast.classList.add('show');
+            setTimeout(() => gbToast.classList.remove('show'), 4000);
+            lastSeenCount = rows.length;
+            sessionStorage.setItem('gbLastCount', rows.length);
+          }
+        })
+        .catch(() => {});
+    }
+    setTimeout(pollGuestbook, 3000);
+    setInterval(pollGuestbook, 60000);
+  }
+
+  /* ---- 7. GAME SCREENSHOT MINI-CAROUSEL (works with 1+ images) ---- */
+  document.querySelectorAll('.game-thumb[data-shots]').forEach(thumb => {
+    const shots = thumb.dataset.shots.split(',').map(s => s.trim()).filter(Boolean);
+    if (shots.length <= 1) return;
+    const img = thumb.querySelector('img');
+    let idx = 0;
+    let carouselTimer = null;
+    thumb.addEventListener('mouseenter', () => {
+      carouselTimer = setInterval(() => {
+        idx = (idx + 1) % shots.length;
+        img.src = shots[idx];
+      }, 900);
+    });
+    thumb.addEventListener('mouseleave', () => {
+      clearInterval(carouselTimer);
+      idx = 0;
+      img.src = shots[0];
+    });
+  });
+
+  /* ---- 8. ACHIEVEMENT BADGES ---- */
+  function unlockAchievement(key, label){
+    if (localStorage.getItem('ach_' + key)) return;
+    localStorage.setItem('ach_' + key, '1');
+    const toast = document.getElementById('achievementToast');
+    document.getElementById('achievementText').textContent = label;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+  let otterClickCount = parseInt(localStorage.getItem('otterClickCount') || '0', 10);
+  document.getElementById('mascotImg').addEventListener('click', () => {
+    otterClickCount++;
+    localStorage.setItem('otterClickCount', otterClickCount);
+    if (otterClickCount >= 5) unlockAchievement('otter5', '수달과 친해짐 — 5번 클릭 달성!');
+  });
+  const gameLinkKeys = new Set();
+  const totalGameCards = document.querySelectorAll('.game').length;
+  document.querySelectorAll('.game-links a').forEach(a => {
+    a.addEventListener('click', () => {
+      const card = a.closest('.game');
+      if (card) gameLinkKeys.add(card.querySelector('.game-title').textContent);
+      if (gameLinkKeys.size >= totalGameCards) unlockAchievement('allgames', '게임 마스터 — 모든 게임 링크 클릭!');
+    });
+  });
+
+  /* ---- 9. REFERRER-BASED GREETING ---- */
+  (function(){
+    const el = document.getElementById('referrerGreeting');
+    const ref = document.referrer;
+    if (!ref) {
+      el.textContent = '👋 링크 타고 바로 오셨네요.';
+    } else if (ref.includes('google.')) {
+      el.textContent = '🔍 검색해서 찾아오셨군요, 환영합니다.';
+    } else if (ref.includes('instagram.') || ref.includes('facebook.')) {
+      el.textContent = '📱 SNS 보고 와주셨네요!';
+    } else if (ref.includes('github.')) {
+      el.textContent = '💻 GitHub에서 넘어오셨군요.';
+    } else {
+      el.textContent = '👀 어디선가 링크를 타고 오셨네요.';
+    }
+  })();
+
+  /* ---- 10. DYNAMIC LIGHTING SHADOW ---- */
+  document.querySelectorAll('.game, .gitem').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const cx = e.clientX - rect.left - rect.width / 2;
+      const cy = e.clientY - rect.top - rect.height / 2;
+      const shadowX = -(cx / rect.width) * 24;
+      const shadowY = -(cy / rect.height) * 24;
+      card.style.boxShadow = `${shadowX}px ${shadowY}px 32px -10px rgba(198,161,91,0.35), 0 0 0 1px rgba(198,161,91,0.25)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.boxShadow = '';
+    });
   });
 </script>
 </body>
