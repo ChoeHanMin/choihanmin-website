@@ -487,7 +487,7 @@
   footer .request-link{
     display:inline-block; margin-top:28px;
     font-family:var(--mono); font-size:13px;
-    color:var(--ink); background:var(--amber);
+    color:var(--ink); background:var(--amber); border:none;
     padding:10px 22px; border-radius:999px;
     letter-spacing:0.01em;
     transition:opacity .2s;
@@ -495,6 +495,57 @@
   footer .request-link:hover{opacity:.85;}
   footer .copyright{margin-top:36px; color:var(--paper-dim); font-size:11px; font-family:var(--mono); opacity:.6;}
   footer .visit-count{display:block; margin-top:6px;}
+  footer .footer-btn-row{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:28px;}
+  footer .footer-btn-row .request-link{margin-top:0;}
+  footer .request-link.ghost{
+    background:transparent; color:var(--amber); border:1px solid var(--amber);
+    font-family:var(--mono); cursor:pointer; font-size:13px;
+  }
+  footer .request-link.ghost:hover{background:var(--amber); color:var(--ink); opacity:1;}
+
+  /* ---------- TIMELINE ---------- */
+  .timeline-list{display:flex; flex-direction:column; gap:10px;}
+  .timeline-row{
+    display:flex; gap:14px; align-items:baseline;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; font-size:13px;
+  }
+  .timeline-row .t-icon{flex-shrink:0; font-size:13px;}
+  .timeline-row .t-date{font-family:var(--mono); color:var(--amber); flex-shrink:0; font-size:12px; min-width:64px;}
+  .timeline-row .t-msg{color:var(--paper); flex:1;}
+  .timeline-row .t-tag{font-family:var(--mono); color:var(--paper-dim); font-size:11px; flex-shrink:0;}
+
+  /* ---------- CHANGELOG ---------- */
+  .change-list{display:flex; flex-direction:column; gap:14px;}
+  .change-row{display:flex; gap:16px; align-items:baseline; border-bottom:1px solid var(--line); padding-bottom:12px;}
+  .change-ver{font-family:var(--mono); color:var(--amber); font-size:13px; flex-shrink:0; min-width:38px;}
+  .change-desc{font-size:14px; color:var(--paper-dim);}
+
+  /* ---------- PORTFOLIO MODAL ---------- */
+  .portfolio-modal{
+    display:none; position:fixed; inset:0; z-index:60;
+    background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:24px;
+  }
+  .portfolio-modal.open{display:flex;}
+  .portfolio-modal-box{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:12px;
+    padding:28px; max-width:340px; width:100%; text-align:center; position:relative;
+  }
+  .portfolio-modal-box h3{font-family:var(--serif); font-size:18px; margin-bottom:10px; color:var(--paper);}
+  .portfolio-modal-sub{font-size:12px; color:var(--paper-dim); margin-bottom:18px; line-height:1.5;}
+  .portfolio-modal-close{position:absolute; top:14px; right:16px; cursor:pointer; color:var(--paper-dim); font-size:14px;}
+  #portfolioPwInput{
+    width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--line);
+    background:var(--ink); color:var(--paper); font-family:var(--mono); font-size:14px; margin-bottom:12px;
+  }
+  #portfolioPwSubmit{
+    width:100%; padding:10px; border-radius:999px; border:none;
+    background:var(--amber); color:var(--ink); font-family:var(--mono); font-size:13px;
+    cursor:pointer; font-weight:600;
+  }
+  #portfolioPwSubmit:hover{opacity:.85;}
+  .portfolio-modal-err{display:none; color:var(--rose); font-size:12px; margin-top:10px;}
+  .portfolio-modal-err.show{display:block;}
 
   /* ---------- COMMIT LIST ---------- */
   .commit-list{display:flex; flex-direction:column; gap:10px;}
@@ -926,7 +977,7 @@
       <div class="interest"><span class="ic">⛳</span><div><b data-en="Golf">골프</b><span data-en="More obsessed with swing form than the score">스코어보다 스윙 폼에 집착하는 편</span></div></div>
       <div class="interest"><span class="ic">🐴</span><div><b data-en="Horseback Riding">승마</b><span data-en="The horse reads the room faster than I do">말이 내 마음보다 눈치가 빠름</span></div></div>
     </div>
-    <p class="song-widget" id="songWidget">🎧 요즘 듣는 노래: (여기에 곡명 - 아티스트를 채워주세요)</p>
+    <p class="song-widget" id="songWidget">🎧 요즘 듣는 노래: When I get old - Christopher &amp; 청하</p>
   </section>
 
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
@@ -1059,6 +1110,20 @@
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
   </svg></div>
 
+  <!-- INTEGRATED TIMELINE -->
+  <section id="timeline" class="reveal slide-right">
+    <div class="sec-head"><span class="tag">TIMELINE</span><h2 data-en="Timeline">게임 개발 &amp; 커밋 타임라인</h2></div>
+    <p class="sec-sub" data-en="Game dev kickoffs and live commits, merged in order">게임 개발 착수 시점과 실시간 커밋을 하나로 모아 시간순으로 정렬했습니다.</p>
+    <div id="timelineList" class="timeline-list">
+      <p class="commit-loading">불러오는 중...</p>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- GALLERY -->
   <section id="gallery" class="reveal slide-right">
     <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2 data-en="Daily Gallery">일상 갤러리</h2></div>
@@ -1115,19 +1180,66 @@
     </div>
   </section>
 
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
+
+  <!-- CHANGELOG -->
+  <section id="changelog" class="reveal slide-left">
+    <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
+    <p class="sec-sub">$ git log --oneline choihanmin-website</p>
+    <div class="change-list">
+      <div class="change-row">
+        <span class="change-ver">v1.3</span>
+        <span class="change-desc" data-en="Added locked portfolio download, free 1-page resume, vCard button, and RSS feed">잠금 포트폴리오 다운로드, 무료 1페이지 이력서, vCard 저장 버튼, RSS 피드 추가</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.2</span>
+        <span class="change-desc" data-en="Added site changelog section">사이트 체인지로그 섹션 추가</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.1</span>
+        <span class="change-desc" data-en="Fixed motto to a single fixed line, expanded gallery to 20 photos">모토를 고정 문구로 확정, 갤러리 사진 20장으로 확장</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.0</span>
+        <span class="change-desc" data-en="First public release — hero, stamina bar, games, gallery, live commits">최초 공개 — 히어로, 체력바, 게임, 갤러리, 실시간 커밋 섹션</span>
+      </div>
+    </div>
+  </section>
+
   <footer class="reveal">
     <div class="footer-title" data-en="If you want to keep in touch">계속 이야기하고 싶다면</div>
     <div class="links">
       <a href="mailto:rokafhanmin@gmail.com">rokafhanmin@gmail.com</a>
       <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
+      <a href="rss.xml" target="_blank" rel="noopener">RSS</a>
+      <a href="files/hanmin.vcf" id="vcardBtn" download="최한민.vcf" data-en="Save Contact">연락처 저장</a>
     </div>
-    <a class="request-link magnetic" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener" data-en="Request something from Hanmin →">최한민에게 요청하기 →</a>
+    <div class="footer-btn-row">
+      <a class="request-link magnetic" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener" data-en="Request something from Hanmin →">최한민에게 요청하기 →</a>
+      <a class="request-link magnetic ghost" href="files/resume-1page.pdf" download data-en="Download 1-page Resume">1페이지 이력서 다운로드</a>
+      <button class="request-link magnetic ghost" id="portfolioBtn" type="button" data-en="Download Full Portfolio 🔒">전체 포트폴리오 다운로드 🔒</button>
+    </div>
     <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy">
     <div class="copyright">
       © 2026 Choi Hanmin · Soodal Games
       <span id="visitCount" class="visit-count"></span>
     </div>
   </footer>
+</div>
+
+<!-- PORTFOLIO PASSWORD MODAL -->
+<div id="portfolioModal" class="portfolio-modal">
+  <div class="portfolio-modal-box">
+    <span class="portfolio-modal-close" id="portfolioModalClose">✕</span>
+    <h3 data-en="Enter Password">비밀번호를 입력하세요</h3>
+    <p class="portfolio-modal-sub" data-en="This isn't real security — just to keep casual visitors from grabbing it. Ask Hanmin for the password.">진짜 보안은 아니고, 아무나 무심코 다운받지 않도록 하는 정도예요. 비밀번호는 저에게 직접 물어보세요.</p>
+    <input type="password" id="portfolioPwInput" placeholder="Password" autocomplete="off">
+    <button id="portfolioPwSubmit" data-en="Unlock">확인</button>
+    <p class="portfolio-modal-err" id="portfolioPwErr" data-en="Wrong password, try again.">비밀번호가 틀렸어요, 다시 시도해주세요.</p>
+  </div>
 </div>
 
 <div id="shortcutPanel" class="shortcut-panel">
@@ -1193,18 +1305,11 @@
   }
   runTerminal();
 
-  /* ---- QUOTE OF THE DAY (date-based, fixed per day) ---- */
-  const quotes = [
-    '안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.',
-    '완벽한 코드보다 배포된 코드가 낫다.',
-    '버그는 실패가 아니라 다음 커밋의 재료다.',
-    '속도보다 방향, 방향보다 일단 시작.',
-    '실패한 프로젝트도 포트폴리오가 된다.'
-  ];
+  /* ---- MOTTO (fixed) ---- */
+  const quotes = ['안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.'];
   const mottoEl = document.getElementById('mottoText');
   if (mottoEl) {
-    const dayIndex = Math.floor(Date.now() / 86400000) % quotes.length;
-    mottoEl.textContent = quotes[dayIndex];
+    mottoEl.textContent = quotes[0];
   }
 
   /* ---- SCROLL REVEAL ---- */
@@ -1305,6 +1410,69 @@
     .catch(() => {
       document.getElementById('commitList').innerHTML = '<p class="commit-loading">최근 커밋을 불러올 수 없습니다.</p>';
     });
+
+  /* ---- INTEGRATED TIMELINE (games + live commits, merged) ---- */
+  (function(){
+    // 실제 개발 착수 시점 (한민님이 직접 제공한 날짜, 월 단위)
+    const gameTimelineEvents = [
+      { date: '2025-01', icon: '🎮', title: '미니법정 (Mini Court) 개발 시작', tag: 'Soodal Games' },
+      { date: '2025-03', icon: '🎮', title: 'Stealth Ops 개발 시작', tag: 'Soodal Games' },
+      { date: '2025-06', icon: '🎮', title: 'Time Heist 24 개발 시작', tag: 'Soodal Games' },
+      { date: '2025-09', icon: '🎮', title: 'Color Debt 개발 시작', tag: 'Soodal Games' },
+      { date: '2025-12', icon: '🎮', title: '자리 사냥 (Seat Hunter) 개발 시작', tag: 'Soodal Games' },
+      { date: '2026-04', icon: '🎮', title: 'Maze Escape 개발 시작', tag: 'Soodal Games' },
+      { date: '2026-06', icon: '🎮', title: 'Stress Smash 개발 시작', tag: 'Soodal Games' },
+    ];
+
+    function renderTimeline(events){
+      const list = document.getElementById('timelineList');
+      if (!list) return;
+      if (!events.length){
+        list.innerHTML = '<p class="commit-loading">타임라인을 불러올 수 없습니다.</p>';
+        return;
+      }
+      list.innerHTML = '';
+      events.forEach(ev => {
+        const row = document.createElement('div');
+        row.className = 'timeline-row';
+        row.innerHTML = `
+          <span class="t-icon">${ev.icon}</span>
+          <span class="t-date">${ev.date}</span>
+          <span class="t-msg">${ev.title}</span>
+          <span class="t-tag">${ev.tag}</span>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    fetch('https://api.github.com/users/ChoeHanMin/events/public')
+      .then(r => r.json())
+      .then(events => {
+        const pushes = (Array.isArray(events) ? events : []).filter(e => e.type === 'PushEvent').slice(0, 6);
+        const commitEvents = pushes.map(ev => {
+          const commit = ev.payload.commits && ev.payload.commits[0];
+          const d = new Date(ev.created_at);
+          const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+          return {
+            date: dateStr,
+            sortKey: d.getTime(),
+            icon: '💻',
+            title: commit ? commit.message.split('\n')[0] : '커밋',
+            tag: ev.repo.name.split('/')[1]
+          };
+        });
+        const gameEvents = gameTimelineEvents.map(ev => ({
+          ...ev,
+          sortKey: new Date(ev.date + '-01').getTime()
+        }));
+        const merged = [...commitEvents, ...gameEvents].sort((a, b) => b.sortKey - a.sortKey);
+        renderTimeline(merged);
+      })
+      .catch(() => {
+        const gameEvents = gameTimelineEvents.slice().reverse();
+        renderTimeline(gameEvents);
+      });
+  })();
 
   /* ---- CURSOR TRAIL ---- */
   const trailCanvas = document.getElementById('trailCanvas');
@@ -1541,13 +1709,7 @@
 
   /* ---- LANG TOGGLE (KR / EN) ---- */
   const langBtn = document.getElementById('langToggle');
-  const enMottos = [
-    'It\'s better to regret doing something than to regret not doing it.',
-    'Shipped code beats perfect code.',
-    'A bug isn\'t a failure — it\'s material for the next commit.',
-    'Direction over speed, starting over direction.',
-    'Even a failed project becomes part of your portfolio.'
-  ];
+  const enMottos = ['It\'s better to regret doing something than to regret not doing it.'];
   let currentLang = 'kr';
   langBtn.addEventListener('click', () => {
     currentLang = currentLang === 'kr' ? 'en' : 'kr';
@@ -1557,8 +1719,7 @@
       el.textContent = currentLang === 'en' ? el.dataset.en : el.dataset.kr;
     });
     if (mottoEl) {
-      const dayIndex = Math.floor(Date.now() / 86400000) % quotes.length;
-      mottoEl.textContent = currentLang === 'en' ? enMottos[dayIndex] : quotes[dayIndex];
+      mottoEl.textContent = currentLang === 'en' ? enMottos[0] : quotes[0];
     }
   });
 
@@ -1597,6 +1758,59 @@
       btn.style.transform = 'translate(0,0)';
     });
   });
+
+  /* ---- 2b. PORTFOLIO PASSWORD LOCK ----
+     비밀번호는 평문 대신 SHA-256 해시로 비교합니다 (진짜 보안 아님, 캐주얼 다운로드 방지용).
+     비밀번호를 바꾸려면: 새 비밀번호로 아래 해시를 만들어 PORTFOLIO_PW_HASH 값을 교체하세요.
+     예) 브라우저 콘솔에서:
+       crypto.subtle.digest('SHA-256', new TextEncoder().encode('새비밀번호')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
+     현재 비밀번호는 별도로 안내받은 값으로 설정되어 있습니다. */
+  const PORTFOLIO_PW_HASH = 'fad7c2485436972062856ca0eeb302f45b7522e7f8783e08554843f1353d6686';
+  const PORTFOLIO_FILE = 'files/portfolio-locked.pdf';
+  const PORTFOLIO_DOWNLOAD_NAME = '최한민_포트폴리오.pdf';
+
+  async function sha256Hex(text){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  const portfolioModal = document.getElementById('portfolioModal');
+  const portfolioBtn = document.getElementById('portfolioBtn');
+  const portfolioPwInput = document.getElementById('portfolioPwInput');
+  const portfolioPwSubmit = document.getElementById('portfolioPwSubmit');
+  const portfolioPwErr = document.getElementById('portfolioPwErr');
+  const portfolioModalClose = document.getElementById('portfolioModalClose');
+
+  function openPortfolioModal(){
+    portfolioModal.classList.add('open');
+    portfolioPwErr.classList.remove('show');
+    portfolioPwInput.value = '';
+    setTimeout(() => portfolioPwInput.focus(), 100);
+  }
+  function closePortfolioModal(){ portfolioModal.classList.remove('open'); }
+
+  if (portfolioBtn) portfolioBtn.addEventListener('click', openPortfolioModal);
+  if (portfolioModalClose) portfolioModalClose.addEventListener('click', closePortfolioModal);
+  if (portfolioModal) portfolioModal.addEventListener('click', (e) => { if (e.target === portfolioModal) closePortfolioModal(); });
+
+  async function tryUnlockPortfolio(){
+    const hash = await sha256Hex(portfolioPwInput.value.trim());
+    if (hash === PORTFOLIO_PW_HASH){
+      const a = document.createElement('a');
+      a.href = PORTFOLIO_FILE;
+      a.download = PORTFOLIO_DOWNLOAD_NAME;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      closePortfolioModal();
+    } else {
+      portfolioPwErr.classList.add('show');
+      portfolioPwInput.value = '';
+      portfolioPwInput.focus();
+    }
+  }
+  if (portfolioPwSubmit) portfolioPwSubmit.addEventListener('click', tryUnlockPortfolio);
+  if (portfolioPwInput) portfolioPwInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlockPortfolio(); });
 
   /* ---- 3. GAME FILTER SHUFFLE (already filters; add settle animation) ---- */
   const gamesContainer = document.querySelector('.games');

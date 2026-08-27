@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>Choi Hanmin — Soodal Games Releases</title>
+  <link>https://www.choihanmin.com</link>
+  <description>최한민(Soodal Games)이 출시한 게임 목록 피드</description>
+  <language>ko</language>
+
+  <item>
+    <title>미니법정 (Mini Court)</title>
+    <link>https://play.google.com/store/apps/details?id=com.choehanmin.minicourt</link>
+    <description>55개 사건, 한/영 지원, 항소심 모드와 데일리 챌린지, 경력 XP 시스템까지 갖춘 법정 시뮬레이션. Google Play와 Steam(App ID 5113110)에 출시.</description>
+    <guid isPermaLink="false">soodal-minicourt</guid>
+  </item>
+  <item>
+    <title>Stealth Ops</title>
+    <link>https://play.google.com/store/apps/details?id=com.choehanmin.stealthops</link>
+    <description>9종 무기, 스테이지별 6개 미니게임, 듀얼 스테이지 맵 구조의 잠입 액션. v4.3.0.0, Electron/Steam 빌드로도 제공.</description>
+    <guid isPermaLink="false">soodal-stealthops</guid>
+  </item>
+  <item>
+    <title>Time Heist 24</title>
+    <link>https://play.google.com/store/apps/details?id=com.choehanmin.timeheist24</link>
+    <description>시간이 곧 체력이자 행동력이자 점수가 되는 턴제 전략 게임.</description>
+    <guid isPermaLink="false">soodal-timeheist24</guid>
+  </item>
+  <item>
+    <title>자리 사냥 (Seat Hunter)</title>
+    <link>https://www.choihanmin.com/#games</link>
+    <description>지하철 승객을 관찰해 곧 내릴 사람을 맞히는 관찰력 캐주얼 게임.</description>
+    <guid isPermaLink="false">soodal-seathunter</guid>
+  </item>
+  <item>
+    <title>Stress Smash</title>
+    <link>https://www.choihanmin.com/#games</link>
+    <description>화면을 두드려 스트레스를 날리는 타격감 중심 캐주얼 게임.</description>
+    <guid isPermaLink="false">soodal-stresssmash</guid>
+  </item>
+  <item>
+    <title>Color Debt</title>
+    <link>https://www.choihanmin.com/#games</link>
+    <description>같은 색 얼굴을 합치고 터뜨려 빚을 늘리지 않는 캐주얼 퍼즐 게임.</description>
+    <guid isPermaLink="false">soodal-colordebt</guid>
+  </item>
+  <item>
+    <title>Maze Escape</title>
+    <link>https://www.choihanmin.com/#games</link>
+    <description>열쇠를 모아 미로를 탈출하는 캐주얼 게임, 초기작 중 하나.</description>
+    <guid isPermaLink="false">soodal-mazeescape</guid>
+  </item>
+</channel>
+</rss>
