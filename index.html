@@ -168,22 +168,29 @@
   .mascot-wrap{position:relative; display:inline-block;}
   .mascot-bubble{
     position:absolute;
-    bottom:calc(100% + 10px); left:50%;
-    transform:translateX(-50%) translateY(6px);
+    top:50%; left:calc(100% + 16px);
+    transform:translateY(-50%) translateX(-6px);
     background:var(--paper); color:var(--ink);
-    font-family:var(--serif); font-size:14px; font-weight:600;
-    padding:8px 14px; border-radius:12px;
+    font-family:var(--serif); font-size:16px; font-weight:600;
+    padding:11px 18px; border-radius:14px;
     white-space:nowrap;
     opacity:0; pointer-events:none;
     transition:opacity .25s, transform .25s;
+    z-index:5;
   }
   .mascot-bubble::after{
-    content:''; position:absolute; top:100%; left:50%;
-    transform:translateX(-50%);
-    border:7px solid transparent; border-top-color:var(--paper);
+    content:''; position:absolute; top:50%; right:100%;
+    transform:translateY(-50%);
+    border:8px solid transparent; border-right-color:var(--paper);
   }
   .mascot-bubble.show{
-    opacity:1; transform:translateX(-50%) translateY(0);
+    opacity:1; transform:translateY(-50%) translateX(0);
+  }
+  @media(max-width:560px){
+    .mascot-bubble{
+      white-space:normal; max-width:150px; font-size:14px;
+      padding:9px 14px; left:calc(100% + 12px);
+    }
   }
   .role{
     font-family:var(--mono);
@@ -1474,32 +1481,21 @@
 
   /* ---- CURSOR TRAIL ---- */
   const trailCanvas = document.getElementById('trailCanvas');
-  if (trailCanvas && window.matchMedia('(min-width: 901px)').matches) {
-    const ctx2d = trailCanvas.getContext('2d');
-    let particles = [];
-    function resizeCanvas(){
+  let particles = [];
+  let trailCtx = null;
+  const trailActive = trailCanvas && window.matchMedia('(min-width: 901px)').matches;
+  if (trailActive) {
+    trailCtx = trailCanvas.getContext('2d');
+    function resizeTrailCanvas(){
       trailCanvas.width = window.innerWidth;
       trailCanvas.height = window.innerHeight;
     }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    resizeTrailCanvas();
+    window.addEventListener('resize', resizeTrailCanvas);
     window.addEventListener('mousemove', (e) => {
       particles.push({ x: e.clientX, y: e.clientY, life: 1 });
-      if (particles.length > 40) particles.shift();
-    });
-    function renderTrail(){
-      ctx2d.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-      particles.forEach(p => {
-        ctx2d.beginPath();
-        ctx2d.arc(p.x, p.y, 2.5 * p.life, 0, Math.PI * 2);
-        ctx2d.fillStyle = `rgba(198,161,91,${p.life * 0.5})`;
-        ctx2d.fill();
-        p.life -= 0.03;
-      });
-      particles = particles.filter(p => p.life > 0);
-      requestAnimationFrame(renderTrail);
-    }
-    renderTrail();
+      if (particles.length > 24) particles.shift();
+    }, { passive: true });
   }
 
   /* ---- SHORTCUT PANEL (persistent, click or key) ---- */
@@ -1539,7 +1535,7 @@
     const h = document.documentElement;
     const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
     scrollBar.style.width = scrolled + '%';
-  });
+  }, { passive: true });
 
   /* ---- COUNT-UP STATS ---- */
   const statEls = document.querySelectorAll('.stat b[data-target]');
@@ -1619,7 +1615,7 @@
   function initStars(){
     starCanvas.width = window.innerWidth;
     starCanvas.height = window.innerHeight;
-    stars = Array.from({ length: 90 }, () => ({
+    stars = Array.from({ length: 55 }, () => ({
       x: Math.random() * starCanvas.width,
       y: Math.random() * starCanvas.height,
       r: Math.random() * 1.2 + 0.3,
@@ -1629,18 +1625,44 @@
   }
   initStars();
   window.addEventListener('resize', initStars);
-  function renderStars(t){
-    starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-    stars.forEach(s => {
-      const twinkle = (Math.sin(t * s.speed + s.phase) + 1) / 2;
-      starCtx.beginPath();
-      starCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      starCtx.fillStyle = `rgba(237,234,226,${0.15 + twinkle * 0.5})`;
-      starCtx.fill();
-    });
-    requestAnimationFrame(renderStars);
+  function isLightMode(){ return document.documentElement.getAttribute('data-theme') === 'light'; }
+
+  /* ---- MERGED BACKGROUND RENDER LOOP ----
+     별자리 배경 + 커서 트레일을 한 requestAnimationFrame 루프로 합치고,
+     ~30fps로 프레임을 건너뛰어서 그림. 두 캔버스가 각자 60fps로 무한 루프를
+     돌던 게 커서 반응이 사이트 전체에서 느려지는 주요 원인이었음.
+     라이트 모드에서는 별 캔버스를 아예 안 그림(계산 자체를 생략). */
+  let frameSkip = false;
+  function renderBackgroundLoop(t){
+    frameSkip = !frameSkip;
+    if (frameSkip) { // 매 두 번째 프레임만 실제로 그림 (~30fps 체감)
+      requestAnimationFrame(renderBackgroundLoop);
+      return;
+    }
+    if (!isLightMode()){
+      starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      stars.forEach(s => {
+        const twinkle = (Math.sin(t * s.speed + s.phase) + 1) / 2;
+        starCtx.beginPath();
+        starCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        starCtx.fillStyle = `rgba(237,234,226,${0.15 + twinkle * 0.5})`;
+        starCtx.fill();
+      });
+    }
+    if (trailActive && trailCtx){
+      trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+      particles.forEach(p => {
+        trailCtx.beginPath();
+        trailCtx.arc(p.x, p.y, 2.5 * p.life, 0, Math.PI * 2);
+        trailCtx.fillStyle = `rgba(198,161,91,${p.life * 0.5})`;
+        trailCtx.fill();
+        p.life -= 0.06; // 프레임을 건너뛰므로 감쇠 속도를 2배로
+      });
+      particles = particles.filter(p => p.life > 0);
+    }
+    requestAnimationFrame(renderBackgroundLoop);
   }
-  requestAnimationFrame(renderStars);
+  requestAnimationFrame(renderBackgroundLoop);
 
   /* ---- CUSTOM CURSOR (rAF-batched, transform-based for smoothness) ---- */
   const customCursor = document.getElementById('customCursor');
@@ -1734,7 +1756,7 @@
       const factor = 0.08 + i * 0.04;
       orb.style.transform = `translateY(${y * factor}px)`;
     });
-  });
+  }, { passive: true });
 
   /* ---- 2. MAGNETIC BUTTONS (rect cached on enter) ---- */
   document.querySelectorAll('.magnetic').forEach(btn => {
