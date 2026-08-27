@@ -86,8 +86,10 @@
   }
   .term-body .prompt{color:var(--teal);}
   .term-body .cmd{color:var(--paper);}
-  .term-line{margin-bottom:6px; opacity:0; animation:appear 0.4s forwards;}
-  .out{margin:2px 0 18px; color:var(--paper-dim);}
+  .term-line{margin-bottom:6px; opacity:0; transition:opacity .3s;}
+  .term-line.appear{opacity:1;}
+  .out{margin:2px 0 18px; color:var(--paper-dim); opacity:0; transition:opacity .4s;}
+  .out.appear{opacity:1;}
   .out b{color:var(--paper); font-weight:600;}
   .out .amber{color:var(--amber);}
   .out .teal{color:var(--teal);}
@@ -126,6 +128,26 @@
     100%{transform:rotate(-6deg) scale(1);}
   }
   .name-row:hover .mascot{transform:rotate(4deg) scale(1.05);}
+  .mascot-wrap{position:relative; display:inline-block;}
+  .mascot-bubble{
+    position:absolute;
+    bottom:calc(100% + 10px); left:50%;
+    transform:translateX(-50%) translateY(6px);
+    background:var(--paper); color:var(--ink);
+    font-family:var(--serif); font-size:14px; font-weight:600;
+    padding:8px 14px; border-radius:12px;
+    white-space:nowrap;
+    opacity:0; pointer-events:none;
+    transition:opacity .25s, transform .25s;
+  }
+  .mascot-bubble::after{
+    content:''; position:absolute; top:100%; left:50%;
+    transform:translateX(-50%);
+    border:7px solid transparent; border-top-color:var(--paper);
+  }
+  .mascot-bubble.show{
+    opacity:1; transform:translateX(-50%) translateY(0);
+  }
   .role{
     font-family:var(--mono);
     font-size:14px;
@@ -371,6 +393,40 @@
   .commit-row .c-msg{color:var(--paper); flex:1;}
   .commit-row .c-repo{font-family:var(--mono); color:var(--paper-dim); font-size:11px; flex-shrink:0;}
 
+  /* ---------- MADE WITH ---------- */
+  .stack-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:12px;
+  }
+  @media(max-width:560px){ .stack-grid{grid-template-columns:1fr;} }
+  .stack-item{
+    border:1px solid var(--line); border-radius:8px; padding:14px 16px;
+  }
+  .stack-item b{display:block; font-size:13px; margin-bottom:4px; color:var(--amber); font-family:var(--mono);}
+  .stack-item span{font-size:13px; color:var(--paper-dim);}
+
+  /* ---------- QR / TOAST ---------- */
+  .qr-code{
+    display:block; margin:28px auto 0;
+    border-radius:8px; border:1px solid var(--line);
+  }
+  .shortcut-toast{
+    position:fixed; left:50%; bottom:22px; transform:translate(-50%, 20px);
+    background:var(--ink-2); border:1px solid var(--line);
+    color:var(--paper-dim); font-family:var(--mono); font-size:12px;
+    padding:10px 18px; border-radius:999px;
+    opacity:0; transition:opacity .4s, transform .4s;
+    pointer-events:none; z-index:15;
+  }
+  .shortcut-toast b{color:var(--amber);}
+  .shortcut-toast.show{opacity:1; transform:translate(-50%, 0);}
+
+  /* ---------- CURSOR TRAIL ---------- */
+  .trail-canvas{
+    position:fixed; inset:0; z-index:0;
+    pointer-events:none;
+  }
+  @media(max-width:900px){ .trail-canvas{display:none;} }
+
   @media (prefers-reduced-motion: reduce){
     .term-line, .caret{animation:none !important; opacity:1;}
   }
@@ -430,6 +486,8 @@
 </head>
 <body>
 
+<canvas id="trailCanvas" class="trail-canvas"></canvas>
+
 <div class="side-rail left"><div class="rail-line"></div><span class="rail-label">SOODAL GAMES</span></div>
 <div class="side-rail right"><div class="rail-line"></div><span class="rail-label">CHOI HANMIN</span></div>
 
@@ -444,23 +502,28 @@
         <div class="term-dot" style="background:#28c840"></div>
         <span>hanmin@soodal — zsh</span>
       </div>
-      <div class="term-body">
-        <div class="term-line" style="animation-delay:.1s"><span class="prompt">~$</span> <span class="cmd">whoami</span></div>
-        <div class="out" style="animation:appear .4s forwards; animation-delay:.3s; opacity:0">
+      <div class="term-body" id="termBody">
+        <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="whoami"></span></div>
+        <div class="out" id="out1">
           <b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>
           인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 · 7개 게임 출시<br>
           동시에 <span class="teal">15+ 대내외 활동</span>, 20+ 조직과 협업 중
         </div>
-        <div class="term-line" style="animation-delay:.6s"><span class="prompt">~$</span> <span class="cmd">git log --oneline -1</span></div>
-        <div class="out" style="animation:appear .4s forwards; animation-delay:.8s; opacity:0">
-          <span class="amber">a1c9f2e</span> feat: LiNK English Buddy 활동 진행 중 — 탈북 청년 대상 1:1 영어 코칭<span class="caret"></span>
+        <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="git log --oneline -1"></span></div>
+        <div class="out" id="out2">
+          <span class="amber">a1c9f2e</span> feat: LiNK English Buddy 활동 진행 중 — 탈북 청년 대상 1:1 영어 코칭
         </div>
+        <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="curl wttr.in/seongnam"></span></div>
+        <div class="out" id="out3">불러오는 중<span class="caret"></span></div>
       </div>
     </div>
 
     <div class="name-row">
       <h1 class="name">최한민 (Choi Hanmin)</h1>
-      <img class="mascot" id="mascotImg" src="images/otter.jpg" alt="마스코트 수달" loading="lazy">
+      <div class="mascot-wrap">
+        <img class="mascot" id="mascotImg" src="images/otter.jpg" alt="마스코트 수달" loading="lazy">
+        <span class="mascot-bubble" id="mascotBubble"></span>
+      </div>
     </div>
     <div class="role">CES STUDENT @ HUFS · GAME DEVELOPER · SERIAL COLLABORATOR</div>
     <p class="lede">
@@ -468,7 +531,7 @@
       밤에는 게임을 만들며, 새벽에는 버그를 고칩니다. 참 재밌는 인생 같습니다.
     </p>
 
-    <blockquote class="motto">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</blockquote>
+    <blockquote class="motto" id="mottoText">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</blockquote>
 
     <div class="stats">
       <div class="stat"><b>7</b><span>출시 게임 (Play / Steam)</span></div>
@@ -496,7 +559,7 @@
         </g>
         <text x="24" y="128" font-family="var(--mono)" font-size="13" fill="var(--rose)">E</text>
         <text x="190" y="128" font-family="var(--mono)" font-size="13" fill="var(--paper-dim)">F</text>
-        <line x1="110" y1="110" x2="51" y2="76" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="110" y1="110" x2="76" y2="51" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/>
         <circle cx="110" cy="110" r="8" fill="var(--amber)"/>
       </svg>
       <p class="gauge-caption">밤새 게임 만들고, 새벽에 버그 고치고, 아침엔 수업 듣고 나니… 바늘이 E 근처에 있습니다. 그래도 재밌어서 계속하는 중.
@@ -657,6 +720,19 @@
     </div>
   </section>
 
+  <!-- MADE WITH -->
+  <section id="madewith" class="reveal slide-right">
+    <div class="sec-head"><span class="tag">STACK</span><h2>이 사이트는 이렇게 만들었다</h2></div>
+    <div class="stack-grid">
+      <div class="stack-item"><b>Frontend</b><span>순수 HTML / CSS / JS, 단일 파일</span></div>
+      <div class="stack-item"><b>서체</b><span>Pretendard + Noto Serif KR</span></div>
+      <div class="stack-item"><b>호스팅</b><span>GitHub Pages</span></div>
+      <div class="stack-item"><b>도메인</b><span>Porkbun · DNS ALIAS/CNAME</span></div>
+      <div class="stack-item"><b>제작 방식</b><span>AI와 대화하며 만드는 바이브 코딩</span></div>
+      <div class="stack-item"><b>날씨/커밋</b><span>Open-Meteo · GitHub Public API 실시간 연동</span></div>
+    </div>
+  </section>
+
   <footer class="reveal">
     <div class="footer-title">계속 이야기하고 싶다면</div>
     <div class="links">
@@ -664,6 +740,7 @@
       <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
     </div>
     <a class="request-link" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener">최한민에게 요청하기 →</a>
+    <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy">
     <div class="copyright">
       © 2026 Choi Hanmin · Soodal Games
       <span id="visitCount" class="visit-count"></span>
@@ -671,8 +748,69 @@
   </footer>
 </div>
 
+<div id="shortcutToast" class="shortcut-toast">⌨️ <b>g</b> 게임 · <b>p</b> 갤러리 · <b>Home</b> 맨 위로</div>
+
 
 <script>
+  /* ---- TERMINAL TYPEWRITER + WEATHER ---- */
+  function typeText(el, text, speed){
+    return new Promise(resolve => {
+      let i = 0;
+      el.textContent = '';
+      const iv = setInterval(() => {
+        el.textContent += text[i];
+        i++;
+        if (i >= text.length) { clearInterval(iv); resolve(); }
+      }, speed);
+    });
+  }
+
+  function getWeatherHTML(){
+    return fetch('https://api.open-meteo.com/v1/forecast?latitude=37.3826&longitude=127.1189&current_weather=true')
+      .then(r => r.json())
+      .then(data => {
+        const cw = data.current_weather;
+        const codeMap = {0:'☀️ 맑음',1:'🌤️ 대체로 맑음',2:'⛅ 구름 조금',3:'☁️ 흐림',45:'🌫️ 안개',48:'🌫️ 안개',
+          51:'🌦️ 이슬비',53:'🌦️ 이슬비',55:'🌧️ 이슬비',61:'🌧️ 비',63:'🌧️ 비',65:'🌧️ 강한 비',
+          71:'🌨️ 눈',73:'🌨️ 눈',75:'❄️ 강한 눈',80:'🌦️ 소나기',81:'🌦️ 소나기',82:'⛈️ 강한 소나기',95:'⛈️ 뇌우'};
+        const desc = codeMap[cw.weathercode] || '날씨 정보';
+        return `<span class="teal">성남시</span> ${desc} · ${Math.round(cw.temperature)}°C`;
+      })
+      .catch(() => '날씨 정보를 불러올 수 없습니다.');
+  }
+
+  async function runTerminal(){
+    const lines = document.querySelectorAll('.term-line');
+    const outs = document.querySelectorAll('.out');
+    const weatherPromise = getWeatherHTML();
+
+    for (let i = 0; i < lines.length; i++) {
+      lines[i].classList.add('appear');
+      const cmdEl = lines[i].querySelector('.cmd');
+      await typeText(cmdEl, cmdEl.dataset.cmd, 35);
+      await new Promise(r => setTimeout(r, 150));
+      if (i === 2) {
+        const weatherHTML = await weatherPromise;
+        outs[i].innerHTML = weatherHTML;
+      }
+      outs[i].classList.add('appear');
+      await new Promise(r => setTimeout(r, 300));
+    }
+  }
+  runTerminal();
+
+  /* ---- QUOTE ROTATION ---- */
+  const quotes = [
+    '안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.',
+    '완벽한 코드보다 배포된 코드가 낫다.',
+    '버그는 실패가 아니라 다음 커밋의 재료다.',
+    '속도보다 방향, 방향보다 일단 시작.',
+    '실패한 프로젝트도 포트폴리오가 된다.'
+  ];
+  const mottoEl = document.getElementById('mottoText');
+  if (mottoEl) mottoEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+  /* ---- SCROLL REVEAL ---- */
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -706,10 +844,20 @@
 
   /* ---- OTTER EASTER EGG ---- */
   const mascot = document.getElementById('mascotImg');
+  const bubble = document.getElementById('mascotBubble');
+  const phrases = ['안녕!', '다시 왔구나', '보고 싶었어', '오늘도 방문 감사~', '심심하면 게임이나 하고 가', '체력바 좀 보고 가'];
+  let bubbleTimer = null;
   mascot.addEventListener('click', () => {
     mascot.classList.remove('boop');
     void mascot.offsetWidth;
     mascot.classList.add('boop');
+
+    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+    bubble.textContent = phrase;
+    bubble.classList.add('show');
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 1800);
+
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
@@ -760,6 +908,48 @@
     .catch(() => {
       document.getElementById('commitList').innerHTML = '<p class="commit-loading">최근 커밋을 불러올 수 없습니다.</p>';
     });
+
+  /* ---- CURSOR TRAIL ---- */
+  const trailCanvas = document.getElementById('trailCanvas');
+  if (trailCanvas && window.matchMedia('(min-width: 901px)').matches) {
+    const ctx2d = trailCanvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas(){
+      trailCanvas.width = window.innerWidth;
+      trailCanvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', (e) => {
+      particles.push({ x: e.clientX, y: e.clientY, life: 1 });
+      if (particles.length > 40) particles.shift();
+    });
+    function renderTrail(){
+      ctx2d.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+      particles.forEach(p => {
+        ctx2d.beginPath();
+        ctx2d.arc(p.x, p.y, 2.5 * p.life, 0, Math.PI * 2);
+        ctx2d.fillStyle = `rgba(198,161,91,${p.life * 0.5})`;
+        ctx2d.fill();
+        p.life -= 0.03;
+      });
+      particles = particles.filter(p => p.life > 0);
+      requestAnimationFrame(renderTrail);
+    }
+    renderTrail();
+  }
+
+  /* ---- KEYBOARD SHORTCUTS ---- */
+  const toast = document.getElementById('shortcutToast');
+  setTimeout(() => { toast.classList.add('show'); }, 1200);
+  setTimeout(() => { toast.classList.remove('show'); }, 5500);
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+    if (e.key === 'g') document.getElementById('games').scrollIntoView({ behavior: 'smooth' });
+    if (e.key === 'p') document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    if (e.key === 'Home') window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 </script>
 </body>
 </html>
