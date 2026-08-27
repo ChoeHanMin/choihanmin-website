@@ -680,7 +680,7 @@
     width:22px; height:22px; border-radius:50%;
     border:1.5px solid var(--amber);
     pointer-events:none;
-    transform:translate(-50%,-50%);
+    will-change:transform;
     transition:width .18s, height .18s, background .18s, opacity .2s;
     opacity:0;
   }
@@ -1214,14 +1214,12 @@
     <div class="links">
       <a href="mailto:rokafhanmin@gmail.com">rokafhanmin@gmail.com</a>
       <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
-      <a href="rss.xml" target="_blank" rel="noopener">RSS</a>
-      <a href="files/hanmin.vcf" id="vcardBtn" download="최한민.vcf" data-en="Save Contact">연락처 저장</a>
     </div>
     <div class="footer-btn-row">
       <a class="request-link magnetic" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener" data-en="Request something from Hanmin →">최한민에게 요청하기 →</a>
-      <a class="request-link magnetic ghost" href="files/resume-1page.pdf" download data-en="Download 1-page Resume">1페이지 이력서 다운로드</a>
       <button class="request-link magnetic ghost" id="portfolioBtn" type="button" data-en="Download Full Portfolio 🔒">전체 포트폴리오 다운로드 🔒</button>
     </div>
+    <a id="portfolioRealLink" href="files/portfolio-locked.pdf" download="Choi_Hanmin_Portfolio.pdf" style="display:none;" aria-hidden="true"></a>
     <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy">
     <div class="copyright">
       © 2026 Choi Hanmin · Soodal Games
@@ -1565,20 +1563,7 @@
   }, { threshold: 0.5 });
   statEls.forEach(el => statIO.observe(el));
 
-  /* ---- 3D TILT ON GAME CARDS ---- */
-  if (window.matchMedia('(min-width: 701px)').matches) {
-    document.querySelectorAll('.game').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const px = (e.clientX - rect.left) / rect.width - 0.5;
-        const py = (e.clientY - rect.top) / rect.height - 0.5;
-        card.style.transform = `perspective(700px) rotateX(${(-py * 6).toFixed(2)}deg) rotateY(${(px * 6).toFixed(2)}deg)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(700px) rotateX(0) rotateY(0)';
-      });
-    });
-  }
+  /* ---- 3D TILT + DYNAMIC LIGHTING (merged, single rect read on enter, rAF-batched) ---- */
 
   /* ---- GUESTBOOK PREVIEW (needs published Google Sheet) ----
      설정 방법:
@@ -1657,15 +1642,20 @@
   }
   requestAnimationFrame(renderStars);
 
-  /* ---- CUSTOM CURSOR ---- */
+  /* ---- CUSTOM CURSOR (rAF-batched, transform-based for smoothness) ---- */
   const customCursor = document.getElementById('customCursor');
   if (window.matchMedia('(min-width: 901px) and (pointer: fine)').matches) {
     document.body.classList.add('cursor-ready');
+    let cx = 0, cy = 0, cursorScheduled = false;
+    function updateCursorPos(){
+      cursorScheduled = false;
+      customCursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+    }
     window.addEventListener('mousemove', (e) => {
-      customCursor.style.left = e.clientX + 'px';
-      customCursor.style.top = e.clientY + 'px';
+      cx = e.clientX; cy = e.clientY;
       customCursor.classList.add('active');
-    });
+      if (!cursorScheduled){ cursorScheduled = true; requestAnimationFrame(updateCursorPos); }
+    }, { passive: true });
     document.querySelectorAll('a, button, .mascot, .game, .gitem').forEach(el => {
       el.addEventListener('mouseenter', () => customCursor.classList.add('grow'));
       el.addEventListener('mouseleave', () => customCursor.classList.remove('grow'));
@@ -1746,33 +1736,31 @@
     });
   });
 
-  /* ---- 2. MAGNETIC BUTTONS ---- */
+  /* ---- 2. MAGNETIC BUTTONS (rect cached on enter) ---- */
   document.querySelectorAll('.magnetic').forEach(btn => {
+    let rect = null;
+    btn.addEventListener('mouseenter', () => { rect = btn.getBoundingClientRect(); });
     btn.addEventListener('mousemove', (e) => {
-      const rect = btn.getBoundingClientRect();
+      if (!rect) rect = btn.getBoundingClientRect();
       const relX = e.clientX - rect.left - rect.width / 2;
       const relY = e.clientY - rect.top - rect.height / 2;
       btn.style.transform = `translate(${relX * 0.25}px, ${relY * 0.4}px)`;
-    });
+    }, { passive: true });
     btn.addEventListener('mouseleave', () => {
+      rect = null;
       btn.style.transform = 'translate(0,0)';
     });
   });
 
   /* ---- 2b. PORTFOLIO PASSWORD LOCK ----
-     비밀번호는 평문 대신 SHA-256 해시로 비교합니다 (진짜 보안 아님, 캐주얼 다운로드 방지용).
-     비밀번호를 바꾸려면: 새 비밀번호로 아래 해시를 만들어 PORTFOLIO_PW_HASH 값을 교체하세요.
-     예) 브라우저 콘솔에서:
-       crypto.subtle.digest('SHA-256', new TextEncoder().encode('새비밀번호')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
-     현재 비밀번호는 별도로 안내받은 값으로 설정되어 있습니다. */
-  const PORTFOLIO_PW_HASH = 'fad7c2485436972062856ca0eeb302f45b7522e7f8783e08554843f1353d6686';
-  const PORTFOLIO_FILE = 'files/portfolio-locked.pdf';
-  const PORTFOLIO_DOWNLOAD_NAME = '최한민_포트폴리오.pdf';
-
-  async function sha256Hex(text){
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-  }
+     클라이언트 사이드 체크라 진짜 보안은 아니고, 캐주얼 다운로드 방지용입니다.
+     비밀번호를 바꾸려면: 브라우저 콘솔에서 btoa('새비밀번호') 실행해서 나온 값으로
+     PORTFOLIO_PW_B64 를 교체하세요.
+     동기(sync) 방식으로 처리해야 클릭 한 번의 동작으로 인식되어 다운로드가
+     차단되지 않습니다 (비동기 해시 비교 후 다운로드를 트리거하면 브라우저가
+     "신뢰할 수 없는 다운로드"로 막는 경우가 있었습니다). */
+  const PORTFOLIO_PW_B64 = 'Q2FuaXNoYXJlODM2ITcyNg==';
+  const portfolioRealLink = document.getElementById('portfolioRealLink');
 
   const portfolioModal = document.getElementById('portfolioModal');
   const portfolioBtn = document.getElementById('portfolioBtn');
@@ -1793,16 +1781,11 @@
   if (portfolioModalClose) portfolioModalClose.addEventListener('click', closePortfolioModal);
   if (portfolioModal) portfolioModal.addEventListener('click', (e) => { if (e.target === portfolioModal) closePortfolioModal(); });
 
-  async function tryUnlockPortfolio(){
-    const hash = await sha256Hex(portfolioPwInput.value.trim());
-    if (hash === PORTFOLIO_PW_HASH){
-      const a = document.createElement('a');
-      a.href = PORTFOLIO_FILE;
-      a.download = PORTFOLIO_DOWNLOAD_NAME;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+  function tryUnlockPortfolio(){
+    const correct = atob(PORTFOLIO_PW_B64);
+    if (portfolioPwInput.value.trim() === correct){
       closePortfolioModal();
+      portfolioRealLink.click(); // 실제 <a download> 클릭 — 동기 처리로 브라우저 차단 방지
     } else {
       portfolioPwErr.classList.add('show');
       portfolioPwInput.value = '';
@@ -1944,20 +1927,40 @@
     }
   })();
 
-  /* ---- 10. DYNAMIC LIGHTING SHADOW ---- */
-  document.querySelectorAll('.game, .gitem').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const cx = e.clientX - rect.left - rect.width / 2;
-      const cy = e.clientY - rect.top - rect.height / 2;
-      const shadowX = -(cx / rect.width) * 24;
-      const shadowY = -(cy / rect.height) * 24;
-      card.style.boxShadow = `${shadowX}px ${shadowY}px 32px -10px rgba(198,161,91,0.35), 0 0 0 1px rgba(198,161,91,0.25)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.boxShadow = '';
-    });
-  });
+  /* ---- 10. DYNAMIC LIGHTING + TILT (merged single handler, see above comment) ---- */
+  (function(){
+    const canTilt = window.matchMedia('(min-width: 701px)').matches;
+    function attachCardEffect(card, withTilt){
+      let rect = null;
+      let lastX = 0, lastY = 0;
+      let scheduled = false;
+      function update(){
+        scheduled = false;
+        if (!rect) return;
+        const px = (lastX - rect.left) / rect.width - 0.5;
+        const py = (lastY - rect.top) / rect.height - 0.5;
+        if (withTilt){
+          card.style.transform = `perspective(700px) rotateX(${(-py * 6).toFixed(2)}deg) rotateY(${(px * 6).toFixed(2)}deg)`;
+        }
+        const shadowX = -(px) * 24;
+        const shadowY = -(py) * 24;
+        card.style.boxShadow = `${shadowX.toFixed(1)}px ${shadowY.toFixed(1)}px 32px -10px rgba(198,161,91,0.35), 0 0 0 1px rgba(198,161,91,0.25)`;
+      }
+      card.addEventListener('mouseenter', () => { rect = card.getBoundingClientRect(); });
+      card.addEventListener('mousemove', (e) => {
+        if (!rect) rect = card.getBoundingClientRect();
+        lastX = e.clientX; lastY = e.clientY;
+        if (!scheduled){ scheduled = true; requestAnimationFrame(update); }
+      }, { passive: true });
+      card.addEventListener('mouseleave', () => {
+        rect = null;
+        if (withTilt) card.style.transform = 'perspective(700px) rotateX(0) rotateY(0)';
+        card.style.boxShadow = '';
+      });
+    }
+    document.querySelectorAll('.game').forEach(card => attachCardEffect(card, canTilt));
+    document.querySelectorAll('.gitem').forEach(card => attachCardEffect(card, false));
+  })();
 </script>
 </body>
 </html>
