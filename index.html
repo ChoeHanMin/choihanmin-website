@@ -61,6 +61,26 @@
       radial-gradient(ellipse 500px 400px at 90% 100%, rgba(95,184,143,0.08), transparent 60%);
     pointer-events:none;
   }
+  .orb{
+    position:absolute; border-radius:50%;
+    filter:blur(60px);
+    pointer-events:none; z-index:0;
+    opacity:.5;
+  }
+  .orb1{ width:260px; height:260px; top:8%; left:6%; background:var(--amber); animation:orbFloat1 16s ease-in-out infinite; }
+  .orb2{ width:200px; height:200px; bottom:10%; right:8%; background:var(--teal); animation:orbFloat2 20s ease-in-out infinite; }
+  .orb3{ width:150px; height:150px; top:45%; right:20%; background:var(--rose); animation:orbFloat1 13s ease-in-out infinite reverse; opacity:.3; }
+  @keyframes orbFloat1{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(40px,30px) scale(1.15); }
+  }
+  @keyframes orbFloat2{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(-35px,-25px) scale(1.1); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .orb{ animation:none; }
+  }
   .term{
     background:var(--ink-2);
     border:1px solid var(--line);
@@ -110,8 +130,8 @@
     flex-wrap:wrap;
   }
   .mascot{
-    width:clamp(220px, 45vw, 460px);
-    height:clamp(220px, 45vw, 460px);
+    width:clamp(130px, 22vw, 220px);
+    height:clamp(130px, 22vw, 220px);
     border-radius:50%;
     object-fit:cover;
     border:2px solid var(--amber);
@@ -176,6 +196,17 @@
     color:var(--amber); font-weight:700;
   }
   .stat span{font-size:12px; color:var(--paper-dim);}
+  .live-visitors{
+    text-align:center; margin-top:14px;
+    font-family:var(--mono); font-size:11px; color:var(--paper-dim);
+    opacity:.7;
+  }
+  .live-visitors .dot{
+    display:inline-block; width:6px; height:6px; border-radius:50%;
+    background:var(--teal); margin-right:6px;
+    animation:pulseDot 1.6s ease-in-out infinite;
+  }
+  @keyframes pulseDot{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
 
   /* ---------- STAMINA GAUGE ---------- */
   .gauge-wrap{
@@ -236,6 +267,13 @@
     transition:opacity .2s;
   }
   .guestbook-link:hover{opacity:.85;}
+  .guestbook-preview{margin-top:24px; display:flex; flex-direction:column; gap:8px;}
+  .guestbook-empty{font-family:var(--mono); font-size:12px; color:var(--paper-dim); opacity:.7;}
+  .guestbook-entry{
+    border-left:2px solid var(--teal); padding-left:12px;
+    font-size:13px; color:var(--paper-dim);
+  }
+  .guestbook-entry b{color:var(--paper); font-weight:600;}
 
   /* ---------- SECTION HEADERS ---------- */
   section{padding:70px 0;}
@@ -257,9 +295,14 @@
     border-radius:10px;
     padding:20px 22px;
     background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
-    transition:border-color .2s, transform .2s;
+    transition:border-color .2s, box-shadow .3s, transform .1s;
+    transform-style:preserve-3d;
+    will-change:transform;
   }
-  .game:hover{border-color:rgba(227,165,72,0.4); transform:translateY(-2px);}
+  .game:hover{
+    border-color:rgba(198,161,91,0.5);
+    box-shadow:0 0 0 1px rgba(198,161,91,0.25), 0 16px 40px -12px rgba(198,161,91,0.25);
+  }
   .game-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;}
   .game-title{font-size:18px; font-weight:700;}
   .game-ver{font-family:var(--mono); font-size:12px; color:var(--teal);}
@@ -306,7 +349,9 @@
     overflow:hidden;
     border-radius:8px;
     background:var(--ink-2);
+    transition:box-shadow .3s;
   }
+  .gitem:hover{ box-shadow:0 0 0 1px rgba(198,161,91,0.4), 0 12px 30px -10px rgba(198,161,91,0.3); }
   .gitem.tall{grid-row: span 2;}
   .gitem img{
     width:100%; height:100%; object-fit:cover;
@@ -326,6 +371,14 @@
   .gitem:hover .gcap{opacity:1; transform:translateY(0);}
   @media (hover:none){
     .gitem .gcap{opacity:1; transform:translateY(0); background:linear-gradient(0deg, rgba(0,0,0,0.7), transparent 70%);}
+  }
+  .new-tag{
+    position:absolute; top:8px; left:8px;
+    background:var(--amber); color:var(--ink);
+    font-family:var(--mono); font-size:9px; font-weight:700;
+    letter-spacing:0.06em;
+    padding:3px 7px; border-radius:4px;
+    z-index:2;
   }
 
   /* ---------- COMMIT LOG (activities) ---------- */
@@ -404,6 +457,9 @@
   .stack-item b{display:block; font-size:13px; margin-bottom:4px; color:var(--amber); font-family:var(--mono);}
   .stack-item span{font-size:13px; color:var(--paper-dim);}
 
+  /* ---------- DIVIDER ---------- */
+  .divider{ margin:8px 0; opacity:.6; }
+
   /* ---------- QR / TOAST ---------- */
   .qr-code{
     display:block; margin:28px auto 0;
@@ -449,6 +505,23 @@
     pointer-events:none;
   }
   @media(max-width:900px){ .trail-canvas{display:none;} }
+
+  /* ---------- SCROLL PROGRESS ---------- */
+  .scroll-progress{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:linear-gradient(90deg, var(--amber), var(--rose));
+    z-index:300;
+    transition:width .1s linear;
+  }
+
+  /* ---------- FILM GRAIN ---------- */
+  .grain-overlay{
+    position:fixed; inset:0; z-index:1;
+    pointer-events:none;
+    opacity:.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
 
   @media (prefers-reduced-motion: reduce){
     .term-line, .caret{animation:none !important; opacity:1;}
@@ -510,6 +583,8 @@
 <body>
 
 <canvas id="trailCanvas" class="trail-canvas"></canvas>
+<div id="scrollProgress" class="scroll-progress"></div>
+<div class="grain-overlay"></div>
 
 <div class="side-rail left"><div class="rail-line"></div><span class="rail-label">SOODAL GAMES</span></div>
 <div class="side-rail right"><div class="rail-line"></div><span class="rail-label">CHOI HANMIN</span></div>
@@ -518,6 +593,9 @@
 
 <div class="wrap">
   <section class="hero">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
     <div class="term">
       <div class="term-bar">
         <div class="term-dot" style="background:#ff5f57"></div>
@@ -557,11 +635,17 @@
     <blockquote class="motto" id="mottoText">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</blockquote>
 
     <div class="stats">
-      <div class="stat"><b>7</b><span>출시 게임 (Play / Steam)</span></div>
-      <div class="stat"><b>15+</b><span>대내외 활동</span></div>
-      <div class="stat"><b>20+</b><span>협업 조직</span></div>
+      <div class="stat"><b data-target="7" data-suffix="">0</b><span>출시 게임 (Play / Steam)</span></div>
+      <div class="stat"><b data-target="15" data-suffix="+">0</b><span>대내외 활동</span></div>
+      <div class="stat"><b data-target="20" data-suffix="+">0</b><span>협업 조직</span></div>
     </div>
+    <div id="liveVisitors" class="live-visitors"></div>
   </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
 
   <!-- STAMINA GAUGE -->
   <section id="stamina" class="reveal slide-right">
@@ -588,9 +672,15 @@
       <p class="gauge-caption">밤새 게임 만들고, 새벽에 버그 고치고, 아침엔 수업 듣고 나니… 바늘이 E 근처에 있습니다. 그래도 재밌어서 계속하는 중.
         <span class="status-line">🔧 이번 주 작업 중: Stealth Ops 신규 스테이지 밸런싱</span>
         <span class="status-line">📚 이번 달 배운 것: 스크롤 리빌 애니메이션 (Intersection Observer)</span>
+        <span class="status-line">🔮 다음 업데이트 예고: Time Heist 24 신규 모드 스크린샷 공개 예정</span>
       </p>
     </div>
   </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
 
   <!-- INTERESTS -->
   <section id="interests" class="reveal slide-left">
@@ -603,13 +693,26 @@
     </div>
   </section>
 
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- GUESTBOOK -->
   <section id="guestbook" class="reveal slide-left">
     <div class="sec-head"><span class="tag">GUESTBOOK</span><h2>방명록</h2></div>
     <p class="sec-sub">$ echo "한마디 남기기" | mail -s "방명록"</p>
     <p class="guestbook-desc">이 사이트까지 와주셨다면, 짧게라도 한마디 남겨주세요. 이름 하나만 남기셔도 반갑습니다.</p>
     <a class="guestbook-link" href="https://forms.gle/JfN6Vd65476TEj6x8" target="_blank" rel="noopener">한마디 남기기 →</a>
+    <div id="guestbookPreview" class="guestbook-preview">
+      <p class="guestbook-empty">아직 방명록 미리보기 연동 전이에요. (설정하면 최근 답변이 여기 뜹니다)</p>
+    </div>
   </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
 
   <!-- GAMES -->
   <section id="games" class="reveal slide-left">
@@ -710,15 +813,20 @@
     </div>
   </section>
 
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- GALLERY -->
   <section id="gallery" class="reveal slide-right">
     <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2>일상 갤러리</h2></div>
     <p class="sec-sub">$ ls ~/photos --recent</p>
     <div class="gallery-grid">
-      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="gcap">LG CNS AI Genius 서포터즈 16기</span></div>
+      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="new-tag">NEW</span><span class="gcap">LG CNS AI Genius 서포터즈 16기</span></div>
       <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="외대 조교"><span class="gcap">외대 조교</span></div>
       <div class="gitem"><img src="images/web/photo04.jpg" loading="lazy" alt="AI 육성센터"><span class="gcap">용인 다우디지털스퀘어 AI 육성센터</span></div>
-      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="gcap">여름 계곡에서 돌탑 쌓기</span></div>
+      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="new-tag">NEW</span><span class="gcap">여름 계곡에서 돌탑 쌓기</span></div>
       <div class="gitem tall"><img src="images/web/photo12.jpg" loading="lazy" alt="농촌 봉사활동"><span class="gcap">가평 농촌 봉사활동 — 고추 수확</span></div>
       <div class="gitem"><img src="images/web/photo01.jpg" loading="lazy" alt="봉사활동"><span class="gcap">지역 봉사활동 현장</span></div>
       <div class="gitem"><img src="images/web/photo08.jpg" loading="lazy" alt="산림 봉사"><span class="gcap">숲 속 봉사활동</span></div>
@@ -734,6 +842,11 @@
     </div>
   </section>
 
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- RECENT COMMITS -->
   <section id="commits" class="reveal slide-left">
     <div class="sec-head"><span class="tag">LIVE</span><h2>최근 커밋</h2></div>
@@ -742,6 +855,11 @@
       <p class="commit-loading">불러오는 중...</p>
     </div>
   </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+  </svg></div>
 
   <!-- MADE WITH -->
   <section id="madewith" class="reveal slide-right">
@@ -831,7 +949,7 @@
   }
   runTerminal();
 
-  /* ---- QUOTE ROTATION ---- */
+  /* ---- QUOTE OF THE DAY (date-based, fixed per day) ---- */
   const quotes = [
     '안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.',
     '완벽한 코드보다 배포된 코드가 낫다.',
@@ -840,7 +958,10 @@
     '실패한 프로젝트도 포트폴리오가 된다.'
   ];
   const mottoEl = document.getElementById('mottoText');
-  if (mottoEl) mottoEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+  if (mottoEl) {
+    const dayIndex = Math.floor(Date.now() / 86400000) % quotes.length;
+    mottoEl.textContent = quotes[dayIndex];
+  }
 
   /* ---- SCROLL REVEAL ---- */
   const revealEls = document.querySelectorAll('.reveal');
@@ -1000,6 +1121,87 @@
   document.getElementById('lightboxClose').addEventListener('click', (e) => {
     e.stopPropagation();
     lightbox.classList.remove('show');
+  });
+
+  /* ---- SCROLL PROGRESS BAR ---- */
+  const scrollBar = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    scrollBar.style.width = scrolled + '%';
+  });
+
+  /* ---- COUNT-UP STATS ---- */
+  const statEls = document.querySelectorAll('.stat b[data-target]');
+  const statIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.suffix || '';
+      const duration = 900;
+      const start = performance.now();
+      function tick(now){
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(eased * target) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      statIO.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  statEls.forEach(el => statIO.observe(el));
+
+  /* ---- 3D TILT ON GAME CARDS ---- */
+  if (window.matchMedia('(min-width: 701px)').matches) {
+    document.querySelectorAll('.game').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(700px) rotateX(${(-py * 6).toFixed(2)}deg) rotateY(${(px * 6).toFixed(2)}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(700px) rotateX(0) rotateY(0)';
+      });
+    });
+  }
+
+  /* ---- GUESTBOOK PREVIEW (needs published Google Sheet) ----
+     설정 방법:
+     1) 구글폼 응답이 쌓이는 스프레드시트를 연다
+     2) 파일 > 공유 > 웹에 게시 (CSV 형식)
+     3) 생성된 시트 ID를 아래 GUESTBOOK_SHEET_ID에 넣는다
+     비워두면 아래 안내 문구만 표시됨 (가짜 데이터 표시 안 함) */
+  const GUESTBOOK_SHEET_ID = '';
+  if (GUESTBOOK_SHEET_ID) {
+    fetch(`https://opensheet.elk.sh/${GUESTBOOK_SHEET_ID}/1`)
+      .then(r => r.json())
+      .then(rows => {
+        const preview = document.getElementById('guestbookPreview');
+        const recent = rows.slice(-3).reverse();
+        if (!recent.length) return;
+        preview.innerHTML = recent.map(row => {
+          const vals = Object.values(row);
+          return `<div class="guestbook-entry"><b>${vals[1] || '익명'}</b> — ${vals[2] || ''}</div>`;
+        }).join('');
+      })
+      .catch(() => {});
+  }
+
+  /* ---- LIVE VISITOR COUNT (approximate, real technique via countapi.xyz) ---- */
+  const liveEl = document.getElementById('liveVisitors');
+  fetch('https://api.countapi.xyz/hit/choihanmin-com/online')
+    .then(r => r.json())
+    .then(data => {
+      liveEl.innerHTML = `<span class="dot"></span>대략 ${Math.max(1, data.value)}명이 최근 이 사이트를 보고 있어요`;
+    })
+    .catch(() => {});
+  window.addEventListener('beforeunload', () => {
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('https://api.countapi.xyz/update/choihanmin-com/online?amount=-1');
+    }
   });
 </script>
 </body>
