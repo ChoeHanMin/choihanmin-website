@@ -21,6 +21,16 @@
     --sans: 'Pretendard', -apple-system, sans-serif;
     --serif: 'Noto Serif KR', serif;
   }
+  html[data-theme="light"]{
+    --ink:#F5F2EA;
+    --ink-2:#EAE5D8;
+    --paper:#211D16;
+    --paper-dim:#6B6459;
+    --amber:#9C7A34;
+    --teal:#3E7A63;
+    --rose:#9C5C48;
+    --line: rgba(33,29,22,0.12);
+  }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
   body{
@@ -98,14 +108,22 @@
     flex-wrap:wrap;
   }
   .mascot{
-    width:clamp(96px, 20vw, 190px);
-    height:clamp(96px, 20vw, 190px);
+    width:clamp(144px, 30vw, 285px);
+    height:clamp(144px, 30vw, 285px);
     border-radius:50%;
     object-fit:cover;
     border:2px solid var(--amber);
     box-shadow:0 20px 50px -14px rgba(0,0,0,0.65);
     transform:rotate(-6deg);
     transition:transform .35s ease;
+    cursor:pointer;
+  }
+  .mascot.boop{ animation:mascotBoop .5s ease; }
+  @keyframes mascotBoop{
+    0%{transform:rotate(-6deg) scale(1);}
+    35%{transform:rotate(8deg) scale(1.18);}
+    60%{transform:rotate(-4deg) scale(.94);}
+    100%{transform:rotate(-6deg) scale(1);}
   }
   .name-row:hover .mascot{transform:rotate(4deg) scale(1.05);}
   .role{
@@ -224,6 +242,10 @@
   .game-title{font-size:18px; font-weight:700;}
   .game-ver{font-family:var(--mono); font-size:12px; color:var(--teal);}
   .game-desc{color:var(--paper-dim); font-size:14px; margin:8px 0 12px; max-width:600px;}
+  .game-behind{
+    font-family:var(--serif); font-style:italic; font-size:13px;
+    color:var(--amber); opacity:.85; margin:-4px 0 12px;
+  }
   .game.has-shot{display:flex; gap:18px; align-items:stretch;}
   .game-thumb{
     flex:0 0 130px; width:130px; height:130px;
@@ -335,6 +357,19 @@
   }
   footer .request-link:hover{opacity:.85;}
   footer .copyright{margin-top:36px; color:var(--paper-dim); font-size:11px; font-family:var(--mono); opacity:.6;}
+  footer .visit-count{display:block; margin-top:6px;}
+
+  /* ---------- COMMIT LIST ---------- */
+  .commit-list{display:flex; flex-direction:column; gap:10px;}
+  .commit-loading{color:var(--paper-dim); font-family:var(--mono); font-size:13px;}
+  .commit-row{
+    display:flex; gap:14px; align-items:baseline;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; font-size:13px;
+  }
+  .commit-row .c-hash{font-family:var(--mono); color:var(--amber); flex-shrink:0;}
+  .commit-row .c-msg{color:var(--paper); flex:1;}
+  .commit-row .c-repo{font-family:var(--mono); color:var(--paper-dim); font-size:11px; flex-shrink:0;}
 
   @media (prefers-reduced-motion: reduce){
     .term-line, .caret{animation:none !important; opacity:1;}
@@ -365,15 +400,28 @@
   .side-rail.right .rail-label{transform:rotate(180deg);}
   @media(min-width:1180px){ .side-rail{display:flex;} }
 
+  /* ---------- THEME TOGGLE ---------- */
+  .theme-toggle{
+    position:fixed; top:18px; right:18px; z-index:20;
+    width:40px; height:40px; border-radius:50%;
+    background:var(--ink-2); border:1px solid var(--line);
+    color:var(--paper); font-size:17px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .2s, background .3s;
+  }
+  .theme-toggle:hover{transform:scale(1.08);}
+
   /* ---------- SCROLL REVEAL ---------- */
   .reveal{
     opacity:0;
-    transform:translateY(28px);
-    transition:opacity .7s ease, transform .7s ease;
+    transform:translateY(50px) scale(.97);
+    transition:opacity .55s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1);
   }
+  .reveal.slide-left{ transform:translateX(-90px) scale(.97); }
+  .reveal.slide-right{ transform:translateX(90px) scale(.97); }
   .reveal.in-view{
     opacity:1;
-    transform:translateY(0);
+    transform:translateX(0) translateY(0) scale(1);
   }
   @media (prefers-reduced-motion: reduce){
     .reveal{opacity:1; transform:none; transition:none;}
@@ -384,6 +432,8 @@
 
 <div class="side-rail left"><div class="rail-line"></div><span class="rail-label">SOODAL GAMES</span></div>
 <div class="side-rail right"><div class="rail-line"></div><span class="rail-label">CHOI HANMIN</span></div>
+
+<button id="themeToggle" class="theme-toggle" aria-label="테마 전환">🌙</button>
 
 <div class="wrap">
   <section class="hero">
@@ -409,8 +459,8 @@
     </div>
 
     <div class="name-row">
-      <h1 class="name">최한민 — Choi Hanmin</h1>
-      <img class="mascot" src="images/otter.jpg" alt="마스코트 수달" loading="lazy">
+      <h1 class="name">최한민 (Choi Hanmin)</h1>
+      <img class="mascot" id="mascotImg" src="images/otter.jpg" alt="마스코트 수달" loading="lazy">
     </div>
     <div class="role">CES STUDENT @ HUFS · GAME DEVELOPER · SERIAL COLLABORATOR</div>
     <p class="lede">
@@ -428,7 +478,7 @@
   </section>
 
   <!-- STAMINA GAUGE -->
-  <section id="stamina" class="reveal">
+  <section id="stamina" class="reveal slide-right">
     <div class="sec-head"><span class="tag">STATUS</span><h2>최한민의 체력바</h2></div>
     <p class="sec-sub">현재 상태: 방전 직전 · 재충전 필요</p>
     <div class="gauge-wrap">
@@ -446,9 +496,7 @@
         </g>
         <text x="24" y="128" font-family="var(--mono)" font-size="13" fill="var(--rose)">E</text>
         <text x="190" y="128" font-family="var(--mono)" font-size="13" fill="var(--paper-dim)">F</text>
-        <g transform="rotate(-68 110 110)">
-          <line x1="110" y1="110" x2="110" y2="38" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/>
-        </g>
+        <line x1="110" y1="110" x2="51" y2="76" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/>
         <circle cx="110" cy="110" r="8" fill="var(--amber)"/>
       </svg>
       <p class="gauge-caption">밤새 게임 만들고, 새벽에 버그 고치고, 아침엔 수업 듣고 나니… 바늘이 E 근처에 있습니다. 그래도 재밌어서 계속하는 중.
@@ -459,7 +507,7 @@
   </section>
 
   <!-- INTERESTS -->
-  <section id="interests" class="reveal">
+  <section id="interests" class="reveal slide-left">
     <div class="sec-head"><span class="tag">OFFLINE</span><h2>좋아하는 것들</h2></div>
     <div class="interests-grid">
       <div class="interest"><span class="ic">🎯</span><div><b>FPS 게임</b><span>Overwatch, Rainbow Six Siege로 밤새는 중</span></div></div>
@@ -470,7 +518,7 @@
   </section>
 
   <!-- GUESTBOOK -->
-  <section id="guestbook" class="reveal">
+  <section id="guestbook" class="reveal slide-left">
     <div class="sec-head"><span class="tag">GUESTBOOK</span><h2>방명록</h2></div>
     <p class="sec-sub">$ echo "한마디 남기기" | mail -s "방명록"</p>
     <p class="guestbook-desc">이 사이트까지 와주셨다면, 짧게라도 한마디 남겨주세요. 이름 하나만 남기셔도 반갑습니다.</p>
@@ -478,7 +526,7 @@
   </section>
 
   <!-- GAMES -->
-  <section id="games" class="reveal">
+  <section id="games" class="reveal slide-left">
     <div class="sec-head"><span class="tag">RELEASES</span><h2>출시한 게임들</h2></div>
     <p class="sec-sub">Soodal Games (Choi Hanmin) · 단일 HTML/CSS/JS PWA → TWA 빌드 파이프라인</p>
     <div class="games">
@@ -490,6 +538,7 @@
             <div><span class="game-title">미니법정 (Mini Court)</span> <span class="game-ver">v2.x — bilingual</span></div>
           </div>
           <p class="game-desc">55개 사건, 한/영 지원, 항소심 모드와 데일리 챌린지, 경력 XP 시스템까지 갖춘 법정 시뮬레이션. Electron으로 패키징해 Steam에도 올렸습니다.</p>
+          <p class="game-behind">비하인드: 55번째 사건 쓰다가 판사 이름 짓는 데 제일 오래 걸렸음.</p>
           <div class="badges">
             <span class="badge play">Google Play</span>
             <span class="badge steam">Steam · App ID 5113110</span>
@@ -508,6 +557,7 @@
             <div><span class="game-title">Stealth Ops</span> <span class="game-ver">v4.3.0.0</span></div>
           </div>
           <p class="game-desc">9종 무기, 스테이지별 6개 미니게임, 듀얼 스테이지 맵 구조의 잠입 액션. Electron/Steam 빌드로도 제공.</p>
+          <p class="game-behind">비하인드: 무기 밸런싱한다고 새벽 4시까지 잡혀있었음.</p>
           <div class="badges"><span class="badge play">Google Play</span><span class="badge steam">Steam</span></div>
           <div class="game-links">
             <a href="https://play.google.com/store/apps/details?id=com.choehanmin.stealthops" target="_blank" rel="noopener">Google Play →</a>
@@ -522,6 +572,7 @@
             <div><span class="game-title">Time Heist 24</span> <span class="game-ver">GitHub: time-heist</span></div>
           </div>
           <p class="game-desc">시간이 곧 체력이자 행동력이자 점수가 되는 턴제 전략 게임.</p>
+          <p class="game-behind">비하인드: 턴제 규칙 짜다가 정작 내 턴을 다 써버림.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
           <div class="game-links">
             <a href="https://play.google.com/store/apps/details?id=com.choehanmin.timeheist24" target="_blank" rel="noopener">Google Play →</a>
@@ -535,6 +586,7 @@
         <div class="game-body">
           <div class="game-top"><div><span class="game-title">자리 사냥 (Seat Hunter)</span></div></div>
           <p class="game-desc">지하철 승객을 관찰해 곧 내릴 사람을 맞히는 관찰력 캐주얼 게임.</p>
+          <p class="game-behind">비하인드: 관찰력 테스트하다가 정작 내가 내릴 역을 놓침.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
         </div>
       </div>
@@ -544,6 +596,7 @@
         <div class="game-body">
           <div class="game-top"><div><span class="game-title">Stress Smash</span></div></div>
           <p class="game-desc">화면을 두드려 스트레스를 날리는 타격감 중심 캐주얼 게임.</p>
+          <p class="game-behind">비하인드: 테스트하다가 진짜로 스트레스가 풀렸음.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
         </div>
       </div>
@@ -553,6 +606,7 @@
         <div class="game-body">
           <div class="game-top"><div><span class="game-title">Color Debt</span></div></div>
           <p class="game-desc">같은 색 얼굴을 합치고 터뜨려 빚을 늘리지 않는 캐주얼 퍼즐 게임.</p>
+          <p class="game-behind">비하인드: 빚 갚는 게임 만들다가 내 통장 잔고가 떠올랐음.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
         </div>
       </div>
@@ -562,6 +616,7 @@
         <div class="game-body">
           <div class="game-top"><div><span class="game-title">Maze Escape</span></div></div>
           <p class="game-desc">열쇠를 모아 미로를 탈출하는 캐주얼 게임, 초기작 중 하나.</p>
+          <p class="game-behind">비하인드: 미로 디자인하다가 정작 나가는 길을 못 찾았음.</p>
           <div class="badges"><span class="badge play">Google Play</span></div>
         </div>
       </div>
@@ -570,7 +625,7 @@
   </section>
 
   <!-- GALLERY -->
-  <section id="gallery" class="reveal">
+  <section id="gallery" class="reveal slide-right">
     <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2>일상 갤러리</h2></div>
     <p class="sec-sub">$ ls ~/photos --recent</p>
     <div class="gallery-grid">
@@ -593,6 +648,15 @@
     </div>
   </section>
 
+  <!-- RECENT COMMITS -->
+  <section id="commits" class="reveal slide-left">
+    <div class="sec-head"><span class="tag">LIVE</span><h2>최근 커밋</h2></div>
+    <p class="sec-sub">$ git log --author=ChoeHanMin -5</p>
+    <div id="commitList" class="commit-list">
+      <p class="commit-loading">불러오는 중...</p>
+    </div>
+  </section>
+
   <footer class="reveal">
     <div class="footer-title">계속 이야기하고 싶다면</div>
     <div class="links">
@@ -600,7 +664,10 @@
       <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
     </div>
     <a class="request-link" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener">최한민에게 요청하기 →</a>
-    <div class="copyright">© 2026 Choi Hanmin · Soodal Games</div>
+    <div class="copyright">
+      © 2026 Choi Hanmin · Soodal Games
+      <span id="visitCount" class="visit-count"></span>
+    </div>
   </footer>
 </div>
 
@@ -616,6 +683,83 @@
     });
   }, { threshold: 0.12 });
   revealEls.forEach(el => io.observe(el));
+
+  /* ---- THEME TOGGLE ---- */
+  const themeBtn = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    themeBtn.textContent = '☀️';
+  }
+  themeBtn.addEventListener('click', () => {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'dark');
+      themeBtn.textContent = '🌙';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+      themeBtn.textContent = '☀️';
+    }
+  });
+
+  /* ---- OTTER EASTER EGG ---- */
+  const mascot = document.getElementById('mascotImg');
+  mascot.addEventListener('click', () => {
+    mascot.classList.remove('boop');
+    void mascot.offsetWidth;
+    mascot.classList.add('boop');
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    } catch (e) {}
+  });
+
+  /* ---- VISITOR COUNTER ---- */
+  fetch('https://api.countapi.xyz/hit/choihanmin-com/visits')
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('visitCount').textContent = `누적 방문 ${data.value.toLocaleString()}회`;
+    })
+    .catch(() => {});
+
+  /* ---- RECENT COMMITS ---- */
+  fetch('https://api.github.com/users/ChoeHanMin/events/public')
+    .then(r => r.json())
+    .then(events => {
+      const pushes = events.filter(e => e.type === 'PushEvent').slice(0, 5);
+      const list = document.getElementById('commitList');
+      if (!pushes.length) {
+        list.innerHTML = '<p class="commit-loading">최근 커밋을 불러올 수 없습니다.</p>';
+        return;
+      }
+      list.innerHTML = '';
+      pushes.forEach(ev => {
+        const commit = ev.payload.commits && ev.payload.commits[0];
+        if (!commit) return;
+        const row = document.createElement('div');
+        row.className = 'commit-row';
+        row.innerHTML = `
+          <span class="c-hash">${commit.sha.slice(0,7)}</span>
+          <span class="c-msg">${commit.message.split('\n')[0]}</span>
+          <span class="c-repo">${ev.repo.name.split('/')[1]}</span>
+        `;
+        list.appendChild(row);
+      });
+    })
+    .catch(() => {
+      document.getElementById('commitList').innerHTML = '<p class="commit-loading">최근 커밋을 불러올 수 없습니다.</p>';
+    });
 </script>
 </body>
 </html>
