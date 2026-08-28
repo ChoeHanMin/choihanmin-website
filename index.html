@@ -426,7 +426,7 @@
     display:flex; align-items:center; gap:10px;
     box-shadow:var(--shadow-lift);
   }
-  .achievement-toast.show{ opacity:1; transform:translate(-50%, 0); }
+  .achievement-toast.show{ opacity:1; transform:translate(-50%, 0); pointer-events:auto; cursor:pointer; }
   .achievement-toast .ach-icon{ font-size:20px; }
 
   /* ---------- GUESTBOOK LIVE TOAST ---------- */
@@ -442,7 +442,7 @@
     max-width:220px;
     box-shadow:var(--shadow-lift);
   }
-  .guestbook-toast.show{ opacity:1; transform:translateX(0); }
+  .guestbook-toast.show{ opacity:1; transform:translateX(0); pointer-events:auto; cursor:pointer; }
 
   /* ---------- REFERRER GREETING ---------- */
   .referrer-greeting{
@@ -974,10 +974,24 @@
   }
 
   /* ---------- NAME GLOW ---------- */
-  h1.name{ transition:text-shadow .3s; }
+  h1.name{ transition:text-shadow .3s; position:relative; }
   h1.name:hover{
     text-shadow:0 0 14px rgba(198,161,91,0.55), 0 0 32px rgba(198,161,91,0.3);
   }
+  h1.name::after{
+    content:''; position:absolute; left:2px; bottom:-8px;
+    height:3px; width:0%; max-width:calc(100% - 4px);
+    background:linear-gradient(90deg, var(--amber), var(--teal));
+    border-radius:2px;
+    animation:nameUnderline 1s var(--ease) both;
+    animation-delay:.6s;
+  }
+  @keyframes nameUnderline{ to{ width:calc(100% - 4px); } }
+  @media (prefers-reduced-motion: reduce){ h1.name::after{ animation:none; width:calc(100% - 4px); } }
+
+  /* ---------- IMAGE FADE-IN ON LOAD ---------- */
+  .gitem img, .game-thumb img{ opacity:0; transition:opacity .5s var(--ease), transform .4s ease; }
+  .gitem img.loaded, .game-thumb img.loaded{ opacity:1; }
 
   /* ---------- NAV DOTS ---------- */
   .nav-dots{
@@ -1607,6 +1621,21 @@
   if (mottoEl) {
     mottoEl.textContent = quotes[0];
   }
+
+  /* ---- DISMISSIBLE TOASTS (click to close early) ---- */
+  document.querySelectorAll('.achievement-toast, .guestbook-toast').forEach(toast => {
+    toast.addEventListener('click', () => toast.classList.remove('show'));
+  });
+
+  /* ---- IMAGE FADE-IN ON LOAD ---- */
+  document.querySelectorAll('.gitem img, .game-thumb img').forEach(img => {
+    if (img.complete && img.naturalWidth > 0) {
+      img.classList.add('loaded');
+    } else {
+      img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+      img.addEventListener('error', () => img.classList.add('loaded'), { once: true });
+    }
+  });
 
   /* ---- SCROLL REVEAL ---- */
   const revealEls = document.querySelectorAll('.reveal');
