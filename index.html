@@ -314,6 +314,13 @@
     display:block; font-family:var(--mono); font-size:clamp(24px,5vw,34px);
     color:var(--amber); font-weight:700; letter-spacing:-0.02em;
   }
+  .stat b.stat-pulse{ animation:statGlow .9s var(--ease); }
+  @keyframes statGlow{
+    0%{ text-shadow:0 0 0 rgba(205,169,104,0); }
+    35%{ text-shadow:0 0 22px rgba(205,169,104,0.75), 0 0 46px rgba(205,169,104,0.35); }
+    100%{ text-shadow:0 0 0 rgba(205,169,104,0); }
+  }
+  @media (prefers-reduced-motion: reduce){ .stat b.stat-pulse{ animation:none; } }
   .stat span{font-size:12px; color:var(--paper-dim); letter-spacing:0.01em;}
   .live-visitors{
     text-align:center; margin-top:14px;
@@ -475,6 +482,7 @@
   .sec-head .tag::before{
     content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
     width:9px; height:1px; background:var(--amber);
+    box-shadow:0 0 8px 1px rgba(205,169,104,0.6);
   }
   .sec-head h2{font-family:var(--serif); font-size:clamp(24px,3.4vw,30px); font-weight:700; letter-spacing:-0.01em;}
   .sec-sub{color:var(--paper-dim); font-size:14px; margin:-22px 0 36px; font-family:var(--mono); opacity:.85;}
@@ -784,6 +792,56 @@
     .shortcut-panel button{ padding:8px 12px; font-size:9px; flex-direction:row; gap:5px; }
     .shortcut-panel button b{ font-size:11px; }
   }
+
+  /* ---------- SPOTLIGHT HOVER GLOW ---------- */
+  .game, .gitem, .interest, .stack-item, .cred{ position:relative; isolation:isolate; }
+  .game::before, .interest::before, .stack-item::before, .cred::before{
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    background:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%), rgba(205,169,104,0.16), transparent 70%);
+    opacity:0; transition:opacity .4s var(--ease);
+    pointer-events:none; z-index:-1;
+  }
+  .gitem::after{
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    background:radial-gradient(circle 180px at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.16), transparent 70%);
+    opacity:0; transition:opacity .4s var(--ease);
+    pointer-events:none; mix-blend-mode:overlay;
+  }
+  .game.spotlit::before, .interest.spotlit::before, .stack-item.spotlit::before, .cred.spotlit::before,
+  .gitem.spotlit::after{ opacity:1; }
+  @media(hover:none){
+    .game::before, .interest::before, .stack-item::before, .cred::before, .gitem::after{ display:none; }
+  }
+
+  /* ---------- BUTTON SHIMMER SWEEP ---------- */
+  .guestbook-link, footer .request-link:not(.ghost){
+    position:relative; overflow:hidden;
+  }
+  .guestbook-link::after, footer .request-link:not(.ghost)::after{
+    content:''; position:absolute; top:0; bottom:0; left:-60%; width:40%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+    transform:skewX(-20deg);
+    transition:left .65s var(--ease);
+  }
+  .guestbook-link:hover::after, footer .request-link:not(.ghost):hover::after{ left:130%; }
+  @media (prefers-reduced-motion: reduce){
+    .guestbook-link::after, footer .request-link:not(.ghost)::after{ display:none; }
+  }
+
+  /* ---------- TERMINAL AMBIENT GLOW BORDER ---------- */
+  .term{ position:relative; }
+  .term::before{
+    content:''; position:absolute; inset:-1px; border-radius:inherit; z-index:-1;
+    padding:1px;
+    background:conic-gradient(from var(--rot,0deg), transparent 0%, rgba(205,169,104,0.5) 12%, transparent 24%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:.7;
+    animation:termRot 7s linear infinite;
+  }
+  @keyframes termRot{ to{ --rot:360deg; } }
+  @property --rot{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+  @media (prefers-reduced-motion: reduce){ .term::before{ animation:none; display:none; } }
 
   /* ---------- LIGHTBOX ---------- */
   .lightbox{
@@ -1749,7 +1807,8 @@
         const p = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - p, 3);
         el.textContent = Math.round(eased * target) + suffix;
-        if (p < 1) requestAnimationFrame(tick);
+        if (p < 1) { requestAnimationFrame(tick); }
+        else { el.classList.add('stat-pulse'); setTimeout(() => el.classList.remove('stat-pulse'), 900); }
       }
       requestAnimationFrame(tick);
       statIO.unobserve(el);
@@ -2165,8 +2224,10 @@
         const shadowX = -(px) * 24;
         const shadowY = -(py) * 24;
         card.style.boxShadow = `${shadowX.toFixed(1)}px ${shadowY.toFixed(1)}px 32px -10px rgba(198,161,91,0.35), 0 0 0 1px rgba(198,161,91,0.25)`;
+        card.style.setProperty('--mx', ((px + 0.5) * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', ((py + 0.5) * 100).toFixed(1) + '%');
       }
-      card.addEventListener('mouseenter', () => { rect = card.getBoundingClientRect(); });
+      card.addEventListener('mouseenter', () => { rect = card.getBoundingClientRect(); card.classList.add('spotlit'); });
       card.addEventListener('mousemove', (e) => {
         if (!rect) rect = card.getBoundingClientRect();
         lastX = e.clientX; lastY = e.clientY;
@@ -2176,10 +2237,12 @@
         rect = null;
         if (withTilt) card.style.transform = 'perspective(700px) rotateX(0) rotateY(0)';
         card.style.boxShadow = '';
+        card.classList.remove('spotlit');
       });
     }
     document.querySelectorAll('.game').forEach(card => attachCardEffect(card, canTilt));
     document.querySelectorAll('.gitem').forEach(card => attachCardEffect(card, false));
+    document.querySelectorAll('.interest, .stack-item, .cred').forEach(card => attachCardEffect(card, false));
   })();
 </script>
 </body>
