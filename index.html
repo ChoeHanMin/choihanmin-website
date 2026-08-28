@@ -137,6 +137,24 @@
   .orb3{ width:150px; height:150px; top:45%; right:20%; background:var(--rose); animation:orbFloat1 13s ease-in-out infinite reverse; opacity:.3; }
   .orb{ will-change:transform; }
 
+  /* ---------- HERO WATERMARK ---------- */
+  .hero-watermark{
+    position:absolute; top:52%; left:50%;
+    transform:translate(-50%,-50%);
+    font-family:var(--serif); font-weight:700;
+    font-size:clamp(90px, 20vw, 260px);
+    letter-spacing:-0.02em;
+    color:transparent;
+    -webkit-text-stroke:1px var(--line-strong);
+    background:linear-gradient(180deg, rgba(205,169,104,0.07), transparent 70%);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+    white-space:nowrap;
+    pointer-events:none; z-index:0;
+    user-select:none;
+  }
+  @media(max-width:700px){ .hero-watermark{ display:none; } }
+
   /* ---------- AURORA (dark mode only) ---------- */
   .aurora{
     position:fixed; top:0; left:0; right:0; height:280px;
@@ -286,8 +304,15 @@
     color:var(--amber);
     letter-spacing:0.08em;
     margin-bottom:24px;
+    min-height:1.4em;
     animation:heroUp .8s var(--ease) both; animation-delay:.22s;
   }
+  .role-caret{
+    display:inline-block; width:2px; height:13px;
+    background:var(--amber); vertical-align:-1px; margin-left:2px;
+    animation:blink 1s step-end infinite;
+  }
+  @media (prefers-reduced-motion: reduce){ .role-caret{ animation:none; } }
   .lede{
     max-width:560px;
     color:var(--paper-dim);
@@ -925,9 +950,15 @@
     position:fixed; inset:0; z-index:1000;
     background:var(--ink);
     display:flex; align-items:center; justify-content:center;
-    transition:opacity .6s ease;
+    clip-path:circle(150% at 50% 50%);
+    transition:clip-path .9s cubic-bezier(.76,0,.24,1), opacity .5s ease .5s;
   }
-  .intro-overlay.hide{ opacity:0; pointer-events:none; }
+  .intro-overlay.hide{ clip-path:circle(0% at 50% 50%); opacity:0; pointer-events:none; }
+  .intro-overlay.hide .intro-content{ opacity:0; transition:opacity .3s ease; }
+  @media (prefers-reduced-motion: reduce){
+    .intro-overlay{ transition:opacity .4s ease; clip-path:none; }
+    .intro-overlay.hide{ clip-path:none; }
+  }
   .intro-content{
     display:flex; flex-direction:column; align-items:center; gap:10px;
     animation:introPulse 1.1s ease-in-out;
@@ -1141,8 +1172,10 @@
   /* ---------- DIVIDER refinement ---------- */
   .divider svg path{ opacity:.55; }
   .divider svg circle{ opacity:.9; }
+  .divider svg .divider-glow{ filter:drop-shadow(0 0 5px var(--amber)); }
   @media (prefers-reduced-motion: reduce){
     .reveal{opacity:1; transform:none; transition:none;}
+    .divider-glow{ display:none; }
   }
 </style>
 </head>
@@ -1188,6 +1221,7 @@
     <div class="orb orb1"></div>
     <div class="orb orb2"></div>
     <div class="orb orb3"></div>
+    <div class="hero-watermark" aria-hidden="true">SOODAL</div>
     <div class="term">
       <div class="term-bar">
         <div class="term-dot" style="background:#ff5f57"></div>
@@ -1219,7 +1253,7 @@
       </div>
     </div>
     <p id="referrerGreeting" class="referrer-greeting"></p>
-    <div class="role">CES STUDENT @ HUFS · GAME DEVELOPER · SERIAL COLLABORATOR</div>
+    <div class="role"><span id="roleCycleText">CES STUDENT @ HUFS</span><span class="role-caret" aria-hidden="true"></span></div>
     <p class="lede" id="ledeText" data-en="I attend computer engineering classes in the morning, join outside programs in the afternoon, work out in the evening, build games at night, and fix bugs before dawn. Life feels pretty fun this way.">
       아침에는 컴퓨터공학 수업을 듣고, 낮에는 대외활동을 다니며, 저녁에는 운동을 하고,
       밤에는 게임을 만들며, 새벽에는 버그를 고칩니다. 참 재밌는 인생 같습니다.
@@ -1238,6 +1272,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- STAMINA GAUGE -->
@@ -1273,6 +1311,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- INTERESTS -->
@@ -1290,6 +1332,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- GUESTBOOK -->
@@ -1306,6 +1352,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- GAMES -->
@@ -1415,6 +1465,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- INTEGRATED TIMELINE -->
@@ -1429,6 +1483,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- GALLERY -->
@@ -1458,6 +1516,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- RECENT COMMITS -->
@@ -1472,6 +1534,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- MADE WITH -->
@@ -1490,6 +1556,10 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
+      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg></div>
 
   <!-- CHANGELOG -->
@@ -1614,6 +1684,31 @@
     }
   }
   runTerminal();
+
+  /* ---- CYCLING ROLE TYPEWRITER ---- */
+  function deleteText(el, speed){
+    return new Promise(resolve => {
+      const iv = setInterval(() => {
+        const t = el.textContent;
+        el.textContent = t.slice(0, -1);
+        if (el.textContent.length === 0) { clearInterval(iv); resolve(); }
+      }, speed);
+    });
+  }
+  async function cycleRoles(){
+    const el = document.getElementById('roleCycleText');
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const phrases = ['CES STUDENT @ HUFS', 'GAME DEVELOPER', 'SOODAL GAMES 운영자', 'SERIAL COLLABORATOR'];
+    let idx = 0;
+    while (true) {
+      await new Promise(r => setTimeout(r, 2000));
+      await deleteText(el, 22);
+      idx = (idx + 1) % phrases.length;
+      await typeText(el, phrases[idx], 45);
+    }
+  }
+  cycleRoles();
 
   /* ---- MOTTO (fixed) ---- */
   const quotes = ['안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.'];
@@ -1962,7 +2057,7 @@
     setTimeout(() => {
       const intro = document.getElementById('introOverlay');
       intro.classList.add('hide');
-      setTimeout(() => intro.remove(), 700);
+      setTimeout(() => intro.remove(), 950);
     }, 900);
   });
 
