@@ -434,7 +434,18 @@
     transform:translateY(-3px);
     box-shadow:var(--shadow-lift);
   }
-  .interest .ic{font-size:27px; line-height:1;}
+  .interest .ic{
+    font-size:21px; line-height:1; flex-shrink:0;
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%, rgba(205,169,104,0.22), rgba(205,169,104,0.06));
+    border:1px solid rgba(205,169,104,0.25);
+    transition:transform .3s var(--ease);
+  }
+  .interest:nth-child(2) .ic{ background:radial-gradient(circle at 35% 30%, rgba(111,160,144,0.22), rgba(111,160,144,0.06)); border-color:rgba(111,160,144,0.25); }
+  .interest:nth-child(3) .ic{ background:radial-gradient(circle at 35% 30%, rgba(188,131,112,0.22), rgba(188,131,112,0.06)); border-color:rgba(188,131,112,0.25); }
+  .interest:nth-child(4) .ic{ background:radial-gradient(circle at 35% 30%, rgba(205,169,104,0.22), rgba(205,169,104,0.06)); border-color:rgba(205,169,104,0.25); }
+  .interest:hover .ic{ transform:scale(1.08) rotate(-4deg); }
   .interest b{display:block; font-size:15px; margin-bottom:5px; letter-spacing:-0.01em;}
   .interest span{font-size:13px; color:var(--paper-dim); line-height:1.55;}
   .reveal.in-view .interest{ animation:cardSettle .5s var(--ease) both; }
@@ -712,6 +723,20 @@
   footer .links{display:flex; gap:30px; flex-wrap:wrap; justify-content:center; font-size:14px;}
   footer a{color:var(--paper-dim); transition:color .2s;}
   footer a:hover{color:var(--amber);}
+  .email-copy-wrap{ position:relative; display:inline-block; }
+  .copy-feedback{
+    position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(-4px);
+    background:var(--amber); color:var(--ink);
+    font-family:var(--mono); font-size:11px; font-weight:600;
+    padding:5px 10px; border-radius:6px; white-space:nowrap;
+    opacity:0; pointer-events:none; z-index:5;
+    transition:opacity .25s var(--ease), transform .25s var(--ease);
+  }
+  .copy-feedback::after{
+    content:''; position:absolute; bottom:100%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-bottom-color:var(--amber);
+  }
+  .copy-feedback.show{ opacity:1; transform:translateX(-50%) translateY(0); }
   footer .request-link{
     display:inline-block; margin-top:28px;
     font-family:var(--mono); font-size:13px; font-weight:600;
@@ -1643,7 +1668,10 @@
     <div class="footer-cta">
       <div class="footer-title" data-en="If you want to keep in touch">계속 이야기하고 싶다면</div>
       <div class="links">
-        <a href="mailto:rokafhanmin@gmail.com">rokafhanmin@gmail.com</a>
+        <span class="email-copy-wrap">
+          <a href="mailto:rokafhanmin@gmail.com" id="footerEmail">rokafhanmin@gmail.com</a>
+          <span class="copy-feedback" id="emailCopyFeedback">복사됨 ✓</span>
+        </span>
         <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="footer-btn-row">
@@ -2523,6 +2551,34 @@
       if (gameLinkKeys.size >= totalGameCards) unlockAchievement('allgames', '게임 마스터 — 모든 게임 링크 클릭!');
     });
   });
+
+  /* ---- SCROLL-TO-END ACHIEVEMENT ---- */
+  const footerEl = document.querySelector('footer');
+  if (footerEl) {
+    const footerIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          unlockAchievement('finished', '완주 — 페이지 끝까지 다 보셨네요!');
+          footerIO.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    footerIO.observe(footerEl);
+  }
+
+  /* ---- EMAIL COPY-TO-CLIPBOARD ---- */
+  (function(){
+    const link = document.getElementById('footerEmail');
+    const feedback = document.getElementById('emailCopyFeedback');
+    if (!link || !feedback) return;
+    link.addEventListener('click', () => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText('rokafhanmin@gmail.com').catch(() => {});
+      }
+      feedback.classList.add('show');
+      setTimeout(() => feedback.classList.remove('show'), 1600);
+    });
+  })();
 
   /* ---- 9. REFERRER-BASED GREETING ---- */
   (function(){
