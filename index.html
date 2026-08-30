@@ -171,23 +171,25 @@
   }
   @media(max-width:700px){ .hero-watermark{ display:none; } }
 
-  /* ---------- AURORA (dark mode only) ---------- */
+  /* ---------- AURORA (dark mode only) ----------
+     Static gradient wash — no per-frame animation. A blurred full-width
+     gradient that keeps repainting forever (whether via background-position
+     or transform, under software rendering both cost real CPU time every
+     frame) was a genuine, measured jank source; the color wash itself
+     doesn't need to move to look good, so it's simply not animated. */
   .aurora{
     position:fixed; top:0; left:0; right:0; height:280px;
     z-index:0; pointer-events:none;
     background:linear-gradient(120deg, rgba(var(--amber-rgb),0.12), rgba(110,156,137,0.10), rgba(183,126,104,0.10), rgba(var(--amber-rgb),0.12));
-    background-size:300% 300%;
-    animation:auroraShift 22s ease-in-out infinite;
     filter:blur(50px);
     opacity:.6;
   }
   html[data-theme="light"] .aurora{ display:none; }
-  @keyframes auroraShift{
-    0%,100%{ background-position:0% 50%; }
-    50%{ background-position:100% 50%; }
-  }
 
-  /* ---------- LIGHT AURORA (light mode only): full-page neon mesh wash ---------- */
+  /* ---------- LIGHT AURORA (light mode only): full-page neon mesh wash ----------
+     Also static for the same reason — a continuously-animated full-viewport
+     multi-gradient layer measurably hurt frame time; the colorful wash is
+     unaffected by not moving. */
   .light-aurora{
     position:fixed; inset:0; z-index:0; pointer-events:none;
     display:none;
@@ -198,15 +200,8 @@
       radial-gradient(ellipse 760px 700px at 92% 55%, rgba(var(--amber-rgb),0.16), transparent 55%),
       radial-gradient(ellipse 900px 760px at 30% 100%, rgba(var(--teal-rgb),0.18), transparent 55%),
       radial-gradient(ellipse 820px 700px at 85% 100%, rgba(var(--rose-rgb),0.16), transparent 55%);
-    background-size:130% 130%;
-    animation:lightAuroraDrift 30s ease-in-out infinite;
   }
   html[data-theme="light"] .light-aurora{ display:block; }
-  @keyframes lightAuroraDrift{
-    0%,100%{ background-position:0% 0%; }
-    50%{ background-position:12% 8%; }
-  }
-  @media (prefers-reduced-motion: reduce){ .light-aurora{ animation:none; } }
   @keyframes orbFloat1{
     0%,100%{ transform:translate(0,0) scale(1); }
     50%{ transform:translate(40px,30px) scale(1.15); }
@@ -482,6 +477,54 @@
   .reveal.in-view .interest:nth-child(2){ animation-delay:.12s; }
   .reveal.in-view .interest:nth-child(3){ animation-delay:.19s; }
   .reveal.in-view .interest:nth-child(4){ animation-delay:.26s; }
+
+  /* ---------- HIGHLIGHTS ---------- */
+  .highlights-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:16px;
+  }
+  @media(max-width:560px){ .highlights-grid{grid-template-columns:1fr;} }
+  .highlight-card{
+    position:relative;
+    display:flex; align-items:flex-start; gap:16px;
+    border:1px solid var(--line); border-radius:var(--r-sm);
+    padding:20px 20px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    box-shadow:var(--shadow-card);
+    transition:border-color .3s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .highlight-card:hover{
+    border-color:rgba(var(--teal-rgb),0.4);
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-lift);
+  }
+  .highlight-card .hic{
+    font-size:21px; line-height:1; flex-shrink:0;
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%, rgba(var(--teal-rgb),0.22), rgba(var(--teal-rgb),0.06));
+    border:1px solid rgba(var(--teal-rgb),0.25);
+    transition:transform .3s var(--ease);
+  }
+  .highlight-card:nth-child(2) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--rose-rgb),0.22), rgba(var(--rose-rgb),0.06)); border-color:rgba(var(--rose-rgb),0.25); }
+  .highlight-card:nth-child(3) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--amber-rgb),0.22), rgba(var(--amber-rgb),0.06)); border-color:rgba(var(--amber-rgb),0.25); }
+  .highlight-card:nth-child(4) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--teal-rgb),0.22), rgba(var(--teal-rgb),0.06)); border-color:rgba(var(--teal-rgb),0.25); }
+  .highlight-card:hover .hic{ transform:scale(1.08) rotate(-4deg); }
+  .highlight-card .h-top{ display:flex; align-items:center; gap:8px; margin-bottom:5px; flex-wrap:wrap; }
+  .highlight-card b{font-size:15px; letter-spacing:-0.01em;}
+  .highlight-card .h-role{
+    font-family:var(--mono); font-size:10px; letter-spacing:.04em;
+    padding:2px 8px; border-radius:20px;
+    color:var(--teal); border:1px solid rgba(var(--teal-rgb),0.35);
+    background:rgba(var(--teal-rgb),0.08);
+  }
+  .highlight-card span.h-desc{display:block; font-size:13px; color:var(--paper-dim); line-height:1.55;}
+  .reveal.in-view .highlight-card{ animation:cardSettle .5s var(--ease) both; }
+  .reveal.in-view .highlight-card:nth-child(1){ animation-delay:.05s; }
+  .reveal.in-view .highlight-card:nth-child(2){ animation-delay:.12s; }
+  .reveal.in-view .highlight-card:nth-child(3){ animation-delay:.19s; }
+  .reveal.in-view .highlight-card:nth-child(4){ animation-delay:.26s; }
 
   /* ---------- GUESTBOOK ---------- */
   .guestbook-desc{color:var(--paper-dim); font-size:14px; margin-bottom:20px; max-width:460px;}
@@ -864,20 +907,20 @@
     .guestbook-link::after, footer .request-link:not(.ghost)::after{ display:none; }
   }
 
-  /* ---------- TERMINAL AMBIENT GLOW BORDER ---------- */
+  /* ---------- TERMINAL AMBIENT GLOW BORDER ----------
+     Static now (was a rotating conic-gradient animated forever via a
+     registered custom property) — a continuously repainting gradient mask
+     on an always-visible hero element was a real, measured jank source
+     for no real visual benefit over a fixed glow. */
   .term{ position:relative; }
   .term::before{
     content:''; position:absolute; inset:-1px; border-radius:inherit; z-index:-1;
     padding:1px;
-    background:conic-gradient(from var(--rot,0deg), transparent 0%, rgba(var(--amber-rgb),0.5) 12%, transparent 24%);
+    background:conic-gradient(from 200deg, transparent 0%, rgba(var(--amber-rgb),0.5) 12%, transparent 24%);
     -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite:xor; mask-composite:exclude;
     opacity:.7;
-    animation:termRot 7s linear infinite;
   }
-  @keyframes termRot{ to{ --rot:360deg; } }
-  @property --rot{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
-  @media (prefers-reduced-motion: reduce){ .term::before{ animation:none; display:none; } }
 
   /* ---------- LIGHTBOX ---------- */
   .lightbox{
@@ -996,25 +1039,6 @@
   }
   html[data-theme="light"] .star-canvas{ display:none; }
 
-  /* ---------- CUSTOM CURSOR ---------- */
-  .custom-cursor{
-    position:fixed; top:0; left:0; z-index:400;
-    width:22px; height:22px; border-radius:50%;
-    border:1.5px solid var(--amber);
-    pointer-events:none;
-    will-change:transform;
-    transition:width .18s, height .18s, background .18s, opacity .2s;
-    opacity:0;
-  }
-  .custom-cursor.active{ opacity:1; }
-  .custom-cursor.grow{
-    width:38px; height:38px;
-    background:rgba(var(--amber-rgb),0.15);
-  }
-  @media(min-width:901px) and (pointer:fine){
-    body.cursor-ready, body.cursor-ready a, body.cursor-ready button, body.cursor-ready .mascot{ cursor:none; }
-  }
-
   /* ---------- NAME GLOW ---------- */
   h1.name{ transition:text-shadow .3s; position:relative; }
   h1.name:hover{
@@ -1109,7 +1133,7 @@
   @media print{
     .side-rail, .shortcut-panel, .theme-toggle, .lang-toggle, .fontsize-panel,
     .trail-canvas, .star-canvas, .scroll-progress, .grain-overlay, .orb,
-    .lightbox, .intro-overlay, .mascot-bubble, .custom-cursor, .nav-dots,
+    .lightbox, .intro-overlay, .mascot-bubble, .nav-dots,
     #liveVisitors, .divider, .mobile-bottom-scrim, .confetti-canvas, .light-aurora{
       display:none !important;
     }
@@ -1169,10 +1193,23 @@
     transform:translateX(0) translateY(0) scale(1);
   }
 
-  /* ---------- DIVIDER refinement ---------- */
+  /* ---------- DIVIDER refinement ----------
+     The traveling dot used to be SMIL-animated (attributeName="cx"), which
+     mutates real SVG geometry every frame — layout + paint work, not
+     composited. Animating a CSS transform instead lets the browser
+     composite it on the GPU. */
   .divider svg path{ opacity:.55; }
   .divider svg circle{ opacity:.9; }
-  .divider svg .divider-glow{ filter:drop-shadow(0 0 5px var(--amber)); }
+  .divider svg .divider-glow{
+    filter:drop-shadow(0 0 5px var(--amber));
+    opacity:0;
+    animation:dividerGlowMove 10s linear infinite;
+  }
+  @keyframes dividerGlowMove{
+    0%{ transform:translateX(0); opacity:0; }
+    50%{ opacity:.8; }
+    100%{ transform:translateX(300px); opacity:0; }
+  }
   @media (prefers-reduced-motion: reduce){
     .reveal{opacity:1; transform:none; transition:none;}
     .divider-glow{ display:none; }
@@ -1217,7 +1254,6 @@
 <div class="grain-overlay"></div>
 <div class="aurora"></div>
 <div class="light-aurora" aria-hidden="true"></div>
-<div id="customCursor" class="custom-cursor"></div>
 
 <div class="side-rail left"><div class="rail-line"></div><span class="rail-label">SOODAL GAMES</span></div>
 <div class="side-rail right"><div class="rail-line"></div><span class="rail-label">CHOI HANMIN</span></div>
@@ -1233,6 +1269,7 @@
 <nav id="navDots" class="nav-dots">
   <button data-target="hero-top"><span class="dot-label">home</span></button>
   <button data-target="stamina"><span class="dot-label">체력바</span></button>
+  <button data-target="highlights"><span class="dot-label">하이라이트</span></button>
   <button data-target="interests"><span class="dot-label">관심사</span></button>
   <button data-target="guestbook"><span class="dot-label">방명록</span></button>
   <button data-target="gallery"><span class="dot-label">갤러리</span></button>
@@ -1298,10 +1335,7 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
   <!-- STAMINA GAUGE -->
@@ -1337,10 +1371,49 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
+  <!-- HIGHLIGHTS -->
+  <section id="highlights" class="reveal slide-right">
+    <div class="sec-head"><span class="tag">TRACK RECORD</span><h2 data-en="Highlights">활동 하이라이트</h2></div>
+    <p class="sec-sub">$ cat ~/career/highlights.md</p>
+    <div class="highlights-grid">
+      <div class="highlight-card">
+        <span class="hic">🎮</span>
+        <div>
+          <div class="h-top"><b data-en="Soodal Games Founder">Soodal Games 대표</b><span class="h-role" data-en="ONGOING">운영 중</span></div>
+          <span class="h-desc" data-en="Founded and run an indie game studio solo, shipping 7 games to Google Play and Steam">인디 게임 스튜디오를 직접 창업해 운영하며 Play·Steam에 게임 7종 출시</span>
+        </div>
+      </div>
+      <div class="highlight-card">
+        <span class="hic">🧑‍🏫</span>
+        <div>
+          <div class="h-top"><b data-en="HUFS Computer Engineering TA">외대 컴퓨터공학과 조교</b><span class="h-role" data-en="TA">조교</span></div>
+          <span class="h-desc" data-en="Teaching assistant for Computational Thinking, guiding underclassmen through algorithm assignments">컴퓨팅사고 수업 TA로 후배들의 알고리즘 과제를 직접 지도</span>
+        </div>
+      </div>
+      <div class="highlight-card">
+        <span class="hic">🤝</span>
+        <div>
+          <div class="h-top"><b data-en="LG CNS AI Genius Supporters 16th">LG CNS AI Genius 서포터즈 16기</b><span class="h-role" data-en="16TH">16기</span></div>
+          <span class="h-desc" data-en="Selected as an AI tech supporter, working on hands-on AI project experience">AI 기술 서포터즈로 선발되어 실무형 AI 프로젝트 경험 중</span>
+        </div>
+      </div>
+      <div class="highlight-card">
+        <span class="hic">🌍</span>
+        <div>
+          <div class="h-top"><b data-en="LiNK English Buddy">LiNK English Buddy</b><span class="h-role" data-en="VOLUNTEER">봉사</span></div>
+          <span class="h-desc" data-en="1:1 English coaching volunteer for North Korean defector youth">탈북 청년 대상 1:1 영어 코칭 봉사활동 진행 중</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
   <!-- INTERESTS -->
@@ -1358,10 +1431,7 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
   <!-- GUESTBOOK -->
@@ -1378,10 +1448,7 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
   <!-- GALLERY -->
@@ -1411,10 +1478,7 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
   <!-- RECENT COMMITS -->
@@ -1429,10 +1493,7 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
   <!-- MADE WITH -->
@@ -1451,10 +1512,7 @@
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
     <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
     <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
   <!-- CHANGELOG -->
@@ -1462,6 +1520,10 @@
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
+      <div class="change-row">
+        <span class="change-ver">v1.4</span>
+        <span class="change-desc" data-en="Added career highlights section (Soodal Games, HUFS TA, LG CNS AI Genius, LiNK English Buddy)">활동 하이라이트 섹션 추가 (Soodal Games, 외대 조교, LG CNS AI Genius, LiNK English Buddy)</span>
+      </div>
       <div class="change-row">
         <span class="change-ver">v1.3</span>
         <span class="change-desc" data-en="Added locked portfolio download, free 1-page resume, vCard button, and RSS feed">잠금 포트폴리오 다운로드, 무료 1페이지 이력서, vCard 저장 버튼, RSS 피드 추가</span>
@@ -1985,26 +2047,6 @@
   }
   requestAnimationFrame(renderBackgroundLoop);
 
-  /* ---- CUSTOM CURSOR (rAF-batched, transform-based for smoothness) ---- */
-  const customCursor = document.getElementById('customCursor');
-  if (window.matchMedia('(min-width: 901px) and (pointer: fine)').matches) {
-    document.body.classList.add('cursor-ready');
-    let cx = 0, cy = 0, cursorScheduled = false;
-    function updateCursorPos(){
-      cursorScheduled = false;
-      customCursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
-    }
-    window.addEventListener('mousemove', (e) => {
-      cx = e.clientX; cy = e.clientY;
-      customCursor.classList.add('active');
-      if (!cursorScheduled){ cursorScheduled = true; requestAnimationFrame(updateCursorPos); }
-    }, { passive: true });
-    document.querySelectorAll('a, button, .mascot, .gitem').forEach(el => {
-      el.addEventListener('mouseenter', () => customCursor.classList.add('grow'));
-      el.addEventListener('mouseleave', () => customCursor.classList.remove('grow'));
-    });
-  }
-
   /* ---- NAV DOTS ---- */
   const navDots = document.querySelectorAll('#navDots button');
   const navSections = Array.from(navDots).map(btn => document.getElementById(btn.dataset.target)).filter(Boolean);
@@ -2065,15 +2107,21 @@
     });
   }, { passive: true });
 
-  /* ---- 2. MAGNETIC BUTTONS (rect cached on enter) ---- */
+  /* ---- 2. MAGNETIC BUTTONS (rect cached on enter, rAF-batched like the other pointer effects) ---- */
   document.querySelectorAll('.magnetic').forEach(btn => {
-    let rect = null;
+    let rect = null, lastX = 0, lastY = 0, scheduled = false;
+    function update(){
+      scheduled = false;
+      if (!rect) return;
+      const relX = lastX - rect.left - rect.width / 2;
+      const relY = lastY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${relX * 0.25}px, ${relY * 0.4}px)`;
+    }
     btn.addEventListener('mouseenter', () => { rect = btn.getBoundingClientRect(); });
     btn.addEventListener('mousemove', (e) => {
       if (!rect) rect = btn.getBoundingClientRect();
-      const relX = e.clientX - rect.left - rect.width / 2;
-      const relY = e.clientY - rect.top - rect.height / 2;
-      btn.style.transform = `translate(${relX * 0.25}px, ${relY * 0.4}px)`;
+      lastX = e.clientX; lastY = e.clientY;
+      if (!scheduled){ scheduled = true; requestAnimationFrame(update); }
     }, { passive: true });
     btn.addEventListener('mouseleave', () => {
       rect = null;
