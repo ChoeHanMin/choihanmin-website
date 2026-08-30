@@ -526,6 +526,34 @@
   .reveal.in-view .highlight-card:nth-child(3){ animation-delay:.19s; }
   .reveal.in-view .highlight-card:nth-child(4){ animation-delay:.26s; }
 
+  /* ---------- SKILLS (colorful chips, light-mode neon palette) ---------- */
+  .skill-groups{ display:flex; flex-direction:column; gap:20px; }
+  .skill-group-label{
+    display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em;
+    color:var(--paper-dim); margin-bottom:10px; text-transform:uppercase;
+  }
+  .skill-chips{ display:flex; flex-wrap:wrap; gap:9px; }
+  .chip{
+    display:inline-block; font-family:var(--mono); font-size:12.5px; letter-spacing:.01em;
+    padding:7px 15px; border-radius:999px;
+    border:1px solid rgba(var(--c-rgb),0.32);
+    background:rgba(var(--c-rgb),0.08);
+    color:var(--c);
+    transition:transform .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .chip:hover{
+    transform:translateY(-3px) scale(1.05);
+    background:rgba(var(--c-rgb),0.18);
+    box-shadow:0 10px 22px -10px rgba(var(--c-rgb),0.5);
+  }
+  .chip-amber{ --c:var(--amber); --c-rgb:var(--amber-rgb); }
+  .chip-teal{ --c:var(--teal); --c-rgb:var(--teal-rgb); }
+  .chip-rose{ --c:var(--rose); --c-rgb:var(--rose-rgb); }
+  .reveal.in-view .skill-group{ animation:cardSettle .5s var(--ease) both; }
+  .reveal.in-view .skill-group:nth-child(1){ animation-delay:.05s; }
+  .reveal.in-view .skill-group:nth-child(2){ animation-delay:.14s; }
+  .reveal.in-view .skill-group:nth-child(3){ animation-delay:.23s; }
+
   /* ---------- GUESTBOOK ---------- */
   .guestbook-desc{color:var(--paper-dim); font-size:14px; margin-bottom:20px; max-width:460px;}
   .guestbook-link{
@@ -1301,6 +1329,7 @@
   <button data-target="hero-top"><span class="dot-label">home</span></button>
   <button data-target="stamina"><span class="dot-label">체력바</span></button>
   <button data-target="highlights"><span class="dot-label">하이라이트</span></button>
+  <button data-target="skills"><span class="dot-label">기술스택</span></button>
   <button data-target="interests"><span class="dot-label">관심사</span></button>
   <button data-target="guestbook"><span class="dot-label">방명록</span></button>
   <button data-target="gallery"><span class="dot-label">갤러리</span></button>
@@ -1447,6 +1476,49 @@
     <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
+  <!-- SKILLS -->
+  <section id="skills" class="reveal slide-right">
+    <div class="sec-head"><span class="tag">STACK</span><h2 data-en="Skills &amp; Tools">기술 스택</h2></div>
+    <p class="sec-sub">$ pip list --user hanmin</p>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <span class="skill-group-label" data-en="Development">개발</span>
+        <div class="skill-chips">
+          <span class="chip chip-amber">Python</span>
+          <span class="chip chip-amber">C++</span>
+          <span class="chip chip-amber">C</span>
+          <span class="chip chip-amber">JavaScript</span>
+          <span class="chip chip-amber">HTML / CSS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="skill-group-label" data-en="AI &amp; Vision">AI · 비전</span>
+        <div class="skill-chips">
+          <span class="chip chip-teal">MediaPipe</span>
+          <span class="chip chip-teal">CLIP</span>
+          <span class="chip chip-teal">FAISS</span>
+          <span class="chip chip-teal">YOLOv8</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="skill-group-label" data-en="Design">디자인</span>
+        <div class="skill-chips">
+          <span class="chip chip-rose">Figma</span>
+          <span class="chip chip-rose">Canva</span>
+          <span class="chip chip-rose">CapCut</span>
+          <span class="chip chip-rose">Illustrator</span>
+          <span class="chip chip-rose">Photoshop</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- INTERESTS -->
   <section id="interests" class="reveal slide-left">
     <div class="sec-head"><span class="tag">OFFLINE</span><h2 data-en="Things I Enjoy">좋아하는 것들</h2></div>
@@ -1551,6 +1623,10 @@
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
+      <div class="change-row">
+        <span class="change-ver">v1.6</span>
+        <span class="change-desc" data-en="Added a colorful skills &amp; tools chip section">알록달록한 기술 스택 칩 섹션 추가</span>
+      </div>
       <div class="change-row">
         <span class="change-ver">v1.5</span>
         <span class="change-desc" data-en="Added a click-cycled otter fact card to the footer">푸터에 클릭으로 넘겨보는 수달 상식 카드 추가</span>
