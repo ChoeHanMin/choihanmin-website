@@ -1734,6 +1734,10 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.2</span>
+        <span class="change-desc" data-en="Added a one-time achievement for discovering light mode">라이트모드 최초 발견 시 업적 추가</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.1</span>
         <span class="change-desc" data-en="Added a share button (Web Share API with clipboard fallback)">공유하기 버튼 추가 (Web Share API, 클립보드 복사 폴백)</span>
       </div>
@@ -2005,6 +2009,7 @@
       document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
       themeBtn.textContent = '☀️';
+      unlockAchievement('lightmode', '라이트모드 발견! 🌈');
     }
     updateAccentRGB();
   });
