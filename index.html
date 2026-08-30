@@ -826,6 +826,23 @@
   .portfolio-modal-err{display:none; color:var(--rose); font-size:12px; margin-top:10px;}
   .portfolio-modal-err.show{display:block;}
 
+  /* ---------- SHORTCUTS HELP MODAL ---------- */
+  .shortcuts-box{ max-width:380px; text-align:left; }
+  .shortcuts-box h3{ text-align:center; }
+  .shortcuts-box .portfolio-modal-sub{ text-align:center; font-family:var(--mono); }
+  .shortcut-list{ display:flex; flex-direction:column; gap:11px; margin-top:6px; }
+  .shortcut-row{ display:flex; align-items:center; gap:10px; }
+  .shortcut-row span{ font-size:13px; color:var(--paper-dim); }
+  kbd{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:28px; height:24px; padding:0 8px;
+    border-radius:6px; border:1px solid var(--line-strong);
+    background:var(--ink); color:var(--amber);
+    font-family:var(--mono); font-size:11px; font-weight:600;
+    box-shadow:0 2px 0 var(--line-strong);
+    flex-shrink:0;
+  }
+
   /* ---------- COMMIT LIST ---------- */
   .commit-list{display:flex; flex-direction:column; gap:4px;}
   .commit-loading{color:var(--paper-dim); font-family:var(--mono); font-size:13px;}
@@ -1636,6 +1653,18 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v1.9</span>
+        <span class="change-desc" data-en="Added a keyboard shortcuts help modal (press ?)">키보드 단축키 도움말 추가 (? 키로 열기)</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.8</span>
+        <span class="change-desc" data-en="Added 10 new photos to the daily gallery">일상 갤러리에 사진 10장 추가</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.7</span>
+        <span class="change-desc" data-en="Switched the hero avatar to a real profile photo">히어로 아바타를 실제 프로필 사진으로 교체</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v1.6</span>
         <span class="change-desc" data-en="Added a colorful skills &amp; tools chip section">알록달록한 기술 스택 칩 섹션 추가</span>
       </div>
@@ -1713,11 +1742,29 @@
   </div>
 </div>
 
+<!-- KEYBOARD SHORTCUTS HELP MODAL -->
+<div id="shortcutsModal" class="portfolio-modal">
+  <div class="portfolio-modal-box shortcuts-box">
+    <span class="portfolio-modal-close" id="shortcutsModalClose">✕</span>
+    <h3 data-en="Keyboard Shortcuts">키보드 단축키</h3>
+    <p class="portfolio-modal-sub" data-en="$ man shortcuts">$ man shortcuts</p>
+    <div class="shortcut-list">
+      <div class="shortcut-row"><kbd>G</kbd><span data-en="Open Soodal Games">Soodal Games 열기</span></div>
+      <div class="shortcut-row"><kbd>P</kbd><span data-en="Jump to gallery">갤러리로 이동</span></div>
+      <div class="shortcut-row"><kbd>Home</kbd><span data-en="Back to top">맨 위로</span></div>
+      <div class="shortcut-row"><kbd>←</kbd><kbd>→</kbd><span data-en="Prev / next photo (in gallery view)">이전 · 다음 사진 (갤러리 열람 중)</span></div>
+      <div class="shortcut-row"><kbd>Esc</kbd><span data-en="Close lightbox or modal">라이트박스 · 모달 닫기</span></div>
+      <div class="shortcut-row"><kbd>?</kbd><span data-en="Toggle this help">이 도움말 열기 / 닫기</span></div>
+    </div>
+  </div>
+</div>
+
 <div class="mobile-bottom-scrim" aria-hidden="true"></div>
 <div id="shortcutPanel" class="shortcut-panel">
   <button id="scGames"><b>G</b>게임</button>
   <button id="scGallery"><b>P</b>갤러리</button>
   <button id="scHome"><b>⌂</b>맨위</button>
+  <button id="scHelp"><b>?</b>단축키</button>
 </div>
 
 <div id="lightbox" class="lightbox">
@@ -1962,12 +2009,24 @@
   document.getElementById('scGames').addEventListener('click', goGames);
   document.getElementById('scGallery').addEventListener('click', goGallery);
   document.getElementById('scHome').addEventListener('click', goHome);
+
+  /* ---- KEYBOARD SHORTCUTS HELP MODAL ---- */
+  const shortcutsModal = document.getElementById('shortcutsModal');
+  const shortcutsModalClose = document.getElementById('shortcutsModalClose');
+  function toggleShortcutsModal(){ shortcutsModal.classList.toggle('open'); }
+  function closeShortcutsModal(){ shortcutsModal.classList.remove('open'); }
+  document.getElementById('scHelp').addEventListener('click', toggleShortcutsModal);
+  shortcutsModalClose.addEventListener('click', closeShortcutsModal);
+  shortcutsModal.addEventListener('click', (e) => { if (e.target === shortcutsModal) closeShortcutsModal(); });
+
   document.addEventListener('keydown', (e) => {
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea') return;
     if (e.key === 'g') goGames();
     if (e.key === 'p') goGallery();
     if (e.key === 'Home') goHome();
+    if (e.key === '?') toggleShortcutsModal();
+    if (e.key === 'Escape') { closeShortcutsModal(); closePortfolioModal(); }
   });
 
   /* ---- LIGHTBOX (with gallery prev/next + captions) ---- */
