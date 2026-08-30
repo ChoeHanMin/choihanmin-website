@@ -1300,6 +1300,16 @@
   .side-rail.right .rail-label{transform:rotate(180deg);}
   @media(min-width:1180px){ .side-rail{display:flex;} }
 
+  /* ---------- SKIP LINK (keyboard/screen-reader accessibility) ---------- */
+  .skip-link{
+    position:fixed; top:-60px; left:12px; z-index:100;
+    background:var(--amber); color:var(--ink);
+    font-family:var(--mono); font-size:13px; font-weight:700;
+    padding:10px 18px; border-radius:8px;
+    transition:top .2s var(--ease);
+  }
+  .skip-link:focus{ top:12px; }
+
   /* ---------- THEME TOGGLE ---------- */
   .theme-toggle{
     position:fixed; top:18px; right:18px; z-index:20;
@@ -1374,6 +1384,7 @@
 </style>
 </head>
 <body>
+<a href="#hero-top" class="skip-link" data-en="Skip to main content">본문 바로가기</a>
 <div id="introOverlay" class="intro-overlay">
   <div class="intro-content">
     <span class="intro-name">Choi Hanmin</span>
@@ -1733,6 +1744,10 @@
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
+      <div class="change-row">
+        <span class="change-ver">v2.3</span>
+        <span class="change-desc" data-en="Added a keyboard skip-to-content link for accessibility">키보드 접근성을 위한 본문 바로가기 링크 추가</span>
+      </div>
       <div class="change-row">
         <span class="change-ver">v2.2</span>
         <span class="change-desc" data-en="Added a one-time achievement for discovering light mode">라이트모드 최초 발견 시 업적 추가</span>
