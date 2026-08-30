@@ -13,13 +13,13 @@
 <meta property="og:title" content="최한민 (Choi Hanmin)">
 <meta property="og:description" content="컴퓨터공학 전공 · 인디 게임 스튜디오 Soodal Games 운영 · 20+ 대내외 활동">
 <meta property="og:url" content="https://www.choihanmin.com/">
-<meta property="og:image" content="https://www.choihanmin.com/images/otter.jpg">
+<meta property="og:image" content="https://www.choihanmin.com/images/profile.jpg">
 <meta property="og:locale" content="ko_KR">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="최한민 (Choi Hanmin)">
 <meta name="twitter:description" content="컴퓨터공학 전공 · 인디 게임 스튜디오 Soodal Games 운영">
-<meta name="twitter:image" content="https://www.choihanmin.com/images/otter.jpg">
+<meta name="twitter:image" content="https://www.choihanmin.com/images/profile.jpg">
 <!-- 네이버 서치어드바이저 사이트 소유 확인용 (네이버 등록 시 발급받은 코드로 교체) -->
 <meta name="naver-site-verification" content="2593782ca8cabb3fe7b63823ab44eda079cc5e45" />
 <!-- 구글 서치 콘솔 사이트 소유 확인용 (구글 등록 시 발급받은 코드로 교체) -->
@@ -31,7 +31,7 @@
   "name": "최한민",
   "alternateName": "Choi Hanmin",
   "url": "https://www.choihanmin.com/",
-  "image": "https://www.choihanmin.com/images/otter.jpg",
+  "image": "https://www.choihanmin.com/images/profile.jpg",
   "email": "mailto:rokafhanmin@gmail.com",
   "affiliation": {
     "@type": "CollegeOrUniversity",
@@ -880,9 +880,11 @@
     transition:border-color .3s var(--ease), transform .3s var(--ease);
   }
   .otter-fact-card:hover{ border-color:rgba(var(--teal-rgb),0.4); transform:translateY(-2px); }
-  .otter-fact-photo{
+  .otter-fact-emoji{
     width:52px; height:52px; flex-shrink:0; border-radius:50%;
-    object-fit:cover; object-position:50% 30%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; line-height:1;
+    background:radial-gradient(circle at 35% 30%, rgba(var(--teal-rgb),0.22), rgba(var(--teal-rgb),0.06));
     border:1px solid rgba(var(--teal-rgb),0.35);
   }
   .otter-fact-label{
@@ -1370,7 +1372,7 @@
     <div class="name-row">
       <h1 class="name">최한민 (Choi Hanmin)</h1>
       <div class="mascot-wrap">
-        <img class="mascot" id="mascotImg" src="images/otter.jpg" alt="마스코트 수달" loading="lazy">
+        <img class="mascot" id="mascotImg" src="images/profile.jpg" alt="최한민 프로필 사진" loading="lazy">
         <span class="mascot-bubble" id="mascotBubble"></span>
       </div>
     </div>
@@ -1674,9 +1676,9 @@
     <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy">
 
     <div class="otter-fact-card">
-      <img class="otter-fact-photo" src="images/otter.jpg" alt="수달" loading="lazy">
+      <span class="otter-fact-emoji" aria-hidden="true">🦦</span>
       <div>
-        <span class="otter-fact-label">🦦 SOODAL FACT</span>
+        <span class="otter-fact-label">SOODAL FACT</span>
         <p class="otter-fact-text" id="otterFactText"></p>
         <button class="otter-fact-next" id="otterFactNext" type="button">다른 사실 보기 →</button>
       </div>
@@ -2417,7 +2419,7 @@
   document.getElementById('mascotImg').addEventListener('click', () => {
     otterClickCount++;
     localStorage.setItem('otterClickCount', otterClickCount);
-    if (otterClickCount >= 5) unlockAchievement('otter5', '수달과 친해짐 — 5번 클릭 달성!');
+    if (otterClickCount >= 5) unlockAchievement('otter5', '최한민과 친해짐 — 5번 클릭 달성!');
   });
   /* ---- SCROLL-TO-END ACHIEVEMENT ---- */
   const footerEl = document.querySelector('footer');
