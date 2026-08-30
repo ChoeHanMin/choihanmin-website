@@ -839,6 +839,37 @@
     display:block; margin:28px auto 0;
     border-radius:8px; border:1px solid var(--line);
   }
+
+  /* ---------- OTTER FACT CARD (footer) ---------- */
+  .otter-fact-card{
+    display:flex; align-items:center; gap:16px;
+    max-width:420px; margin:36px auto 0;
+    padding:16px 18px;
+    border:1px solid var(--line); border-radius:var(--r-sm);
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    box-shadow:var(--shadow-card);
+    text-align:left;
+    transition:border-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .otter-fact-card:hover{ border-color:rgba(var(--teal-rgb),0.4); transform:translateY(-2px); }
+  .otter-fact-photo{
+    width:52px; height:52px; flex-shrink:0; border-radius:50%;
+    object-fit:cover; object-position:50% 30%;
+    border:1px solid rgba(var(--teal-rgb),0.35);
+  }
+  .otter-fact-label{
+    font-family:var(--mono); font-size:10px; letter-spacing:.08em;
+    color:var(--teal); display:block; margin-bottom:4px;
+  }
+  .otter-fact-text{ font-size:13px; color:var(--paper-dim); line-height:1.5; margin-bottom:8px; }
+  .otter-fact-next{
+    font-family:var(--mono); font-size:11px; letter-spacing:.02em;
+    background:none; border:none; padding:0; cursor:pointer;
+    color:var(--amber); opacity:.85; transition:opacity .2s;
+  }
+  .otter-fact-next:hover{ opacity:1; text-decoration:underline; }
+  @media(max-width:480px){ .otter-fact-card{ flex-direction:column; text-align:center; } .otter-fact-label{text-align:center;} }
+
   .shortcut-panel{
     position:fixed; right:16px; top:50%; transform:translateY(-50%);
     display:flex; flex-direction:column; gap:8px;
@@ -1521,6 +1552,10 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v1.5</span>
+        <span class="change-desc" data-en="Added a click-cycled otter fact card to the footer">푸터에 클릭으로 넘겨보는 수달 상식 카드 추가</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v1.4</span>
         <span class="change-desc" data-en="Added career highlights section (Soodal Games, HUFS TA, LG CNS AI Genius, LiNK English Buddy)">활동 하이라이트 섹션 추가 (Soodal Games, 외대 조교, LG CNS AI Genius, LiNK English Buddy)</span>
       </div>
@@ -1561,6 +1596,16 @@
     </div>
     <a id="portfolioRealLink" href="files/portfolio-locked.pdf" download="Choi_Hanmin_Portfolio.pdf" style="display:none;" aria-hidden="true"></a>
     <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy">
+
+    <div class="otter-fact-card">
+      <img class="otter-fact-photo" src="images/otter.jpg" alt="수달" loading="lazy">
+      <div>
+        <span class="otter-fact-label">🦦 SOODAL FACT</span>
+        <p class="otter-fact-text" id="otterFactText"></p>
+        <button class="otter-fact-next" id="otterFactNext" type="button">다른 사실 보기 →</button>
+      </div>
+    </div>
+
     <div class="copyright">
       © 2026 Choi Hanmin · Soodal Games
       <span id="visitCount" class="visit-count"></span>
@@ -2324,6 +2369,34 @@
       feedback.classList.add('show');
       setTimeout(() => feedback.classList.remove('show'), 1600);
     });
+  })();
+
+  /* ---- OTTER FACT CARD (footer, click-cycled — no auto-timer) ---- */
+  (function(){
+    const textEl = document.getElementById('otterFactText');
+    const nextBtn = document.getElementById('otterFactNext');
+    if (!textEl || !nextBtn) return;
+    const facts = [
+      { kr: '수달은 먹이를 못 놓치려고 잠잘 때도 서로 손을 잡습니다.', en: 'Otters hold hands while sleeping so they don\'t drift apart.' },
+      { kr: '물 위에 등을 대고 누워 배 위에 조개를 올려놓고 돌로 깨 먹습니다.', en: 'They float on their backs and crack shellfish open on a rock balanced on their belly.' },
+      { kr: '촘촘한 털 덕분에 지방층 없이도 물속에서 체온을 유지할 수 있어요.', en: 'Dense fur keeps them warm in cold water — no blubber needed.' },
+      { kr: '‘Soodal(수달)’은 이 사이트 주인이 직접 만든 게임 스튜디오 이름이기도 해요.', en: '"Soodal" is also the name of the game studio behind this site.' },
+      { kr: '수달은 하루 대부분을 먹이 사냥과 몸단장에 씁니다 — 개발자의 하루와 은근히 비슷하죠.', en: 'Otters spend most of the day hunting and grooming — not unlike a developer\'s daily routine.' },
+      { kr: '수달은 특유의 냄새로 자기 영역을 표시합니다. 마치 커밋 로그처럼요.', en: 'Otters mark their territory with scent — kind of like leaving a commit log.' }
+    ];
+    let idx = Math.floor(Math.random() * facts.length);
+    let isEn = false;
+    function render(){
+      textEl.textContent = isEn ? facts[idx].en : facts[idx].kr;
+      nextBtn.textContent = isEn ? 'Another fact →' : '다른 사실 보기 →';
+    }
+    render();
+    nextBtn.addEventListener('click', () => {
+      idx = (idx + 1) % facts.length;
+      render();
+    });
+    const langBtn = document.getElementById('langToggle');
+    if (langBtn) langBtn.addEventListener('click', () => { isEn = !isEn; render(); });
   })();
 
   /* ---- 9. REFERRER-BASED GREETING ---- */
