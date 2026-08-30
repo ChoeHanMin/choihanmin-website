@@ -804,6 +804,11 @@
   footer .links{display:flex; gap:30px; flex-wrap:wrap; justify-content:center; font-size:14px;}
   footer a{color:var(--paper-dim); transition:color .2s;}
   footer a:hover{color:var(--amber);}
+  .footer-link-btn{
+    background:none; border:none; padding:0; cursor:pointer;
+    font-family:inherit; font-size:14px; color:var(--paper-dim); transition:color .2s;
+  }
+  .footer-link-btn:hover{color:var(--amber);}
   .email-copy-wrap{ position:relative; display:inline-block; }
   .copy-feedback{
     position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(-4px);
@@ -1295,6 +1300,16 @@
   .side-rail.right .rail-label{transform:rotate(180deg);}
   @media(min-width:1180px){ .side-rail{display:flex;} }
 
+  /* ---------- SKIP LINK (keyboard/screen-reader accessibility) ---------- */
+  .skip-link{
+    position:fixed; top:-60px; left:12px; z-index:100;
+    background:var(--amber); color:var(--ink);
+    font-family:var(--mono); font-size:13px; font-weight:700;
+    padding:10px 18px; border-radius:8px;
+    transition:top .2s var(--ease);
+  }
+  .skip-link:focus{ top:12px; }
+
   /* ---------- THEME TOGGLE ---------- */
   .theme-toggle{
     position:fixed; top:18px; right:18px; z-index:20;
@@ -1369,6 +1384,7 @@
 </style>
 </head>
 <body>
+<a href="#hero-top" class="skip-link" data-en="Skip to main content">본문 바로가기</a>
 <div id="introOverlay" class="intro-overlay">
   <div class="intro-content">
     <span class="intro-name">Choi Hanmin</span>
@@ -1729,6 +1745,18 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.3</span>
+        <span class="change-desc" data-en="Added a keyboard skip-to-content link for accessibility">키보드 접근성을 위한 본문 바로가기 링크 추가</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v2.2</span>
+        <span class="change-desc" data-en="Added a one-time achievement for discovering light mode">라이트모드 최초 발견 시 업적 추가</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v2.1</span>
+        <span class="change-desc" data-en="Added a share button (Web Share API with clipboard fallback)">공유하기 버튼 추가 (Web Share API, 클립보드 복사 폴백)</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.0</span>
         <span class="change-desc" data-en="Added a live activity tracker (progress bars computed from real dates)">대외활동 진행 현황 트래커 추가 (실제 날짜 기반 실시간 진행률)</span>
       </div>
@@ -1785,6 +1813,10 @@
         </span>
         <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
         <a href="https://www.soodalgames.com/" target="_blank" rel="noopener" data-en="Soodal Games (games) →">Soodal Games (게임) →</a>
+        <span class="email-copy-wrap">
+          <button class="footer-link-btn" id="shareBtn" type="button" data-en="Share this page">이 페이지 공유</button>
+          <span class="copy-feedback" id="shareCopyFeedback">링크 복사됨 ✓</span>
+        </span>
       </div>
       <div class="footer-btn-row">
         <a class="request-link magnetic" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener" data-en="Request something from Hanmin →">최한민에게 요청하기 →</a>
@@ -1992,6 +2024,7 @@
       document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
       themeBtn.textContent = '☀️';
+      unlockAchievement('lightmode', '라이트모드 발견! 🌈');
     }
     updateAccentRGB();
   });
@@ -2595,6 +2628,30 @@
       }
       feedback.classList.add('show');
       setTimeout(() => feedback.classList.remove('show'), 1600);
+    });
+  })();
+
+  /* ---- SHARE BUTTON (Web Share API, clipboard-copy fallback) ---- */
+  (function(){
+    const btn = document.getElementById('shareBtn');
+    const feedback = document.getElementById('shareCopyFeedback');
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+      const shareData = {
+        title: '최한민 (Choi Hanmin)',
+        text: '최한민의 개인 홈페이지 — 개발, 대외활동, 게임 스튜디오 Soodal Games',
+        url: 'https://www.choihanmin.com'
+      };
+      if (navigator.share) {
+        try { await navigator.share(shareData); return; } catch (e) { /* 사용자가 취소한 경우 등 — 클립보드 복사로 폴백하지 않고 조용히 종료 */ if (e && e.name === 'AbortError') return; }
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareData.url).catch(() => {});
+      }
+      if (feedback) {
+        feedback.classList.add('show');
+        setTimeout(() => feedback.classList.remove('show'), 1600);
+      }
     });
   })();
 
