@@ -13,13 +13,13 @@
 <meta property="og:title" content="최한민 (Choi Hanmin)">
 <meta property="og:description" content="컴퓨터공학 전공 · 인디 게임 스튜디오 Soodal Games 운영 · 20+ 대내외 활동">
 <meta property="og:url" content="https://www.choihanmin.com/">
-<meta property="og:image" content="https://www.choihanmin.com/images/otter.jpg">
+<meta property="og:image" content="https://www.choihanmin.com/images/profile.jpg">
 <meta property="og:locale" content="ko_KR">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="최한민 (Choi Hanmin)">
 <meta name="twitter:description" content="컴퓨터공학 전공 · 인디 게임 스튜디오 Soodal Games 운영">
-<meta name="twitter:image" content="https://www.choihanmin.com/images/otter.jpg">
+<meta name="twitter:image" content="https://www.choihanmin.com/images/profile.jpg">
 <!-- 네이버 서치어드바이저 사이트 소유 확인용 (네이버 등록 시 발급받은 코드로 교체) -->
 <meta name="naver-site-verification" content="2593782ca8cabb3fe7b63823ab44eda079cc5e45" />
 <!-- 구글 서치 콘솔 사이트 소유 확인용 (구글 등록 시 발급받은 코드로 교체) -->
@@ -31,7 +31,7 @@
   "name": "최한민",
   "alternateName": "Choi Hanmin",
   "url": "https://www.choihanmin.com/",
-  "image": "https://www.choihanmin.com/images/otter.jpg",
+  "image": "https://www.choihanmin.com/images/profile.jpg",
   "email": "mailto:rokafhanmin@gmail.com",
   "affiliation": {
     "@type": "CollegeOrUniversity",
@@ -526,6 +526,84 @@
   .reveal.in-view .highlight-card:nth-child(3){ animation-delay:.19s; }
   .reveal.in-view .highlight-card:nth-child(4){ animation-delay:.26s; }
 
+  /* ---------- ACTIVITY TRACKER (live, computed from real dates in JS) ---------- */
+  .tracker-stats{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;
+    margin-bottom:28px;
+  }
+  .tstat{
+    text-align:center; padding:16px 8px;
+    border:1px solid var(--line); border-radius:var(--r-sm);
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+  }
+  .tstat b{ display:block; font-family:var(--mono); font-size:22px; color:var(--amber); margin-bottom:4px; }
+  .tstat span{ font-size:11px; color:var(--paper-dim); }
+  .tracker-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--paper-dim); margin:22px 0 10px;
+  }
+  .tracker-group:first-of-type .tracker-label{ margin-top:0; }
+  .tracker-list{ display:flex; flex-direction:column; gap:10px; }
+  .tracker-item{
+    border:1px solid var(--line); border-radius:var(--r-sm);
+    padding:16px 18px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    box-shadow:var(--shadow-card);
+    transition:border-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .tracker-item:hover{ border-color:rgba(var(--amber-rgb),0.4); transform:translateY(-2px); }
+  .tracker-item-top{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .tracker-name{ font-size:14px; letter-spacing:-0.01em; }
+  .tracker-sub{ display:block; font-size:12px; color:var(--paper-dim); margin-top:3px; }
+  .tracker-pct{ font-family:var(--mono); font-weight:700; color:var(--amber); font-size:17px; flex-shrink:0; }
+  .tracker-bar{
+    height:6px; border-radius:999px; background:var(--line); overflow:hidden; margin:12px 0 8px;
+  }
+  .tracker-bar-fill{
+    height:100%; border-radius:999px;
+    background:linear-gradient(90deg, var(--amber), rgba(var(--amber-rgb),0.7));
+    width:0%; transition:width 1s var(--ease);
+  }
+  .tracker-item.ongoing .tracker-bar-fill{ background:linear-gradient(90deg, var(--teal), rgba(var(--teal-rgb),0.7)); width:100% !important; }
+  .tracker-item.ongoing .tracker-pct{ color:var(--teal); font-size:13px; }
+  .tracker-item-bottom{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--paper-dim); }
+  .tracker-item.upcoming{ opacity:.88; }
+  .tracker-item.upcoming .tracker-item-top{ align-items:center; }
+  .tracker-dday{
+    font-family:var(--mono); font-size:11px; font-weight:700;
+    padding:3px 10px; border-radius:999px; flex-shrink:0;
+    color:var(--rose); border:1px solid rgba(var(--rose-rgb),0.35); background:rgba(var(--rose-rgb),0.08);
+  }
+  @media(max-width:560px){ .tracker-stats{ grid-template-columns:repeat(3, 1fr); gap:8px; } .tstat{ padding:12px 4px; } .tstat b{ font-size:18px; } }
+
+  /* ---------- SKILLS (colorful chips, light-mode neon palette) ---------- */
+  .skill-groups{ display:flex; flex-direction:column; gap:20px; }
+  .skill-group-label{
+    display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em;
+    color:var(--paper-dim); margin-bottom:10px; text-transform:uppercase;
+  }
+  .skill-chips{ display:flex; flex-wrap:wrap; gap:9px; }
+  .chip{
+    display:inline-block; font-family:var(--mono); font-size:12.5px; letter-spacing:.01em;
+    padding:7px 15px; border-radius:999px;
+    border:1px solid rgba(var(--c-rgb),0.32);
+    background:rgba(var(--c-rgb),0.08);
+    color:var(--c);
+    transition:transform .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .chip:hover{
+    transform:translateY(-3px) scale(1.05);
+    background:rgba(var(--c-rgb),0.18);
+    box-shadow:0 10px 22px -10px rgba(var(--c-rgb),0.5);
+  }
+  .chip-amber{ --c:var(--amber); --c-rgb:var(--amber-rgb); }
+  .chip-teal{ --c:var(--teal); --c-rgb:var(--teal-rgb); }
+  .chip-rose{ --c:var(--rose); --c-rgb:var(--rose-rgb); }
+  .reveal.in-view .skill-group{ animation:cardSettle .5s var(--ease) both; }
+  .reveal.in-view .skill-group:nth-child(1){ animation-delay:.05s; }
+  .reveal.in-view .skill-group:nth-child(2){ animation-delay:.14s; }
+  .reveal.in-view .skill-group:nth-child(3){ animation-delay:.23s; }
+
   /* ---------- GUESTBOOK ---------- */
   .guestbook-desc{color:var(--paper-dim); font-size:14px; margin-bottom:20px; max-width:460px;}
   .guestbook-link{
@@ -798,6 +876,23 @@
   .portfolio-modal-err{display:none; color:var(--rose); font-size:12px; margin-top:10px;}
   .portfolio-modal-err.show{display:block;}
 
+  /* ---------- SHORTCUTS HELP MODAL ---------- */
+  .shortcuts-box{ max-width:380px; text-align:left; }
+  .shortcuts-box h3{ text-align:center; }
+  .shortcuts-box .portfolio-modal-sub{ text-align:center; font-family:var(--mono); }
+  .shortcut-list{ display:flex; flex-direction:column; gap:11px; margin-top:6px; }
+  .shortcut-row{ display:flex; align-items:center; gap:10px; }
+  .shortcut-row span{ font-size:13px; color:var(--paper-dim); }
+  kbd{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:28px; height:24px; padding:0 8px;
+    border-radius:6px; border:1px solid var(--line-strong);
+    background:var(--ink); color:var(--amber);
+    font-family:var(--mono); font-size:11px; font-weight:600;
+    box-shadow:0 2px 0 var(--line-strong);
+    flex-shrink:0;
+  }
+
   /* ---------- COMMIT LIST ---------- */
   .commit-list{display:flex; flex-direction:column; gap:4px;}
   .commit-loading{color:var(--paper-dim); font-family:var(--mono); font-size:13px;}
@@ -852,9 +947,11 @@
     transition:border-color .3s var(--ease), transform .3s var(--ease);
   }
   .otter-fact-card:hover{ border-color:rgba(var(--teal-rgb),0.4); transform:translateY(-2px); }
-  .otter-fact-photo{
+  .otter-fact-emoji{
     width:52px; height:52px; flex-shrink:0; border-radius:50%;
-    object-fit:cover; object-position:50% 30%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; line-height:1;
+    background:radial-gradient(circle at 35% 30%, rgba(var(--teal-rgb),0.22), rgba(var(--teal-rgb),0.06));
     border:1px solid rgba(var(--teal-rgb),0.35);
   }
   .otter-fact-label{
@@ -1301,6 +1398,8 @@
   <button data-target="hero-top"><span class="dot-label">home</span></button>
   <button data-target="stamina"><span class="dot-label">체력바</span></button>
   <button data-target="highlights"><span class="dot-label">하이라이트</span></button>
+  <button data-target="tracker"><span class="dot-label">진행현황</span></button>
+  <button data-target="skills"><span class="dot-label">기술스택</span></button>
   <button data-target="interests"><span class="dot-label">관심사</span></button>
   <button data-target="guestbook"><span class="dot-label">방명록</span></button>
   <button data-target="gallery"><span class="dot-label">갤러리</span></button>
@@ -1341,7 +1440,7 @@
     <div class="name-row">
       <h1 class="name">최한민 (Choi Hanmin)</h1>
       <div class="mascot-wrap">
-        <img class="mascot" id="mascotImg" src="images/otter.jpg" alt="마스코트 수달" loading="lazy">
+        <img class="mascot" id="mascotImg" src="images/profile.jpg" alt="최한민 프로필 사진" loading="lazy">
         <span class="mascot-bubble" id="mascotBubble"></span>
       </div>
     </div>
@@ -1447,6 +1546,74 @@
     <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
+  <!-- ACTIVITY TRACKER -->
+  <section id="tracker" class="reveal slide-left">
+    <div class="sec-head"><span class="tag">LIVE STATUS</span><h2 data-en="Activity Tracker">대외활동 진행 현황</h2></div>
+    <p class="sec-sub" id="trackerAsOf">$ tail -f ~/activities.log</p>
+    <div class="tracker-stats">
+      <div class="tstat"><b id="trkActiveCount">0</b><span data-en="Ongoing">진행 중</span></div>
+      <div class="tstat"><b id="trkUpcomingCount">0</b><span data-en="Starting soon">시작 예정</span></div>
+      <div class="tstat"><b id="trkLongest">-</b><span data-en="Longest running">최장 활동</span></div>
+    </div>
+    <div class="tracker-group">
+      <div class="tracker-label" data-en="In Progress">진행 중</div>
+      <div id="trackerActiveList" class="tracker-list"></div>
+    </div>
+    <div class="tracker-group" id="trackerUpcomingGroup">
+      <div class="tracker-label" id="trackerUpcomingLabel" data-en="Starting Soon">시작 예정</div>
+      <div id="trackerUpcomingList" class="tracker-list"></div>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
+  <!-- SKILLS -->
+  <section id="skills" class="reveal slide-right">
+    <div class="sec-head"><span class="tag">STACK</span><h2 data-en="Skills &amp; Tools">기술 스택</h2></div>
+    <p class="sec-sub">$ pip list --user hanmin</p>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <span class="skill-group-label" data-en="Development">개발</span>
+        <div class="skill-chips">
+          <span class="chip chip-amber">Python</span>
+          <span class="chip chip-amber">C++</span>
+          <span class="chip chip-amber">C</span>
+          <span class="chip chip-amber">JavaScript</span>
+          <span class="chip chip-amber">HTML / CSS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="skill-group-label" data-en="AI &amp; Vision">AI · 비전</span>
+        <div class="skill-chips">
+          <span class="chip chip-teal">MediaPipe</span>
+          <span class="chip chip-teal">CLIP</span>
+          <span class="chip chip-teal">FAISS</span>
+          <span class="chip chip-teal">YOLOv8</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="skill-group-label" data-en="Design">디자인</span>
+        <div class="skill-chips">
+          <span class="chip chip-rose">Figma</span>
+          <span class="chip chip-rose">Canva</span>
+          <span class="chip chip-rose">CapCut</span>
+          <span class="chip chip-rose">Illustrator</span>
+          <span class="chip chip-rose">Photoshop</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- INTERESTS -->
   <section id="interests" class="reveal slide-left">
     <div class="sec-head"><span class="tag">OFFLINE</span><h2 data-en="Things I Enjoy">좋아하는 것들</h2></div>
@@ -1487,10 +1654,20 @@
     <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2 data-en="Daily Gallery">일상 갤러리</h2></div>
     <p class="sec-sub">$ ls ~/photos --recent</p>
     <div class="gallery-grid">
-      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="new-tag">NEW</span><span class="gcap">LG CNS AI Genius 서포터즈 16기</span></div>
+      <div class="gitem"><img src="images/web/photo23.jpg" loading="lazy" alt="승마 체험"><span class="new-tag">NEW</span><span class="gcap">말이랑 인사하기</span></div>
+      <div class="gitem"><img src="images/web/photo29.jpg" loading="lazy" alt="특수분장 체험"><span class="new-tag">NEW</span><span class="gcap">예비군 훈련장 좀비 분장 체험</span></div>
+      <div class="gitem"><img src="images/web/photo21.jpg" loading="lazy" alt="헬스장 덤벨 운동"><span class="gcap">헬스장에서 덤벨 컬</span></div>
+      <div class="gitem"><img src="images/web/photo22.jpg" loading="lazy" alt="웨이트 트레이닝"><span class="gcap">웨이트 트레이닝 중</span></div>
+      <div class="gitem"><img src="images/web/photo24.jpg" loading="lazy" alt="단체사진 포즈 패러디"><span class="gcap">단체사진 포즈 패러디</span></div>
+      <div class="gitem tall"><img src="images/web/photo26.jpg" loading="lazy" alt="고궁 산책"><span class="gcap">고궁에서 노을 보기</span></div>
+      <div class="gitem"><img src="images/web/photo25.jpg" loading="lazy" alt="호숫가에서"><span class="gcap">호숫가 산책</span></div>
+      <div class="gitem"><img src="images/web/photo27.jpg" loading="lazy" alt="조명 설치미술 전시"><span class="gcap">조명 설치미술 전시에서</span></div>
+      <div class="gitem"><img src="images/web/photo28.jpg" loading="lazy" alt="강변 산책"><span class="gcap">강변에서 (수달 폰케이스 발견)</span></div>
+      <div class="gitem"><img src="images/web/photo30.jpg" loading="lazy" alt="부엉이 인형과"><span class="gcap">부대찌개 맛집에서 부엉이 인형과</span></div>
+      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="gcap">LG CNS AI Genius 서포터즈 16기</span></div>
       <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="외대 조교"><span class="gcap">외대 조교</span></div>
       <div class="gitem"><img src="images/web/photo04.jpg" loading="lazy" alt="AI 육성센터"><span class="gcap">용인 다우디지털스퀘어 AI 육성센터</span></div>
-      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="new-tag">NEW</span><span class="gcap">여름 계곡에서 돌탑 쌓기</span></div>
+      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="gcap">여름 계곡에서 돌탑 쌓기</span></div>
       <div class="gitem tall"><img src="images/web/photo12.jpg" loading="lazy" alt="농촌 봉사활동"><span class="gcap">가평 농촌 봉사활동 — 고추 수확</span></div>
       <div class="gitem"><img src="images/web/photo01.jpg" loading="lazy" alt="봉사활동"><span class="gcap">지역 봉사활동 현장</span></div>
       <div class="gitem"><img src="images/web/photo08.jpg" loading="lazy" alt="산림 봉사"><span class="gcap">숲 속 봉사활동</span></div>
@@ -1552,6 +1729,26 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.0</span>
+        <span class="change-desc" data-en="Added a live activity tracker (progress bars computed from real dates)">대외활동 진행 현황 트래커 추가 (실제 날짜 기반 실시간 진행률)</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.9</span>
+        <span class="change-desc" data-en="Added a keyboard shortcuts help modal (press ?)">키보드 단축키 도움말 추가 (? 키로 열기)</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.8</span>
+        <span class="change-desc" data-en="Added 10 new photos to the daily gallery">일상 갤러리에 사진 10장 추가</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.7</span>
+        <span class="change-desc" data-en="Switched the hero avatar to a real profile photo">히어로 아바타를 실제 프로필 사진으로 교체</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v1.6</span>
+        <span class="change-desc" data-en="Added a colorful skills &amp; tools chip section">알록달록한 기술 스택 칩 섹션 추가</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v1.5</span>
         <span class="change-desc" data-en="Added a click-cycled otter fact card to the footer">푸터에 클릭으로 넘겨보는 수달 상식 카드 추가</span>
       </div>
@@ -1598,9 +1795,9 @@
     <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy">
 
     <div class="otter-fact-card">
-      <img class="otter-fact-photo" src="images/otter.jpg" alt="수달" loading="lazy">
+      <span class="otter-fact-emoji" aria-hidden="true">🦦</span>
       <div>
-        <span class="otter-fact-label">🦦 SOODAL FACT</span>
+        <span class="otter-fact-label">SOODAL FACT</span>
         <p class="otter-fact-text" id="otterFactText"></p>
         <button class="otter-fact-next" id="otterFactNext" type="button">다른 사실 보기 →</button>
       </div>
@@ -1625,11 +1822,29 @@
   </div>
 </div>
 
+<!-- KEYBOARD SHORTCUTS HELP MODAL -->
+<div id="shortcutsModal" class="portfolio-modal">
+  <div class="portfolio-modal-box shortcuts-box">
+    <span class="portfolio-modal-close" id="shortcutsModalClose">✕</span>
+    <h3 data-en="Keyboard Shortcuts">키보드 단축키</h3>
+    <p class="portfolio-modal-sub" data-en="$ man shortcuts">$ man shortcuts</p>
+    <div class="shortcut-list">
+      <div class="shortcut-row"><kbd>G</kbd><span data-en="Open Soodal Games">Soodal Games 열기</span></div>
+      <div class="shortcut-row"><kbd>P</kbd><span data-en="Jump to gallery">갤러리로 이동</span></div>
+      <div class="shortcut-row"><kbd>Home</kbd><span data-en="Back to top">맨 위로</span></div>
+      <div class="shortcut-row"><kbd>←</kbd><kbd>→</kbd><span data-en="Prev / next photo (in gallery view)">이전 · 다음 사진 (갤러리 열람 중)</span></div>
+      <div class="shortcut-row"><kbd>Esc</kbd><span data-en="Close lightbox or modal">라이트박스 · 모달 닫기</span></div>
+      <div class="shortcut-row"><kbd>?</kbd><span data-en="Toggle this help">이 도움말 열기 / 닫기</span></div>
+    </div>
+  </div>
+</div>
+
 <div class="mobile-bottom-scrim" aria-hidden="true"></div>
 <div id="shortcutPanel" class="shortcut-panel">
   <button id="scGames"><b>G</b>게임</button>
   <button id="scGallery"><b>P</b>갤러리</button>
   <button id="scHome"><b>⌂</b>맨위</button>
+  <button id="scHelp"><b>?</b>단축키</button>
 </div>
 
 <div id="lightbox" class="lightbox">
@@ -1874,12 +2089,24 @@
   document.getElementById('scGames').addEventListener('click', goGames);
   document.getElementById('scGallery').addEventListener('click', goGallery);
   document.getElementById('scHome').addEventListener('click', goHome);
+
+  /* ---- KEYBOARD SHORTCUTS HELP MODAL ---- */
+  const shortcutsModal = document.getElementById('shortcutsModal');
+  const shortcutsModalClose = document.getElementById('shortcutsModalClose');
+  function toggleShortcutsModal(){ shortcutsModal.classList.toggle('open'); }
+  function closeShortcutsModal(){ shortcutsModal.classList.remove('open'); }
+  document.getElementById('scHelp').addEventListener('click', toggleShortcutsModal);
+  shortcutsModalClose.addEventListener('click', closeShortcutsModal);
+  shortcutsModal.addEventListener('click', (e) => { if (e.target === shortcutsModal) closeShortcutsModal(); });
+
   document.addEventListener('keydown', (e) => {
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea') return;
     if (e.key === 'g') goGames();
     if (e.key === 'p') goGallery();
     if (e.key === 'Home') goHome();
+    if (e.key === '?') toggleShortcutsModal();
+    if (e.key === 'Escape') { closeShortcutsModal(); closePortfolioModal(); }
   });
 
   /* ---- LIGHTBOX (with gallery prev/next + captions) ---- */
@@ -2341,7 +2568,7 @@
   document.getElementById('mascotImg').addEventListener('click', () => {
     otterClickCount++;
     localStorage.setItem('otterClickCount', otterClickCount);
-    if (otterClickCount >= 5) unlockAchievement('otter5', '수달과 친해짐 — 5번 클릭 달성!');
+    if (otterClickCount >= 5) unlockAchievement('otter5', '최한민과 친해짐 — 5번 클릭 달성!');
   });
   /* ---- SCROLL-TO-END ACHIEVEMENT ---- */
   const footerEl = document.querySelector('footer');
@@ -2368,6 +2595,118 @@
       }
       feedback.classList.add('show');
       setTimeout(() => feedback.classList.remove('show'), 1600);
+    });
+  })();
+
+  /* ---- ACTIVITY TRACKER (computed live from real dates, no manual % updates needed) ---- */
+  (function(){
+    const activeList = document.getElementById('trackerActiveList');
+    if (!activeList) return;
+
+    const activities = [
+      { name: '시대에듀 에듀메이트 서포터즈 2기', sub: null, start: '2026-08-11', end: '2026-09-06' },
+      { name: '삼성 갤럭시 대학생 서포터즈 6기', sub: '갤럭시 캠퍼스 스토어 방장', start: '2026-03-01', end: '2026-12-31' },
+      { name: '2030 신메뉴 리서치 & 모니터링 서포터즈', sub: null, start: '2026-08-01', end: '2026-10-31' },
+      { name: '코드하나 코더스 서포터즈', sub: '주강사 · 초등 SW·AI 교육', start: '2026-08-01', end: '2027-01-31' },
+      { name: '죽전 다우디지털스퀘어 AI 육성센터', sub: null, start: '2026-06-01', end: '2028-03-31' },
+      { name: 'K애디터즈 서포터즈 8기', sub: '한국특수판매공제조합', start: '2026-08-24', end: '2026-10-30' },
+      { name: '멈블 앰버서더 5기', sub: "팀장 · 팀 '속닥속닥'", start: '2026-08-31', end: '2026-10-25' },
+      { name: '굿네이버스 AI 캠페인 크리에이터 2기', sub: '경기남부사업본부', start: '2026-08-31', end: '2026-09-29' },
+      { name: 'AJ 게임 개발 동아리', sub: null, start: '2020-03-01', end: null },
+      { name: 'LG CNS AI Genius 서포터즈 16기', sub: null, start: '2026-09-01', end: '2026-12-31' },
+      { name: '서울 디지털 성범죄 안심 서포터즈', sub: null, start: '2026-09-01', end: '2026-11-30' },
+      { name: 'LiNK LELP English Buddy', sub: null, start: '2026-09-01', end: '2026-11-28' }
+    ];
+
+    function daysBetween(a, b){ return Math.round((b - a) / 86400000); }
+    function fmtDate(d){ return `${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`; }
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const active = [];
+    const upcoming = [];
+    activities.forEach(a => {
+      const start = new Date(a.start + 'T00:00:00');
+      const end = a.end ? new Date(a.end + 'T00:00:00') : null;
+      const item = { name: a.name, sub: a.sub, start, end };
+      if (start > now) upcoming.push(item);
+      else if (!end || end >= now) active.push(item);
+      // past activities (end < now) are intentionally not shown here — see the locked portfolio download
+    });
+
+    active.sort((a, b) => {
+      if (!a.end && !b.end) return 0;
+      if (!a.end) return 1;
+      if (!b.end) return -1;
+      return ((now - b.start) / (b.end - b.start)) - ((now - a.start) / (a.end - a.start));
+    });
+    upcoming.sort((a, b) => a.start - b.start);
+
+    active.forEach(a => {
+      const row = document.createElement('div');
+      if (!a.end) {
+        const years = Math.max(1, Math.round((now - a.start) / (365.25 * 86400000)));
+        row.className = 'tracker-item ongoing';
+        row.innerHTML = `
+          <div class="tracker-item-top">
+            <div><b class="tracker-name">${a.name}</b>${a.sub ? `<span class="tracker-sub">${a.sub}</span>` : ''}</div>
+            <span class="tracker-pct">${years}년째</span>
+          </div>
+          <div class="tracker-bar"><div class="tracker-bar-fill"></div></div>
+          <div class="tracker-item-bottom"><span>${fmtDate(a.start)} 시작</span><span>종료일 없음 · 상시 활동</span></div>
+        `;
+      } else {
+        const total = daysBetween(a.start, a.end);
+        const elapsed = Math.min(total, Math.max(0, daysBetween(a.start, now)));
+        const pct = total > 0 ? Math.round((elapsed / total) * 100) : 100;
+        row.className = 'tracker-item';
+        row.innerHTML = `
+          <div class="tracker-item-top">
+            <div><b class="tracker-name">${a.name}</b>${a.sub ? `<span class="tracker-sub">${a.sub}</span>` : ''}</div>
+            <span class="tracker-pct">${pct}%</span>
+          </div>
+          <div class="tracker-bar"><div class="tracker-bar-fill" data-w="${pct}"></div></div>
+          <div class="tracker-item-bottom"><span>D+${daysBetween(a.start, now)}</span><span>마감까지 D-${daysBetween(now, a.end)}</span></div>
+        `;
+      }
+      activeList.appendChild(row);
+    });
+
+    const upcomingList = document.getElementById('trackerUpcomingList');
+    const upcomingGroup = document.getElementById('trackerUpcomingGroup');
+    upcoming.forEach(a => {
+      const row = document.createElement('div');
+      row.className = 'tracker-item upcoming';
+      row.innerHTML = `
+        <div class="tracker-item-top">
+          <div><b class="tracker-name">${a.name}</b><span class="tracker-sub">${fmtDate(a.start)} ~ ${a.end ? fmtDate(a.end) : ''}</span></div>
+          <span class="tracker-dday">D-${daysBetween(now, a.start)}</span>
+        </div>
+      `;
+      upcomingList.appendChild(row);
+    });
+    if (upcomingGroup) upcomingGroup.style.display = upcoming.length ? '' : 'none';
+
+    document.getElementById('trkActiveCount').textContent = active.length;
+    document.getElementById('trkUpcomingCount').textContent = upcoming.length;
+
+    const ongoingItem = active.find(a => !a.end);
+    if (ongoingItem) {
+      const years = Math.max(1, Math.round((now - ongoingItem.start) / (365.25 * 86400000)));
+      document.getElementById('trkLongest').textContent = years + '년+';
+    } else {
+      let maxDays = 0;
+      active.concat(upcoming).forEach(a => { if (a.end) maxDays = Math.max(maxDays, daysBetween(a.start, a.end)); });
+      document.getElementById('trkLongest').textContent = maxDays > 0 ? Math.round(maxDays / 30) + '개월' : '-';
+    }
+
+    const asOf = document.getElementById('trackerAsOf');
+    if (asOf) asOf.textContent = `$ tail -f ~/activities.log  # ${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 기준`;
+
+    // fill bars on next frame — a one-time width transition, not a looping animation
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.tracker-bar-fill[data-w]').forEach(el => { el.style.width = el.dataset.w + '%'; });
     });
   })();
 
