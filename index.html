@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>최한민 (Choi Hanmin) — 개발자 &amp; Soodal Games</title>
-<meta name="description" content="최한민(Choi Hanmin) 개인 홈페이지. 한국외국어대학교 컴퓨터공학과 학생이자 인디 게임 스튜디오 Soodal Games 운영자. Google Play·Steam에 게임 7종 출시, 삼성 갤럭시 서포터즈·하나 소셜벤처 등 20건 이상의 대내외 활동 경험.">
+<meta name="description" content="최한민(Choi Hanmin) 개인 홈페이지. 한국외국어대학교 컴퓨터공학과 학생이자 인디 게임 스튜디오 Soodal Games 운영자(게임 목록은 soodalgames.com), 삼성 갤럭시 서포터즈·하나 소셜벤처 등 20건 이상의 대내외 활동 경험.">
 <meta name="keywords" content="최한민, Choi Hanmin, 최한민닷컴, choihanmin, Soodal Games, 한국외국어대학교, 컴퓨터공학과, 미니법정, Mini Court">
 <meta name="author" content="최한민 (Choi Hanmin)">
 <link rel="canonical" href="https://www.choihanmin.com/">
 <!-- Open Graph (카카오톡/페이스북 등 링크 공유 시 미리보기) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="최한민 (Choi Hanmin)">
-<meta property="og:description" content="컴퓨터공학 전공 · 인디 게임 스튜디오 Soodal Games 운영 · 게임 7종 출시 · 20+ 대내외 활동">
+<meta property="og:description" content="컴퓨터공학 전공 · 인디 게임 스튜디오 Soodal Games 운영 · 20+ 대내외 활동">
 <meta property="og:url" content="https://www.choihanmin.com/">
 <meta property="og:image" content="https://www.choihanmin.com/images/otter.jpg">
 <meta property="og:locale" content="ko_KR">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="최한민 (Choi Hanmin)">
-<meta name="twitter:description" content="컴퓨터공학 전공 · 인디 게임 스튜디오 Soodal Games 운영 · 게임 7종 출시">
+<meta name="twitter:description" content="컴퓨터공학 전공 · 인디 게임 스튜디오 Soodal Games 운영">
 <meta name="twitter:image" content="https://www.choihanmin.com/images/otter.jpg">
 <!-- 네이버 서치어드바이저 사이트 소유 확인용 (네이버 등록 시 발급받은 코드로 교체) -->
 <meta name="naver-site-verification" content="2593782ca8cabb3fe7b63823ab44eda079cc5e45" />
@@ -45,7 +45,8 @@
   },
   "sameAs": [
     "https://github.com/ChoeHanMin",
-    "https://blog.naver.com/choehanmin"
+    "https://blog.naver.com/choehanmin",
+    "https://www.soodalgames.com/"
   ]
 }
 </script>
@@ -368,7 +369,7 @@
     animation:heroUp .8s var(--ease) both; animation-delay:.4s;
   }
   @media (prefers-reduced-motion: reduce){ .stats{ animation:none; } }
-  .stat{padding:26px 8px; text-align:center; border-right:1px solid var(--line); transition:background .25s;}
+  .stat{display:block; padding:26px 8px; text-align:center; border-right:1px solid var(--line); transition:background .25s;}
   .stat:hover{ background:rgba(var(--amber-rgb),0.05); }
   .stat:last-child{border-right:none;}
   .stat b{
@@ -528,21 +529,20 @@
   .guestbook-toast.show{ opacity:1; transform:translateX(0); pointer-events:auto; cursor:pointer; }
   html[data-theme="light"] .guestbook-toast{ background:rgba(255,255,255,0.88); }
 
+  /* ---------- GAMES MOVED NOTE ---------- */
+  .games-moved-note{
+    font-family:var(--mono); font-size:12px; color:var(--paper-dim);
+    margin-top:14px;
+  }
+  .games-moved-note a{ color:var(--amber); border-bottom:1px solid transparent; transition:border-color .2s; }
+  .games-moved-note a:hover{ border-color:var(--amber); }
+
   /* ---------- REFERRER GREETING ---------- */
   .referrer-greeting{
     font-family:var(--mono); font-size:12px; color:var(--teal);
     margin-bottom:6px; opacity:.85;
   }
 
-  /* ---------- GAME FILTER SHUFFLE ---------- */
-  .game{ transition:border-color .2s, box-shadow .3s, transform .1s, opacity .3s; }
-  .games.shuffling .game:not(.filtered-out){
-    animation:cardSettle .4s ease both;
-  }
-  @keyframes cardSettle{
-    0%{ opacity:0; transform:translateY(10px) scale(.98); }
-    100%{ opacity:1; transform:translateY(0) scale(1); }
-  }
   .guestbook-preview{margin-top:24px; display:flex; flex-direction:column; gap:8px;}
   .guestbook-empty{font-family:var(--mono); font-size:12px; color:var(--paper-dim); opacity:.7;}
   .guestbook-entry{
@@ -570,76 +570,6 @@
   }
   .sec-head h2{font-family:var(--serif); font-size:clamp(24px,3.4vw,30px); font-weight:700; letter-spacing:-0.01em;}
   .sec-sub{color:var(--paper-dim); font-size:14px; margin:-22px 0 36px; font-family:var(--mono); opacity:.85;}
-
-  /* ---------- GAMES (release cards) ---------- */
-  .games{display:flex; flex-direction:column; gap:16px;}
-  .game{
-    border:1px solid var(--line);
-    border-radius:var(--r-md);
-    padding:24px 26px;
-    background:linear-gradient(165deg, rgba(255,255,255,0.02), rgba(255,255,255,0) 55%);
-    box-shadow:var(--shadow-card);
-    transition:border-color .3s var(--ease), box-shadow .35s var(--ease);
-    transform-style:preserve-3d;
-    will-change:transform;
-  }
-  .game:hover{
-    border-color:rgba(var(--amber-rgb),0.45);
-  }
-  .game.featured{
-    border-color:rgba(var(--amber-rgb),0.35);
-    background:linear-gradient(165deg, rgba(var(--amber-rgb),0.07), rgba(255,255,255,0) 60%);
-    padding-top:30px;
-  }
-  .featured-ribbon{
-    position:absolute; top:14px; right:18px;
-    font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:0.08em;
-    color:var(--ink); background:linear-gradient(100deg, var(--amber), var(--amber-soft));
-    padding:5px 12px; border-radius:999px;
-    box-shadow:0 8px 18px -8px rgba(var(--amber-rgb),0.6);
-  }
-  @media(max-width:520px){ .featured-ribbon{ top:10px; right:12px; font-size:9.5px; padding:4px 9px; } }
-  .game-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;}
-  .game-title{font-size:18.5px; font-weight:700; letter-spacing:-0.01em;}
-  .game-ver{font-family:var(--mono); font-size:12px; color:var(--teal);}
-  .game-desc{color:var(--paper-dim); font-size:14.5px; line-height:1.7; margin:9px 0 12px; max-width:600px;}
-  .game-behind{
-    font-family:var(--serif); font-style:italic; font-size:13px;
-    color:var(--amber); opacity:.85; margin:-2px 0 14px;
-  }
-  .game.has-shot{display:flex; gap:22px; align-items:stretch;}
-  .game-thumb{
-    flex:0 0 138px; width:138px; height:138px;
-    border-radius:var(--r-sm); overflow:hidden;
-    border:1px solid var(--line);
-    box-shadow:0 12px 26px -14px rgba(0,0,0,0.5);
-  }
-  .game-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
-  .game-body{flex:1; min-width:0;}
-  .game.featured .game-thumb{ flex-basis:164px; width:164px; height:164px; }
-  .game.featured .game-title{ font-size:20.5px; }
-  @media(max-width:520px){
-    .game.has-shot{flex-direction:column;}
-    .game-thumb{width:100%; height:190px;}
-    .game.featured .game-thumb{ width:100%; height:200px; }
-  }
-  .badges{display:flex; gap:8px; flex-wrap:wrap;}
-  .badge{
-    font-family:var(--mono); font-size:11px; padding:4px 10px; border-radius:999px;
-    border:1px solid var(--line); color:var(--paper-dim); letter-spacing:0.01em;
-  }
-  .badge.play{border-color:rgba(var(--teal-rgb),0.4); color:var(--teal);}
-  .badge.steam{border-color:rgba(var(--rose-rgb),0.4); color:var(--rose);}
-  .game-links{margin-top:14px; display:flex; gap:18px; font-family:var(--mono); font-size:12px;}
-  .game-links a{color:var(--amber); border-bottom:1px solid transparent; transition:border-color .2s, opacity .2s;}
-  .game-links a:hover{border-color:var(--amber);}
-  .reveal.in-view .game{ animation:cardSettle .55s var(--ease) both; }
-  .reveal.in-view .game:nth-child(1){ animation-delay:.04s; }
-  .reveal.in-view .game:nth-child(2){ animation-delay:.1s; }
-  .reveal.in-view .game:nth-child(3){ animation-delay:.16s; }
-  .reveal.in-view .game:nth-child(4){ animation-delay:.22s; }
-  .reveal.in-view .game:nth-child(5){ animation-delay:.28s; }
-  .reveal.in-view .game:nth-child(n+6){ animation-delay:.32s; }
 
   /* ---------- GALLERY ---------- */
   .gallery-grid{
@@ -788,25 +718,6 @@
   }
   footer .request-link.ghost:hover{background:var(--amber); color:var(--ink); border-color:var(--amber); filter:none;}
 
-  /* ---------- TIMELINE ---------- */
-  .timeline-list{display:flex; flex-direction:column; gap:4px;}
-  .timeline-row{
-    display:flex; gap:14px; align-items:baseline;
-    border-bottom:1px solid var(--line);
-    padding:11px 10px; font-size:13px;
-    margin:0 -10px; border-radius:8px;
-    transition:background .2s, border-color .2s;
-  }
-  .timeline-row:hover{ background:rgba(255,255,255,0.02); border-color:transparent; }
-  .timeline-row .t-icon{flex-shrink:0; font-size:13px;}
-  .timeline-row .t-date{font-family:var(--mono); color:var(--amber); flex-shrink:0; font-size:12px; min-width:64px;}
-  .timeline-row .t-msg{color:var(--paper); flex:1; min-width:0; overflow-wrap:break-word;}
-  .timeline-row .t-tag{font-family:var(--mono); color:var(--paper-dim); font-size:11px; flex-shrink:0;}
-  @media(max-width:480px){
-    .timeline-row{ flex-wrap:wrap; margin:0 -6px; padding:11px 6px; }
-    .timeline-row .t-tag{ flex-basis:100%; padding-left:27px; margin-top:-2px; }
-  }
-
   /* ---------- CHANGELOG ---------- */
   .change-list{display:flex; flex-direction:column; gap:14px;}
   .change-row{display:flex; gap:16px; align-items:baseline; border-bottom:1px solid var(--line); padding-bottom:14px;}
@@ -919,8 +830,8 @@
   }
 
   /* ---------- SPOTLIGHT HOVER GLOW ---------- */
-  .game, .gitem, .interest, .stack-item, .cred{ position:relative; isolation:isolate; }
-  .game::before, .interest::before, .stack-item::before, .cred::before{
+  .gitem, .interest, .stack-item, .cred{ position:relative; isolation:isolate; }
+  .interest::before, .stack-item::before, .cred::before{
     content:''; position:absolute; inset:0; border-radius:inherit;
     background:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%), rgba(var(--amber-rgb),0.16), transparent 70%);
     opacity:0; transition:opacity .4s var(--ease);
@@ -932,10 +843,10 @@
     opacity:0; transition:opacity .4s var(--ease);
     pointer-events:none; mix-blend-mode:overlay;
   }
-  .game.spotlit::before, .interest.spotlit::before, .stack-item.spotlit::before, .cred.spotlit::before,
+  .interest.spotlit::before, .stack-item.spotlit::before, .cred.spotlit::before,
   .gitem.spotlit::after{ opacity:1; }
   @media(hover:none){
-    .game::before, .interest::before, .stack-item::before, .cred::before, .gitem::after{ display:none; }
+    .interest::before, .stack-item::before, .cred::before, .gitem::after{ display:none; }
   }
 
   /* ---------- BUTTON SHIMMER SWEEP ---------- */
@@ -1121,8 +1032,8 @@
   @media (prefers-reduced-motion: reduce){ h1.name::after{ animation:none; width:calc(100% - 4px); } }
 
   /* ---------- IMAGE FADE-IN ON LOAD ---------- */
-  .gitem img, .game-thumb img{ opacity:0; transition:opacity .5s var(--ease), transform .4s ease; }
-  .gitem img.loaded, .game-thumb img.loaded{ opacity:1; }
+  .gitem img{ opacity:0; transition:opacity .5s var(--ease), transform .4s ease; }
+  .gitem img.loaded{ opacity:1; }
 
   /* ---------- NAV DOTS ---------- */
   .nav-dots{
@@ -1145,22 +1056,6 @@
     white-space:nowrap; opacity:0; transition:opacity .2s;
   }
   .nav-dots button:hover .dot-label{ opacity:1; }
-
-  /* ---------- GAME FILTER ---------- */
-  .game-filters{ display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap; }
-  .game-filters button{
-    font-family:var(--mono); font-size:11px;
-    background:transparent; color:var(--paper-dim);
-    border:1px solid var(--line); border-radius:999px;
-    padding:7px 16px; cursor:pointer;
-    transition:color .2s, border-color .2s, background .2s, transform .15s;
-  }
-  .game-filters button:hover{ border-color:var(--line-strong); color:var(--paper); }
-  .game-filters button.active{
-    color:var(--ink); background:var(--amber); border-color:var(--amber);
-  }
-  .game-filters button:active{ transform:scale(.96); }
-  .game.filtered-out{ display:none; }
 
   /* ---------- LANG TOGGLE ---------- */
   .lang-toggle{
@@ -1215,13 +1110,12 @@
     .side-rail, .shortcut-panel, .theme-toggle, .lang-toggle, .fontsize-panel,
     .trail-canvas, .star-canvas, .scroll-progress, .grain-overlay, .orb,
     .lightbox, .intro-overlay, .mascot-bubble, .custom-cursor, .nav-dots,
-    #liveVisitors, .game-filters, .divider, .mobile-bottom-scrim, .confetti-canvas, .light-aurora{
+    #liveVisitors, .divider, .mobile-bottom-scrim, .confetti-canvas, .light-aurora{
       display:none !important;
     }
     body{ background:#fff !important; color:#111 !important; }
     .reveal{ opacity:1 !important; transform:none !important; }
     a{ color:#111 !important; text-decoration:underline; }
-    .game.filtered-out{ display:block !important; }
   }
 
   /* ---------- SIDE ORNAMENT ---------- */
@@ -1294,12 +1188,10 @@
   html[data-theme="light"] .hero-spotlight{
     background:radial-gradient(circle 480px at var(--hx,50%) var(--hy,30%), rgba(var(--amber-rgb),0.16), transparent 70%);
   }
-  html[data-theme="light"] .game::before, html[data-theme="light"] .interest::before,
+  html[data-theme="light"] .interest::before,
   html[data-theme="light"] .stack-item::before, html[data-theme="light"] .cred::before{
     background:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%), rgba(var(--amber-rgb),0.22), transparent 70%);
   }
-  html[data-theme="light"] .badge.play{ background:rgba(var(--teal-rgb),0.12); }
-  html[data-theme="light"] .badge.steam{ background:rgba(var(--rose-rgb),0.12); }
   html[data-theme="light"] .orb{ opacity:.4; filter:blur(70px); }
   html[data-theme="light"] .sec-head .tag::before{
     box-shadow:0 0 10px 2px rgba(var(--amber-rgb),0.5);
@@ -1343,7 +1235,6 @@
   <button data-target="stamina"><span class="dot-label">체력바</span></button>
   <button data-target="interests"><span class="dot-label">관심사</span></button>
   <button data-target="guestbook"><span class="dot-label">방명록</span></button>
-  <button data-target="games"><span class="dot-label">게임</span></button>
   <button data-target="gallery"><span class="dot-label">갤러리</span></button>
   <button data-target="commits"><span class="dot-label">커밋</span></button>
   <button data-target="madewith"><span class="dot-label">제작기</span></button>
@@ -1367,7 +1258,7 @@
         <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="whoami"></span></div>
         <div class="out" id="out1">
           <b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>
-          인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 · 7개 게임 출시<br>
+          인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 (게임 목록 → soodalgames.com)<br>
           동시에 <span class="teal">15+ 대내외 활동</span>, 20+ 조직과 협업 중
         </div>
         <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="git log --oneline -1"></span></div>
@@ -1396,10 +1287,11 @@
     <blockquote class="motto" id="mottoText">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</blockquote>
 
     <div class="stats">
-      <div class="stat"><b data-target="7" data-suffix="">0</b><span data-en="Games shipped (Play / Steam)">출시 게임 (Play / Steam)</span></div>
+      <a class="stat" href="https://www.soodalgames.com/" target="_blank" rel="noopener"><b data-target="7" data-suffix="">0</b><span data-en="Games shipped (Play / Steam)">출시 게임 (Play / Steam)</span></a>
       <div class="stat"><b data-target="15" data-suffix="+">0</b><span data-en="Outside activities">대내외 활동</span></div>
       <div class="stat"><b data-target="20" data-suffix="+">0</b><span data-en="Organizations collaborated">협업 조직</span></div>
     </div>
+    <p class="games-moved-note" data-en="Games I've shipped and the dev timeline now live at soodalgames.com →">출시한 게임들과 개발 타임라인은 이제 <a href="https://www.soodalgames.com/" target="_blank" rel="noopener">soodalgames.com</a>에서 볼 수 있어요 →</p>
     <div id="liveVisitors" class="live-visitors"></div>
   </section>
 
@@ -1480,138 +1372,6 @@
     <a class="guestbook-link magnetic" href="https://forms.gle/JfN6Vd65476TEj6x8" target="_blank" rel="noopener" data-en="Leave a note →">한마디 남기기 →</a>
     <div id="guestbookPreview" class="guestbook-preview">
       <p class="guestbook-empty">아직 방명록 미리보기 연동 전이에요. (설정하면 최근 답변이 여기 뜹니다)</p>
-    </div>
-  </section>
-
-  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
-    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
-    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
-  </svg></div>
-
-  <!-- GAMES -->
-  <section id="games" class="reveal slide-left">
-    <div class="sec-head"><span class="tag">RELEASES</span><h2 data-en="Games I've Shipped">출시한 게임들</h2></div>
-    <p class="sec-sub">Soodal Games (Choi Hanmin) · 단일 HTML/CSS/JS PWA → TWA 빌드 파이프라인</p>
-    <div class="game-filters">
-      <button class="active" data-filter="all">전체</button>
-      <button data-filter="play">Google Play만</button>
-      <button data-filter="steam">Steam만</button>
-    </div>
-    <div class="games">
-
-      <div class="game has-shot featured" data-platforms="play steam">
-        <span class="featured-ribbon">★ FEATURED</span>
-        <div class="game-thumb" data-shots="images/games/web/minicourt.jpg,images/games/web/minicourt2.jpg,images/games/web/minicourt3.jpg,images/games/web/minicourt4.jpg"><img src="images/games/web/minicourt.jpg" loading="lazy" alt="미니법정 스크린샷"></div>
-        <div class="game-body">
-          <div class="game-top">
-            <div><span class="game-title">미니법정 (Mini Court)</span> <span class="game-ver">v2.x — bilingual</span></div>
-          </div>
-          <p class="game-desc" data-en="A courtroom sim with 55 cases, Korean/English support, an appeals mode, daily challenges, and a career XP system. Packaged with Electron and released on Steam too.">55개 사건, 한/영 지원, 항소심 모드와 데일리 챌린지, 경력 XP 시스템까지 갖춘 법정 시뮬레이션. Electron으로 패키징해 Steam에도 올렸습니다.</p>
-          <p class="game-behind">비하인드: 55번째 사건 쓰다가 판사 이름 짓는 데 제일 오래 걸렸음.</p>
-          <div class="badges">
-            <span class="badge play">Google Play</span>
-            <span class="badge steam">Steam · App ID 5113110</span>
-          </div>
-          <div class="game-links">
-            <a href="https://store.steampowered.com/app/5113110" target="_blank" rel="noopener">Steam →</a>
-            <a href="https://play.google.com/store/apps/details?id=com.choehanmin.minicourt" target="_blank" rel="noopener">Google Play →</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="game has-shot" data-platforms="play steam">
-        <div class="game-thumb" data-shots="images/games/web/stealthops.jpg,images/games/web/stealthops2.jpg,images/games/web/stealthops3.jpg,images/games/web/stealthops4.jpg"><img src="images/games/web/stealthops.jpg" loading="lazy" alt="Stealth Ops 스크린샷"></div>
-        <div class="game-body">
-          <div class="game-top">
-            <div><span class="game-title">Stealth Ops</span> <span class="game-ver">v4.3.0.0</span></div>
-          </div>
-          <p class="game-desc" data-en="A stealth action game with 9 weapons, 6 mini-games per stage, and dual-stage maps. Also shipped as an Electron/Steam build.">9종 무기, 스테이지별 6개 미니게임, 듀얼 스테이지 맵 구조의 잠입 액션. Electron/Steam 빌드로도 제공.</p>
-          <p class="game-behind">비하인드: 무기 밸런싱한다고 새벽 4시까지 잡혀있었음.</p>
-          <div class="badges"><span class="badge play">Google Play</span><span class="badge steam">Steam</span></div>
-          <div class="game-links">
-            <a href="https://play.google.com/store/apps/details?id=com.choehanmin.stealthops" target="_blank" rel="noopener">Google Play →</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="game has-shot" data-platforms="play">
-        <div class="game-thumb" data-shots="images/games/web/timeheist24.jpg,images/games/web/timeheist24_2.jpg,images/games/web/timeheist24_3.jpg"><img src="images/games/web/timeheist24.jpg" loading="lazy" alt="Time Heist 24 스크린샷"></div>
-        <div class="game-body">
-          <div class="game-top">
-            <div><span class="game-title">Time Heist 24</span> <span class="game-ver">GitHub: time-heist</span></div>
-          </div>
-          <p class="game-desc" data-en="A turn-based strategy game where time is your HP, action points, and score all at once.">시간이 곧 체력이자 행동력이자 점수가 되는 턴제 전략 게임.</p>
-          <p class="game-behind">비하인드: 턴제 규칙 짜다가 정작 내 턴을 다 써버림.</p>
-          <div class="badges"><span class="badge play">Google Play</span></div>
-          <div class="game-links">
-            <a href="https://play.google.com/store/apps/details?id=com.choehanmin.timeheist24" target="_blank" rel="noopener">Google Play →</a>
-            <a href="https://github.com/ChoeHanMin/time-heist" target="_blank" rel="noopener">GitHub →</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="game has-shot" data-platforms="play">
-        <div class="game-thumb" data-shots="images/games/web/seathunter.jpg,images/games/web/seathunter2.jpg,images/games/web/seathunter3.jpg"><img src="images/games/web/seathunter.jpg" loading="lazy" alt="자리 사냥 스크린샷"></div>
-        <div class="game-body">
-          <div class="game-top"><div><span class="game-title">자리 사냥 (Seat Hunter)</span></div></div>
-          <p class="game-desc" data-en="A casual observation game — watch subway passengers and guess who's about to get off.">지하철 승객을 관찰해 곧 내릴 사람을 맞히는 관찰력 캐주얼 게임.</p>
-          <p class="game-behind">비하인드: 관찰력 테스트하다가 정작 내가 내릴 역을 놓침.</p>
-          <div class="badges"><span class="badge play">Google Play</span></div>
-        </div>
-      </div>
-
-      <div class="game has-shot" data-platforms="play">
-        <div class="game-thumb" data-shots="images/games/web/stresssmash.jpg,images/games/web/stresssmash2.jpg"><img src="images/games/web/stresssmash.jpg" loading="lazy" alt="Stress Smash 스크린샷"></div>
-        <div class="game-body">
-          <div class="game-top"><div><span class="game-title">Stress Smash</span></div></div>
-          <p class="game-desc" data-en="A punchy casual game — tap the screen to smash your stress away.">화면을 두드려 스트레스를 날리는 타격감 중심 캐주얼 게임.</p>
-          <p class="game-behind">비하인드: 테스트하다가 진짜로 스트레스가 풀렸음.</p>
-          <div class="badges"><span class="badge play">Google Play</span></div>
-        </div>
-      </div>
-
-      <div class="game has-shot" data-platforms="play">
-        <div class="game-thumb" data-shots="images/games/web/colordebt.jpg,images/games/web/colordebt2.jpg,images/games/web/colordebt3.jpg"><img src="images/games/web/colordebt.jpg" loading="lazy" alt="Color Debt 스크린샷"></div>
-        <div class="game-body">
-          <div class="game-top"><div><span class="game-title">Color Debt</span></div></div>
-          <p class="game-desc" data-en="A casual puzzle game — merge and pop same-colored faces to keep your debt from growing.">같은 색 얼굴을 합치고 터뜨려 빚을 늘리지 않는 캐주얼 퍼즐 게임.</p>
-          <p class="game-behind">비하인드: 빚 갚는 게임 만들다가 내 통장 잔고가 떠올랐음.</p>
-          <div class="badges"><span class="badge play">Google Play</span></div>
-        </div>
-      </div>
-
-      <div class="game has-shot" data-platforms="play">
-        <div class="game-thumb" data-shots="images/games/web/mazeescape.jpg,images/games/web/mazeescape2.jpg,images/games/web/mazeescape3.jpg"><img src="images/games/web/mazeescape.jpg" loading="lazy" alt="Maze Escape 스크린샷"></div>
-        <div class="game-body">
-          <div class="game-top"><div><span class="game-title">Maze Escape</span></div></div>
-          <p class="game-desc" data-en="A casual maze-escape game where you collect keys to get out — one of my earliest releases.">열쇠를 모아 미로를 탈출하는 캐주얼 게임, 초기작 중 하나.</p>
-          <p class="game-behind">비하인드: 미로 디자인하다가 정작 나가는 길을 못 찾았음.</p>
-          <div class="badges"><span class="badge play">Google Play</span></div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
-    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
-    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
-    <circle class="divider-glow" cy="8" r="3.2" style="fill:var(--amber)">
-      <animate attributeName="cx" values="0;300;0" dur="10s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
-  </svg></div>
-
-  <!-- INTEGRATED TIMELINE -->
-  <section id="timeline" class="reveal slide-right">
-    <div class="sec-head"><span class="tag">TIMELINE</span><h2 data-en="Timeline">게임 개발 &amp; 커밋 타임라인</h2></div>
-    <p class="sec-sub" data-en="Game dev kickoffs and live commits, merged in order">게임 개발 착수 시점과 실시간 커밋을 하나로 모아 시간순으로 정렬했습니다.</p>
-    <div id="timelineList" class="timeline-list">
-      <p class="commit-loading">불러오는 중...</p>
     </div>
   </section>
 
@@ -1730,6 +1490,7 @@
           <span class="copy-feedback" id="emailCopyFeedback">복사됨 ✓</span>
         </span>
         <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.soodalgames.com/" target="_blank" rel="noopener" data-en="Soodal Games (games) →">Soodal Games (게임) →</a>
       </div>
       <div class="footer-btn-row">
         <a class="request-link magnetic" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener" data-en="Request something from Hanmin →">최한민에게 요청하기 →</a>
@@ -1863,7 +1624,7 @@
   });
 
   /* ---- IMAGE FADE-IN ON LOAD ---- */
-  document.querySelectorAll('.gitem img, .game-thumb img').forEach(img => {
+  document.querySelectorAll('.gitem img').forEach(img => {
     if (img.complete && img.naturalWidth > 0) {
       img.classList.add('loaded');
     } else {
@@ -1980,69 +1741,6 @@
       document.getElementById('commitList').innerHTML = '<p class="commit-loading">최근 커밋을 불러올 수 없습니다.</p>';
     });
 
-  /* ---- INTEGRATED TIMELINE (games + live commits, merged) ---- */
-  (function(){
-    // 실제 개발 착수 시점 (한민님이 직접 제공한 날짜, 월 단위)
-    const gameTimelineEvents = [
-      { date: '2025-01', icon: '🎮', title: '미니법정 (Mini Court) 개발 시작', tag: 'Soodal Games' },
-      { date: '2025-03', icon: '🎮', title: 'Stealth Ops 개발 시작', tag: 'Soodal Games' },
-      { date: '2025-06', icon: '🎮', title: 'Time Heist 24 개발 시작', tag: 'Soodal Games' },
-      { date: '2025-09', icon: '🎮', title: 'Color Debt 개발 시작', tag: 'Soodal Games' },
-      { date: '2025-12', icon: '🎮', title: '자리 사냥 (Seat Hunter) 개발 시작', tag: 'Soodal Games' },
-      { date: '2026-04', icon: '🎮', title: 'Maze Escape 개발 시작', tag: 'Soodal Games' },
-      { date: '2026-06', icon: '🎮', title: 'Stress Smash 개발 시작', tag: 'Soodal Games' },
-    ];
-
-    function renderTimeline(events){
-      const list = document.getElementById('timelineList');
-      if (!list) return;
-      if (!events.length){
-        list.innerHTML = '<p class="commit-loading">타임라인을 불러올 수 없습니다.</p>';
-        return;
-      }
-      list.innerHTML = '';
-      events.forEach(ev => {
-        const row = document.createElement('div');
-        row.className = 'timeline-row';
-        row.innerHTML = `
-          <span class="t-icon">${ev.icon}</span>
-          <span class="t-date">${ev.date}</span>
-          <span class="t-msg">${ev.title}</span>
-          <span class="t-tag">${ev.tag}</span>
-        `;
-        list.appendChild(row);
-      });
-    }
-
-    fetch('https://api.github.com/users/ChoeHanMin/events/public')
-      .then(r => r.json())
-      .then(events => {
-        const pushes = (Array.isArray(events) ? events : []).filter(e => e.type === 'PushEvent').slice(0, 6);
-        const commitEvents = pushes.map(ev => {
-          const commit = ev.payload.commits && ev.payload.commits[0];
-          const d = new Date(ev.created_at);
-          const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
-          return {
-            date: dateStr,
-            sortKey: d.getTime(),
-            icon: '💻',
-            title: commit ? commit.message.split('\n')[0] : '커밋',
-            tag: ev.repo.name.split('/')[1]
-          };
-        });
-        const gameEvents = gameTimelineEvents.map(ev => ({
-          ...ev,
-          sortKey: new Date(ev.date + '-01').getTime()
-        }));
-        const merged = [...commitEvents, ...gameEvents].sort((a, b) => b.sortKey - a.sortKey);
-        renderTimeline(merged);
-      })
-      .catch(() => {
-        const gameEvents = gameTimelineEvents.slice().reverse();
-        renderTimeline(gameEvents);
-      });
-  })();
-
   /* ---- CURSOR TRAIL ---- */
   const trailCanvas = document.getElementById('trailCanvas');
   let particles = [];
@@ -2063,7 +1761,7 @@
   }
 
   /* ---- SHORTCUT PANEL (persistent, click or key) ---- */
-  function goGames(){ document.getElementById('games').scrollIntoView({ behavior: 'smooth' }); }
+  function goGames(){ window.open('https://www.soodalgames.com/', '_blank', 'noopener'); }
   function goGallery(){ document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' }); }
   function goHome(){ window.scrollTo({ top: 0, behavior: 'smooth' }); }
   document.getElementById('scGames').addEventListener('click', goGames);
@@ -2102,17 +1800,6 @@
     img.style.cursor = 'zoom-in';
     img.addEventListener('click', () => {
       showGalleryAt(i);
-      lightbox.classList.add('show');
-    });
-  });
-  document.querySelectorAll('.game-thumb img').forEach(img => {
-    img.style.cursor = 'zoom-in';
-    img.addEventListener('click', () => {
-      galleryIndex = -1;
-      lightboxImg.src = img.src;
-      lightboxCaption.textContent = '';
-      lightboxPrev.hidden = true;
-      lightboxNext.hidden = true;
       lightbox.classList.add('show');
     });
   });
@@ -2312,7 +1999,7 @@
       customCursor.classList.add('active');
       if (!cursorScheduled){ cursorScheduled = true; requestAnimationFrame(updateCursorPos); }
     }, { passive: true });
-    document.querySelectorAll('a, button, .mascot, .game, .gitem').forEach(el => {
+    document.querySelectorAll('a, button, .mascot, .gitem').forEach(el => {
       el.addEventListener('mouseenter', () => customCursor.classList.add('grow'));
       el.addEventListener('mouseleave', () => customCursor.classList.remove('grow'));
     });
@@ -2338,20 +2025,6 @@
     });
   }, { threshold: 0.4 });
   navSections.forEach(sec => navIO.observe(sec));
-
-  /* ---- GAME FILTER ---- */
-  document.querySelectorAll('.game-filters button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.game-filters button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      document.querySelectorAll('.game').forEach(card => {
-        const platforms = (card.dataset.platforms || '').split(' ');
-        const show = filter === 'all' || platforms.includes(filter);
-        card.classList.toggle('filtered-out', !show);
-      });
-    });
-  });
 
   /* ---- LANG TOGGLE (KR / EN) ---- */
   const langBtn = document.getElementById('langToggle');
@@ -2451,17 +2124,6 @@
   if (portfolioPwSubmit) portfolioPwSubmit.addEventListener('click', tryUnlockPortfolio);
   if (portfolioPwInput) portfolioPwInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlockPortfolio(); });
 
-  /* ---- 3. GAME FILTER SHUFFLE (already filters; add settle animation) ---- */
-  const gamesContainer = document.querySelector('.games');
-  document.querySelectorAll('.game-filters button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!gamesContainer) return;
-      gamesContainer.classList.remove('shuffling');
-      void gamesContainer.offsetWidth;
-      gamesContainer.classList.add('shuffling');
-    });
-  });
-
   /* ---- 4. TEXT SCRAMBLE ON SECTION TITLES ---- */
   const scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ가나다라마바사아자차카타파하#$%&';
   function scrambleInto(el, finalText, duration){
@@ -2520,26 +2182,6 @@
     setTimeout(pollGuestbook, 3000);
     setInterval(pollGuestbook, 60000);
   }
-
-  /* ---- 7. GAME SCREENSHOT MINI-CAROUSEL (works with 1+ images) ---- */
-  document.querySelectorAll('.game-thumb[data-shots]').forEach(thumb => {
-    const shots = thumb.dataset.shots.split(',').map(s => s.trim()).filter(Boolean);
-    if (shots.length <= 1) return;
-    const img = thumb.querySelector('img');
-    let idx = 0;
-    let carouselTimer = null;
-    thumb.addEventListener('mouseenter', () => {
-      carouselTimer = setInterval(() => {
-        idx = (idx + 1) % shots.length;
-        img.src = shots[idx];
-      }, 900);
-    });
-    thumb.addEventListener('mouseleave', () => {
-      clearInterval(carouselTimer);
-      idx = 0;
-      img.src = shots[0];
-    });
-  });
 
   /* ---- 8. ACHIEVEMENT BADGES ---- */
   /* ---- CONFETTI BURST (for achievement unlocks) ---- */
@@ -2608,16 +2250,6 @@
     localStorage.setItem('otterClickCount', otterClickCount);
     if (otterClickCount >= 5) unlockAchievement('otter5', '수달과 친해짐 — 5번 클릭 달성!');
   });
-  const gameLinkKeys = new Set();
-  const totalGameCards = document.querySelectorAll('.game').length;
-  document.querySelectorAll('.game-links a').forEach(a => {
-    a.addEventListener('click', () => {
-      const card = a.closest('.game');
-      if (card) gameLinkKeys.add(card.querySelector('.game-title').textContent);
-      if (gameLinkKeys.size >= totalGameCards) unlockAchievement('allgames', '게임 마스터 — 모든 게임 링크 클릭!');
-    });
-  });
-
   /* ---- SCROLL-TO-END ACHIEVEMENT ---- */
   const footerEl = document.querySelector('footer');
   if (footerEl) {
@@ -2717,7 +2349,6 @@
         card.classList.remove('spotlit');
       });
     }
-    document.querySelectorAll('.game').forEach(card => attachCardEffect(card, canTilt));
     document.querySelectorAll('.gitem').forEach(card => attachCardEffect(card, false));
     document.querySelectorAll('.interest, .stack-item, .cred').forEach(card => attachCardEffect(card, false));
   })();
