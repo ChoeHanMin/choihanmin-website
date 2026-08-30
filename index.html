@@ -478,6 +478,54 @@
   .reveal.in-view .interest:nth-child(3){ animation-delay:.19s; }
   .reveal.in-view .interest:nth-child(4){ animation-delay:.26s; }
 
+  /* ---------- HIGHLIGHTS ---------- */
+  .highlights-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:16px;
+  }
+  @media(max-width:560px){ .highlights-grid{grid-template-columns:1fr;} }
+  .highlight-card{
+    position:relative;
+    display:flex; align-items:flex-start; gap:16px;
+    border:1px solid var(--line); border-radius:var(--r-sm);
+    padding:20px 20px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    box-shadow:var(--shadow-card);
+    transition:border-color .3s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .highlight-card:hover{
+    border-color:rgba(var(--teal-rgb),0.4);
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-lift);
+  }
+  .highlight-card .hic{
+    font-size:21px; line-height:1; flex-shrink:0;
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%, rgba(var(--teal-rgb),0.22), rgba(var(--teal-rgb),0.06));
+    border:1px solid rgba(var(--teal-rgb),0.25);
+    transition:transform .3s var(--ease);
+  }
+  .highlight-card:nth-child(2) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--rose-rgb),0.22), rgba(var(--rose-rgb),0.06)); border-color:rgba(var(--rose-rgb),0.25); }
+  .highlight-card:nth-child(3) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--amber-rgb),0.22), rgba(var(--amber-rgb),0.06)); border-color:rgba(var(--amber-rgb),0.25); }
+  .highlight-card:nth-child(4) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--teal-rgb),0.22), rgba(var(--teal-rgb),0.06)); border-color:rgba(var(--teal-rgb),0.25); }
+  .highlight-card:hover .hic{ transform:scale(1.08) rotate(-4deg); }
+  .highlight-card .h-top{ display:flex; align-items:center; gap:8px; margin-bottom:5px; flex-wrap:wrap; }
+  .highlight-card b{font-size:15px; letter-spacing:-0.01em;}
+  .highlight-card .h-role{
+    font-family:var(--mono); font-size:10px; letter-spacing:.04em;
+    padding:2px 8px; border-radius:20px;
+    color:var(--teal); border:1px solid rgba(var(--teal-rgb),0.35);
+    background:rgba(var(--teal-rgb),0.08);
+  }
+  .highlight-card span.h-desc{display:block; font-size:13px; color:var(--paper-dim); line-height:1.55;}
+  .reveal.in-view .highlight-card{ animation:cardSettle .5s var(--ease) both; }
+  .reveal.in-view .highlight-card:nth-child(1){ animation-delay:.05s; }
+  .reveal.in-view .highlight-card:nth-child(2){ animation-delay:.12s; }
+  .reveal.in-view .highlight-card:nth-child(3){ animation-delay:.19s; }
+  .reveal.in-view .highlight-card:nth-child(4){ animation-delay:.26s; }
+
   /* ---------- GUESTBOOK ---------- */
   .guestbook-desc{color:var(--paper-dim); font-size:14px; margin-bottom:20px; max-width:460px;}
   .guestbook-link{
@@ -1221,6 +1269,7 @@
 <nav id="navDots" class="nav-dots">
   <button data-target="hero-top"><span class="dot-label">home</span></button>
   <button data-target="stamina"><span class="dot-label">체력바</span></button>
+  <button data-target="highlights"><span class="dot-label">하이라이트</span></button>
   <button data-target="interests"><span class="dot-label">관심사</span></button>
   <button data-target="guestbook"><span class="dot-label">방명록</span></button>
   <button data-target="gallery"><span class="dot-label">갤러리</span></button>
@@ -1316,6 +1365,48 @@
         <span class="status-line">📚 이번 달 배운 것: 스크롤 리빌 애니메이션 (Intersection Observer)</span>
         <span class="status-line">🔮 다음 업데이트 예고: Time Heist 24 신규 모드 스크린샷 공개 예정</span>
       </p>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
+  <!-- HIGHLIGHTS -->
+  <section id="highlights" class="reveal slide-right">
+    <div class="sec-head"><span class="tag">TRACK RECORD</span><h2 data-en="Highlights">활동 하이라이트</h2></div>
+    <p class="sec-sub">$ cat ~/career/highlights.md</p>
+    <div class="highlights-grid">
+      <div class="highlight-card">
+        <span class="hic">🎮</span>
+        <div>
+          <div class="h-top"><b data-en="Soodal Games Founder">Soodal Games 대표</b><span class="h-role" data-en="ONGOING">운영 중</span></div>
+          <span class="h-desc" data-en="Founded and run an indie game studio solo, shipping 7 games to Google Play and Steam">인디 게임 스튜디오를 직접 창업해 운영하며 Play·Steam에 게임 7종 출시</span>
+        </div>
+      </div>
+      <div class="highlight-card">
+        <span class="hic">🧑‍🏫</span>
+        <div>
+          <div class="h-top"><b data-en="HUFS Computer Engineering TA">외대 컴퓨터공학과 조교</b><span class="h-role" data-en="TA">조교</span></div>
+          <span class="h-desc" data-en="Teaching assistant for Computational Thinking, guiding underclassmen through algorithm assignments">컴퓨팅사고 수업 TA로 후배들의 알고리즘 과제를 직접 지도</span>
+        </div>
+      </div>
+      <div class="highlight-card">
+        <span class="hic">🤝</span>
+        <div>
+          <div class="h-top"><b data-en="LG CNS AI Genius Supporters 16th">LG CNS AI Genius 서포터즈 16기</b><span class="h-role" data-en="16TH">16기</span></div>
+          <span class="h-desc" data-en="Selected as an AI tech supporter, working on hands-on AI project experience">AI 기술 서포터즈로 선발되어 실무형 AI 프로젝트 경험 중</span>
+        </div>
+      </div>
+      <div class="highlight-card">
+        <span class="hic">🌍</span>
+        <div>
+          <div class="h-top"><b data-en="LiNK English Buddy">LiNK English Buddy</b><span class="h-role" data-en="VOLUNTEER">봉사</span></div>
+          <span class="h-desc" data-en="1:1 English coaching volunteer for North Korean defector youth">탈북 청년 대상 1:1 영어 코칭 봉사활동 진행 중</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1429,6 +1520,10 @@
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
+      <div class="change-row">
+        <span class="change-ver">v1.4</span>
+        <span class="change-desc" data-en="Added career highlights section (Soodal Games, HUFS TA, LG CNS AI Genius, LiNK English Buddy)">활동 하이라이트 섹션 추가 (Soodal Games, 외대 조교, LG CNS AI Genius, LiNK English Buddy)</span>
+      </div>
       <div class="change-row">
         <span class="change-ver">v1.3</span>
         <span class="change-desc" data-en="Added locked portfolio download, free 1-page resume, vCard button, and RSS feed">잠금 포트폴리오 다운로드, 무료 1페이지 이력서, vCard 저장 버튼, RSS 피드 추가</span>
