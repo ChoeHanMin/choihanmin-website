@@ -526,6 +526,56 @@
   .reveal.in-view .highlight-card:nth-child(3){ animation-delay:.19s; }
   .reveal.in-view .highlight-card:nth-child(4){ animation-delay:.26s; }
 
+  /* ---------- ACTIVITY TRACKER (live, computed from real dates in JS) ---------- */
+  .tracker-stats{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;
+    margin-bottom:28px;
+  }
+  .tstat{
+    text-align:center; padding:16px 8px;
+    border:1px solid var(--line); border-radius:var(--r-sm);
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+  }
+  .tstat b{ display:block; font-family:var(--mono); font-size:22px; color:var(--amber); margin-bottom:4px; }
+  .tstat span{ font-size:11px; color:var(--paper-dim); }
+  .tracker-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--paper-dim); margin:22px 0 10px;
+  }
+  .tracker-group:first-of-type .tracker-label{ margin-top:0; }
+  .tracker-list{ display:flex; flex-direction:column; gap:10px; }
+  .tracker-item{
+    border:1px solid var(--line); border-radius:var(--r-sm);
+    padding:16px 18px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    box-shadow:var(--shadow-card);
+    transition:border-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .tracker-item:hover{ border-color:rgba(var(--amber-rgb),0.4); transform:translateY(-2px); }
+  .tracker-item-top{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .tracker-name{ font-size:14px; letter-spacing:-0.01em; }
+  .tracker-sub{ display:block; font-size:12px; color:var(--paper-dim); margin-top:3px; }
+  .tracker-pct{ font-family:var(--mono); font-weight:700; color:var(--amber); font-size:17px; flex-shrink:0; }
+  .tracker-bar{
+    height:6px; border-radius:999px; background:var(--line); overflow:hidden; margin:12px 0 8px;
+  }
+  .tracker-bar-fill{
+    height:100%; border-radius:999px;
+    background:linear-gradient(90deg, var(--amber), rgba(var(--amber-rgb),0.7));
+    width:0%; transition:width 1s var(--ease);
+  }
+  .tracker-item.ongoing .tracker-bar-fill{ background:linear-gradient(90deg, var(--teal), rgba(var(--teal-rgb),0.7)); width:100% !important; }
+  .tracker-item.ongoing .tracker-pct{ color:var(--teal); font-size:13px; }
+  .tracker-item-bottom{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--paper-dim); }
+  .tracker-item.upcoming{ opacity:.88; }
+  .tracker-item.upcoming .tracker-item-top{ align-items:center; }
+  .tracker-dday{
+    font-family:var(--mono); font-size:11px; font-weight:700;
+    padding:3px 10px; border-radius:999px; flex-shrink:0;
+    color:var(--rose); border:1px solid rgba(var(--rose-rgb),0.35); background:rgba(var(--rose-rgb),0.08);
+  }
+  @media(max-width:560px){ .tracker-stats{ grid-template-columns:repeat(3, 1fr); gap:8px; } .tstat{ padding:12px 4px; } .tstat b{ font-size:18px; } }
+
   /* ---------- SKILLS (colorful chips, light-mode neon palette) ---------- */
   .skill-groups{ display:flex; flex-direction:column; gap:20px; }
   .skill-group-label{
@@ -1348,6 +1398,7 @@
   <button data-target="hero-top"><span class="dot-label">home</span></button>
   <button data-target="stamina"><span class="dot-label">체력바</span></button>
   <button data-target="highlights"><span class="dot-label">하이라이트</span></button>
+  <button data-target="tracker"><span class="dot-label">진행현황</span></button>
   <button data-target="skills"><span class="dot-label">기술스택</span></button>
   <button data-target="interests"><span class="dot-label">관심사</span></button>
   <button data-target="guestbook"><span class="dot-label">방명록</span></button>
@@ -1486,6 +1537,31 @@
           <span class="h-desc" data-en="1:1 English coaching volunteer for North Korean defector youth">탈북 청년 대상 1:1 영어 코칭 봉사활동 진행 중</span>
         </div>
       </div>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
+  <!-- ACTIVITY TRACKER -->
+  <section id="tracker" class="reveal slide-left">
+    <div class="sec-head"><span class="tag">LIVE STATUS</span><h2 data-en="Activity Tracker">대외활동 진행 현황</h2></div>
+    <p class="sec-sub" id="trackerAsOf">$ tail -f ~/activities.log</p>
+    <div class="tracker-stats">
+      <div class="tstat"><b id="trkActiveCount">0</b><span data-en="Ongoing">진행 중</span></div>
+      <div class="tstat"><b id="trkUpcomingCount">0</b><span data-en="Starting soon">시작 예정</span></div>
+      <div class="tstat"><b id="trkLongest">-</b><span data-en="Longest running">최장 활동</span></div>
+    </div>
+    <div class="tracker-group">
+      <div class="tracker-label" data-en="In Progress">진행 중</div>
+      <div id="trackerActiveList" class="tracker-list"></div>
+    </div>
+    <div class="tracker-group" id="trackerUpcomingGroup">
+      <div class="tracker-label" id="trackerUpcomingLabel" data-en="Starting Soon">시작 예정</div>
+      <div id="trackerUpcomingList" class="tracker-list"></div>
     </div>
   </section>
 
@@ -1652,6 +1728,10 @@
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
+      <div class="change-row">
+        <span class="change-ver">v2.0</span>
+        <span class="change-desc" data-en="Added a live activity tracker (progress bars computed from real dates)">대외활동 진행 현황 트래커 추가 (실제 날짜 기반 실시간 진행률)</span>
+      </div>
       <div class="change-row">
         <span class="change-ver">v1.9</span>
         <span class="change-desc" data-en="Added a keyboard shortcuts help modal (press ?)">키보드 단축키 도움말 추가 (? 키로 열기)</span>
@@ -2515,6 +2595,118 @@
       }
       feedback.classList.add('show');
       setTimeout(() => feedback.classList.remove('show'), 1600);
+    });
+  })();
+
+  /* ---- ACTIVITY TRACKER (computed live from real dates, no manual % updates needed) ---- */
+  (function(){
+    const activeList = document.getElementById('trackerActiveList');
+    if (!activeList) return;
+
+    const activities = [
+      { name: '시대에듀 에듀메이트 서포터즈 2기', sub: null, start: '2026-08-11', end: '2026-09-06' },
+      { name: '삼성 갤럭시 대학생 서포터즈 6기', sub: '갤럭시 캠퍼스 스토어 방장', start: '2026-03-01', end: '2026-12-31' },
+      { name: '2030 신메뉴 리서치 & 모니터링 서포터즈', sub: null, start: '2026-08-01', end: '2026-10-31' },
+      { name: '코드하나 코더스 서포터즈', sub: '주강사 · 초등 SW·AI 교육', start: '2026-08-01', end: '2027-01-31' },
+      { name: '죽전 다우디지털스퀘어 AI 육성센터', sub: null, start: '2026-06-01', end: '2028-03-31' },
+      { name: 'K애디터즈 서포터즈 8기', sub: '한국특수판매공제조합', start: '2026-08-24', end: '2026-10-30' },
+      { name: '멈블 앰버서더 5기', sub: "팀장 · 팀 '속닥속닥'", start: '2026-08-31', end: '2026-10-25' },
+      { name: '굿네이버스 AI 캠페인 크리에이터 2기', sub: '경기남부사업본부', start: '2026-08-31', end: '2026-09-29' },
+      { name: 'AJ 게임 개발 동아리', sub: null, start: '2020-03-01', end: null },
+      { name: 'LG CNS AI Genius 서포터즈 16기', sub: null, start: '2026-09-01', end: '2026-12-31' },
+      { name: '서울 디지털 성범죄 안심 서포터즈', sub: null, start: '2026-09-01', end: '2026-11-30' },
+      { name: 'LiNK LELP English Buddy', sub: null, start: '2026-09-01', end: '2026-11-28' }
+    ];
+
+    function daysBetween(a, b){ return Math.round((b - a) / 86400000); }
+    function fmtDate(d){ return `${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`; }
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const active = [];
+    const upcoming = [];
+    activities.forEach(a => {
+      const start = new Date(a.start + 'T00:00:00');
+      const end = a.end ? new Date(a.end + 'T00:00:00') : null;
+      const item = { name: a.name, sub: a.sub, start, end };
+      if (start > now) upcoming.push(item);
+      else if (!end || end >= now) active.push(item);
+      // past activities (end < now) are intentionally not shown here — see the locked portfolio download
+    });
+
+    active.sort((a, b) => {
+      if (!a.end && !b.end) return 0;
+      if (!a.end) return 1;
+      if (!b.end) return -1;
+      return ((now - b.start) / (b.end - b.start)) - ((now - a.start) / (a.end - a.start));
+    });
+    upcoming.sort((a, b) => a.start - b.start);
+
+    active.forEach(a => {
+      const row = document.createElement('div');
+      if (!a.end) {
+        const years = Math.max(1, Math.round((now - a.start) / (365.25 * 86400000)));
+        row.className = 'tracker-item ongoing';
+        row.innerHTML = `
+          <div class="tracker-item-top">
+            <div><b class="tracker-name">${a.name}</b>${a.sub ? `<span class="tracker-sub">${a.sub}</span>` : ''}</div>
+            <span class="tracker-pct">${years}년째</span>
+          </div>
+          <div class="tracker-bar"><div class="tracker-bar-fill"></div></div>
+          <div class="tracker-item-bottom"><span>${fmtDate(a.start)} 시작</span><span>종료일 없음 · 상시 활동</span></div>
+        `;
+      } else {
+        const total = daysBetween(a.start, a.end);
+        const elapsed = Math.min(total, Math.max(0, daysBetween(a.start, now)));
+        const pct = total > 0 ? Math.round((elapsed / total) * 100) : 100;
+        row.className = 'tracker-item';
+        row.innerHTML = `
+          <div class="tracker-item-top">
+            <div><b class="tracker-name">${a.name}</b>${a.sub ? `<span class="tracker-sub">${a.sub}</span>` : ''}</div>
+            <span class="tracker-pct">${pct}%</span>
+          </div>
+          <div class="tracker-bar"><div class="tracker-bar-fill" data-w="${pct}"></div></div>
+          <div class="tracker-item-bottom"><span>D+${daysBetween(a.start, now)}</span><span>마감까지 D-${daysBetween(now, a.end)}</span></div>
+        `;
+      }
+      activeList.appendChild(row);
+    });
+
+    const upcomingList = document.getElementById('trackerUpcomingList');
+    const upcomingGroup = document.getElementById('trackerUpcomingGroup');
+    upcoming.forEach(a => {
+      const row = document.createElement('div');
+      row.className = 'tracker-item upcoming';
+      row.innerHTML = `
+        <div class="tracker-item-top">
+          <div><b class="tracker-name">${a.name}</b><span class="tracker-sub">${fmtDate(a.start)} ~ ${a.end ? fmtDate(a.end) : ''}</span></div>
+          <span class="tracker-dday">D-${daysBetween(now, a.start)}</span>
+        </div>
+      `;
+      upcomingList.appendChild(row);
+    });
+    if (upcomingGroup) upcomingGroup.style.display = upcoming.length ? '' : 'none';
+
+    document.getElementById('trkActiveCount').textContent = active.length;
+    document.getElementById('trkUpcomingCount').textContent = upcoming.length;
+
+    const ongoingItem = active.find(a => !a.end);
+    if (ongoingItem) {
+      const years = Math.max(1, Math.round((now - ongoingItem.start) / (365.25 * 86400000)));
+      document.getElementById('trkLongest').textContent = years + '년+';
+    } else {
+      let maxDays = 0;
+      active.concat(upcoming).forEach(a => { if (a.end) maxDays = Math.max(maxDays, daysBetween(a.start, a.end)); });
+      document.getElementById('trkLongest').textContent = maxDays > 0 ? Math.round(maxDays / 30) + '개월' : '-';
+    }
+
+    const asOf = document.getElementById('trackerAsOf');
+    if (asOf) asOf.textContent = `$ tail -f ~/activities.log  # ${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 기준`;
+
+    // fill bars on next frame — a one-time width transition, not a looping animation
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.tracker-bar-fill[data-w]').forEach(el => { el.style.width = el.dataset.w + '%'; });
     });
   })();
 
