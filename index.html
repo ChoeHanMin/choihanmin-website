@@ -510,6 +510,7 @@
   .highlight-card:nth-child(2) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--rose-rgb),0.22), rgba(var(--rose-rgb),0.06)); border-color:rgba(var(--rose-rgb),0.25); }
   .highlight-card:nth-child(3) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--amber-rgb),0.22), rgba(var(--amber-rgb),0.06)); border-color:rgba(var(--amber-rgb),0.25); }
   .highlight-card:nth-child(4) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--teal-rgb),0.22), rgba(var(--teal-rgb),0.06)); border-color:rgba(var(--teal-rgb),0.25); }
+  .highlight-card:nth-child(5) .hic{ background:radial-gradient(circle at 35% 30%, rgba(var(--rose-rgb),0.22), rgba(var(--rose-rgb),0.06)); border-color:rgba(var(--rose-rgb),0.25); }
   .highlight-card:hover .hic{ transform:scale(1.08) rotate(-4deg); }
   .highlight-card .h-top{ display:flex; align-items:center; gap:8px; margin-bottom:5px; flex-wrap:wrap; }
   .highlight-card b{font-size:15px; letter-spacing:-0.01em;}
@@ -525,6 +526,7 @@
   .reveal.in-view .highlight-card:nth-child(2){ animation-delay:.12s; }
   .reveal.in-view .highlight-card:nth-child(3){ animation-delay:.19s; }
   .reveal.in-view .highlight-card:nth-child(4){ animation-delay:.26s; }
+  .reveal.in-view .highlight-card:nth-child(5){ animation-delay:.33s; }
 
   /* ---------- ACTIVITY TRACKER (live, computed from real dates in JS) ---------- */
   .tracker-stats{
@@ -867,7 +869,7 @@
   @keyframes modalPop{ from{opacity:0; transform:scale(.94) translateY(8px);} to{opacity:1; transform:scale(1) translateY(0);} }
   .portfolio-modal-box h3{font-family:var(--serif); font-size:18px; margin-bottom:10px; color:var(--paper);}
   .portfolio-modal-sub{font-size:12px; color:var(--paper-dim); margin-bottom:18px; line-height:1.5;}
-  .portfolio-modal-close{position:absolute; top:14px; right:16px; cursor:pointer; color:var(--paper-dim); font-size:14px;}
+  .portfolio-modal-close{position:absolute; top:14px; right:16px; cursor:pointer; color:var(--paper-dim); font-size:14px; background:none; border:none; padding:0; font-family:inherit;}
   #portfolioPwInput{
     width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--line);
     background:var(--ink); color:var(--paper); font-family:var(--mono); font-size:14px; margin-bottom:12px;
@@ -1071,6 +1073,7 @@
     display:flex; align-items:center; justify-content:center;
     transition:background .2s, transform .2s;
     z-index:2;
+    font-family:inherit; padding:0;
   }
   .lightbox-close:hover{ background:rgba(255,255,255,0.12); transform:scale(1.06); }
   .lightbox-nav{
@@ -1405,9 +1408,9 @@
 <button id="themeToggle" class="theme-toggle" aria-label="테마 전환">🌙</button>
 <button id="langToggle" class="lang-toggle" aria-label="언어 전환">EN</button>
 <div class="fontsize-panel">
-  <button id="fsSmall" data-size="sm">가</button>
-  <button id="fsMedium" data-size="md" class="active">가</button>
-  <button id="fsLarge" data-size="lg">가</button>
+  <button id="fsSmall" data-size="sm" aria-label="작은 글씨">가</button>
+  <button id="fsMedium" data-size="md" class="active" aria-label="보통 글씨">가</button>
+  <button id="fsLarge" data-size="lg" aria-label="큰 글씨">가</button>
 </div>
 
 <nav id="navDots" class="nav-dots">
@@ -1528,29 +1531,36 @@
       <div class="highlight-card">
         <span class="hic">🎮</span>
         <div>
-          <div class="h-top"><b data-en="Soodal Games Founder">Soodal Games 대표</b><span class="h-role" data-en="ONGOING">운영 중</span></div>
+          <div class="h-top"><b data-en="Soodal Games Founder">Soodal Games 대표</b><span class="h-role" data-en="STARTUP">스타트업</span></div>
           <span class="h-desc" data-en="Founded and run an indie game studio solo, shipping 7 games to Google Play and Steam">인디 게임 스튜디오를 직접 창업해 운영하며 Play·Steam에 게임 7종 출시</span>
         </div>
       </div>
       <div class="highlight-card">
         <span class="hic">🧑‍🏫</span>
         <div>
-          <div class="h-top"><b data-en="HUFS Computer Engineering TA">외대 컴퓨터공학과 조교</b><span class="h-role" data-en="TA">조교</span></div>
+          <div class="h-top"><b data-en="HUFS Computer Engineering TA">외대 컴퓨터공학과 조교</b><span class="h-role" data-en="UNIVERSITY">대학</span></div>
           <span class="h-desc" data-en="Teaching assistant for Computational Thinking, guiding underclassmen through algorithm assignments">컴퓨팅사고 수업 TA로 후배들의 알고리즘 과제를 직접 지도</span>
         </div>
       </div>
       <div class="highlight-card">
         <span class="hic">🤝</span>
         <div>
-          <div class="h-top"><b data-en="LG CNS AI Genius Supporters 16th">LG CNS AI Genius 서포터즈 16기</b><span class="h-role" data-en="16TH">16기</span></div>
+          <div class="h-top"><b data-en="LG CNS AI Genius Supporters 16th">LG CNS AI Genius 서포터즈 16기</b><span class="h-role" data-en="CORPORATE">대기업</span></div>
           <span class="h-desc" data-en="Selected as an AI tech supporter, working on hands-on AI project experience">AI 기술 서포터즈로 선발되어 실무형 AI 프로젝트 경험 중</span>
         </div>
       </div>
       <div class="highlight-card">
         <span class="hic">🌍</span>
         <div>
-          <div class="h-top"><b data-en="LiNK English Buddy">LiNK English Buddy</b><span class="h-role" data-en="VOLUNTEER">봉사</span></div>
+          <div class="h-top"><b data-en="LiNK English Buddy">LiNK English Buddy</b><span class="h-role" data-en="INTL NGO">국제NGO</span></div>
           <span class="h-desc" data-en="1:1 English coaching volunteer for North Korean defector youth">탈북 청년 대상 1:1 영어 코칭 봉사활동 진행 중</span>
+        </div>
+      </div>
+      <div class="highlight-card">
+        <span class="hic">🌾</span>
+        <div>
+          <div class="h-top"><b data-en="Gapyeong Rural Volunteer Work">가평 농촌 봉사활동</b><span class="h-role" data-en="GOVERNMENT">정부 부처</span></div>
+          <span class="h-desc" data-en="Government-run farm labor volunteer program — helped Gapyeong farmers with the pepper harvest">정부 주관 농촌일손돕기 프로그램으로 가평 농가 고추 수확 지원</span>
         </div>
       </div>
     </div>
@@ -1745,6 +1755,14 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.5</span>
+        <span class="change-desc" data-en="Accessibility fixes: close buttons are now real keyboard-focusable buttons, font-size buttons have distinguishing labels">접근성 개선: 닫기 버튼을 키보드 포커스 가능한 진짜 버튼으로 교체, 글자크기 버튼에 구분 라벨 추가</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v2.4</span>
+        <span class="change-desc" data-en="Activity tracker now shows a live climbing percentage; highlight badges recategorized by organization type, plus a new government-program card">진행 현황 퍼센트 실시간 표시, 하이라이트 뱃지를 기관 유형으로 재분류 + 정부 프로그램 카드 추가</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.3</span>
         <span class="change-desc" data-en="Added a keyboard skip-to-content link for accessibility">키보드 접근성을 위한 본문 바로가기 링크 추가</span>
       </div>
@@ -1845,7 +1863,7 @@
 <!-- PORTFOLIO PASSWORD MODAL -->
 <div id="portfolioModal" class="portfolio-modal">
   <div class="portfolio-modal-box">
-    <span class="portfolio-modal-close" id="portfolioModalClose">✕</span>
+    <button class="portfolio-modal-close" id="portfolioModalClose" type="button" aria-label="닫기">✕</button>
     <h3 data-en="Enter Password">비밀번호를 입력하세요</h3>
     <p class="portfolio-modal-sub" data-en="This isn't real security — just to keep casual visitors from grabbing it. Ask Hanmin for the password.">진짜 보안은 아니고, 아무나 무심코 다운받지 않도록 하는 정도예요. 비밀번호는 저에게 직접 물어보세요.</p>
     <input type="password" id="portfolioPwInput" placeholder="Password" autocomplete="off">
@@ -1857,7 +1875,7 @@
 <!-- KEYBOARD SHORTCUTS HELP MODAL -->
 <div id="shortcutsModal" class="portfolio-modal">
   <div class="portfolio-modal-box shortcuts-box">
-    <span class="portfolio-modal-close" id="shortcutsModalClose">✕</span>
+    <button class="portfolio-modal-close" id="shortcutsModalClose" type="button" aria-label="닫기">✕</button>
     <h3 data-en="Keyboard Shortcuts">키보드 단축키</h3>
     <p class="portfolio-modal-sub" data-en="$ man shortcuts">$ man shortcuts</p>
     <div class="shortcut-list">
@@ -1880,7 +1898,7 @@
 </div>
 
 <div id="lightbox" class="lightbox">
-  <span class="lightbox-close" id="lightboxClose">✕</span>
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">✕</button>
   <button class="lightbox-nav prev" id="lightboxPrev" aria-label="이전 사진" type="button">‹</button>
   <img id="lightboxImg" src="" alt="확대 이미지">
   <button class="lightbox-nav next" id="lightboxNext" aria-label="다음 사진" type="button">›</button>
@@ -2700,6 +2718,9 @@
     });
     upcoming.sort((a, b) => a.start - b.start);
 
+    const liveTickers = []; // { el, basePct, phase } — cosmetic "climbing" decimals, see below
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     active.forEach(a => {
       const row = document.createElement('div');
       if (!a.end) {
@@ -2721,14 +2742,33 @@
         row.innerHTML = `
           <div class="tracker-item-top">
             <div><b class="tracker-name">${a.name}</b>${a.sub ? `<span class="tracker-sub">${a.sub}</span>` : ''}</div>
-            <span class="tracker-pct">${pct}%</span>
+            <span class="tracker-pct">${prefersReducedMotion ? pct + '%' : pct.toFixed(4) + '%'}</span>
           </div>
           <div class="tracker-bar"><div class="tracker-bar-fill" data-w="${pct}"></div></div>
           <div class="tracker-item-bottom"><span>D+${daysBetween(a.start, now)}</span><span>마감까지 D-${daysBetween(now, a.end)}</span></div>
         `;
+        if (!prefersReducedMotion && pct < 100) {
+          liveTickers.push({ el: row.querySelector('.tracker-pct'), basePct: pct, phase: Math.random() });
+        }
       }
       activeList.appendChild(row);
     });
+
+    /* Cosmetic "live" percent readout — climbs 77.0000% → 77.9999% and loops, like a
+       terminal progress meter. This is NOT the real sub-day progress rate (a multi-week
+       activity genuinely advances by a fraction of a percent per day, far too slowly to
+       watch), it's a decorative animated counter layered on top of the real daily %
+       baseline. Just a textContent update on a few small nodes every 120ms — no CSS
+       animation/repaint involved, so it doesn't reintroduce the jank this session fixed. */
+    if (liveTickers.length) {
+      setInterval(() => {
+        liveTickers.forEach(t => {
+          t.phase += 0.006 + Math.random() * 0.02;
+          if (t.phase >= 1) t.phase -= 1;
+          t.el.textContent = (t.basePct + t.phase).toFixed(4) + '%';
+        });
+      }, 120);
+    }
 
     const upcomingList = document.getElementById('trackerUpcomingList');
     const upcomingGroup = document.getElementById('trackerUpcomingGroup');
