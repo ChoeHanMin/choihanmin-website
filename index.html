@@ -406,6 +406,31 @@
     width:20px; height:20px; flex-shrink:0; align-self:center;
     filter:drop-shadow(0 2px 8px rgba(29,155,240,0.4));
   }
+  .sns-neon-wrap{
+    position:relative;
+    padding:22px;
+    border-radius:calc(var(--r-sm) + 10px);
+    box-shadow:
+      0 0 0 1px rgba(56,189,248,0.25),
+      0 0 40px 6px rgba(56,189,248,0.16),
+      0 0 90px 16px rgba(56,189,248,0.08);
+    animation:snsNeonPulse 3.4s ease-in-out infinite;
+  }
+  @keyframes snsNeonPulse{
+    0%,100%{
+      box-shadow:
+        0 0 0 1px rgba(56,189,248,0.25),
+        0 0 40px 6px rgba(56,189,248,0.16),
+        0 0 90px 16px rgba(56,189,248,0.08);
+    }
+    50%{
+      box-shadow:
+        0 0 0 1px rgba(56,189,248,0.4),
+        0 0 55px 10px rgba(56,189,248,0.28),
+        0 0 110px 24px rgba(56,189,248,0.13);
+    }
+  }
+  @media (prefers-reduced-motion: reduce){ .sns-neon-wrap{ animation:none; } }
   .sns-grid{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
@@ -422,7 +447,6 @@
     transition:border-color .3s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease);
   }
   .sns-card:hover{
-    border-color:rgba(var(--teal-rgb),0.4);
     transform:translateY(-3px);
     box-shadow:var(--shadow-lift);
   }
@@ -430,15 +454,33 @@
     font-size:20px; line-height:1; flex-shrink:0;
     width:42px; height:42px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(circle at 35% 30%, rgba(var(--teal-rgb),0.22), rgba(var(--teal-rgb),0.06));
-    border:1px solid rgba(var(--teal-rgb),0.25);
     transition:transform .3s var(--ease);
   }
-  .sns-card:nth-child(2) .sic{ background:radial-gradient(circle at 35% 30%, rgba(var(--rose-rgb),0.22), rgba(var(--rose-rgb),0.06)); border-color:rgba(var(--rose-rgb),0.25); }
-  .sns-card:nth-child(3) .sic{ background:radial-gradient(circle at 35% 30%, rgba(var(--amber-rgb),0.22), rgba(var(--amber-rgb),0.06)); border-color:rgba(var(--amber-rgb),0.25); }
   .sns-card:hover .sic{ transform:scale(1.08) rotate(-4deg); }
   .sns-card b{display:block; font-size:14px; letter-spacing:-0.01em; margin-bottom:2px;}
   .sns-card span{display:block; font-size:12.5px; color:var(--paper-dim); font-family:var(--mono);}
+  .sns-card .sns-tag{
+    display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:600;
+    letter-spacing:.01em; margin-left:5px; opacity:.85;
+  }
+  /* per-account pastel accents */
+  .sns-card.ig-red{ background:linear-gradient(180deg, rgba(255,107,107,0.14), transparent); border-color:rgba(255,107,107,0.32); }
+  .sns-card.ig-red:hover{ border-color:rgba(255,107,107,0.55); }
+  .sns-card.ig-red .sic{ background:radial-gradient(circle at 35% 30%, rgba(255,107,107,0.32), rgba(255,107,107,0.08)); border:1px solid rgba(255,107,107,0.38); }
+  .sns-card.ig-red .sns-tag{ color:#FF8A80; }
+
+  .sns-card.ig-blue{ background:linear-gradient(180deg, rgba(93,169,255,0.14), transparent); border-color:rgba(93,169,255,0.32); }
+  .sns-card.ig-blue:hover{ border-color:rgba(93,169,255,0.55); }
+  .sns-card.ig-blue .sic{ background:radial-gradient(circle at 35% 30%, rgba(93,169,255,0.32), rgba(93,169,255,0.08)); border:1px solid rgba(93,169,255,0.38); }
+  .sns-card.ig-blue .sns-tag{ color:#82B1FF; }
+
+  .sns-card.blog-green{ background:linear-gradient(180deg, rgba(156,204,101,0.14), transparent); border-color:rgba(156,204,101,0.32); }
+  .sns-card.blog-green:hover{ border-color:rgba(156,204,101,0.55); }
+  .sns-card.blog-green .sic{ background:radial-gradient(circle at 35% 30%, rgba(156,204,101,0.32), rgba(156,204,101,0.08)); border:1px solid rgba(156,204,101,0.38); }
+
+  html[data-theme="light"] .sns-card.ig-red{ background:linear-gradient(180deg, rgba(255,107,107,0.24), rgba(255,107,107,0.05)); }
+  html[data-theme="light"] .sns-card.ig-blue{ background:linear-gradient(180deg, rgba(93,169,255,0.24), rgba(93,169,255,0.05)); }
+  html[data-theme="light"] .sns-card.blog-green{ background:linear-gradient(180deg, rgba(156,204,101,0.24), rgba(156,204,101,0.05)); }
 
   /* ---------- STAMINA GAUGE ---------- */
   .gauge-wrap{
@@ -1545,19 +1587,21 @@
   <section id="sns" class="reveal slide-left">
     <div class="sec-head"><span class="tag">SOCIAL</span><h2 data-en="Hanmin's SNS">최한민의 SNS</h2><svg class="verified-badge" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12.00,1.00 14.23,3.69 17.50,2.47 18.08,5.92 21.53,6.50 20.31,9.77 23.00,12.00 20.31,14.23 21.53,17.50 18.08,18.08 17.50,21.53 14.23,20.31 12.00,23.00 9.77,20.31 6.50,21.53 5.92,18.08 2.47,17.50 3.69,14.23 1.00,12.00 3.69,9.77 2.47,6.50 5.92,5.92 6.50,2.47 9.77,3.69" fill="#1D9BF0"/><path d="M9.5 12.8 L11.3 14.6 L15 10.4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
     <p class="sec-sub">$ open ~/social-links</p>
-    <div class="sns-grid">
-      <a class="sns-card" href="https://www.instagram.com/choihanmin_/" target="_blank" rel="noopener">
-        <span class="sic">📷</span>
-        <div><b>Instagram</b><span>@choihanmin_</span></div>
-      </a>
-      <a class="sns-card" href="https://www.instagram.com/dae.hanmin.guk/" target="_blank" rel="noopener">
-        <span class="sic">📷</span>
-        <div><b>Instagram</b><span>@dae.hanmin.guk</span></div>
-      </a>
-      <a class="sns-card" href="https://blog.naver.com/choehanmin" target="_blank" rel="noopener">
-        <span class="sic">📝</span>
-        <div><b>Naver Blog</b><span>blog.naver.com/choehanmin</span></div>
-      </a>
+    <div class="sns-neon-wrap">
+      <div class="sns-grid">
+        <a class="sns-card ig-red" href="https://www.instagram.com/choihanmin_/" target="_blank" rel="noopener">
+          <span class="sic">📷</span>
+          <div><b>Instagram <span class="sns-tag">#일상생활용</span></b><span>@choihanmin_</span></div>
+        </a>
+        <a class="sns-card ig-blue" href="https://www.instagram.com/dae.hanmin.guk/" target="_blank" rel="noopener">
+          <span class="sic">📷</span>
+          <div><b>Instagram <span class="sns-tag">#대외활동용</span></b><span>@dae.hanmin.guk</span></div>
+        </a>
+        <a class="sns-card blog-green" href="https://blog.naver.com/choehanmin" target="_blank" rel="noopener">
+          <span class="sic">📝</span>
+          <div><b>Naver Blog</b><span>blog.naver.com/choehanmin</span></div>
+        </a>
+      </div>
     </div>
   </section>
 
