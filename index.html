@@ -712,6 +712,7 @@
     transition:box-shadow .25s var(--ease), filter .2s;
   }
   .guestbook-link:hover{ filter:brightness(1.08); box-shadow:0 18px 38px -12px rgba(var(--teal-rgb),0.6); }
+  .guestbook-link:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; }
   .magnetic{ transition:transform .15s ease-out; display:inline-block; }
 
   /* ---------- ACHIEVEMENT TOAST ---------- */
@@ -737,7 +738,7 @@
     background:rgba(21,22,32,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     border:1px solid var(--teal);
     color:var(--paper); font-family:var(--mono); font-size:12px;
-    padding:11px 18px; border-radius:var(--r-sm);
+    padding:11px 18px; border-radius:var(--r-md);
     opacity:0; transform:translateX(20px);
     transition:opacity .4s var(--ease), transform .4s var(--ease);
     pointer-events:none; z-index:250;
@@ -820,16 +821,17 @@
     transition:transform .4s ease;
   }
   .gitem:hover img{transform:scale(1.06);}
+  .gitem img:focus-visible{ outline:2px solid var(--amber); outline-offset:-2px; transform:scale(1.06); }
   .gitem .gcap{
     position:absolute; left:0; right:0; bottom:0;
     padding:10px 10px 8px;
     font-size:11px; line-height:1.3;
-    color:var(--paper);
+    color:#EEEBE3;
     background:linear-gradient(0deg, rgba(0,0,0,0.75), transparent);
     opacity:0; transform:translateY(6px);
     transition:opacity .25s, transform .25s;
   }
-  .gitem:hover .gcap{opacity:1; transform:translateY(0);}
+  .gitem:hover .gcap, .gitem:focus-within .gcap{opacity:1; transform:translateY(0);}
   @media (hover:none){
     .gitem .gcap{opacity:1; transform:translateY(0); background:linear-gradient(0deg, rgba(0,0,0,0.7), transparent 70%);}
   }
@@ -841,36 +843,6 @@
     padding:3px 7px; border-radius:4px;
     z-index:2;
   }
-
-  /* ---------- COMMIT LOG (activities) ---------- */
-  .log{position:relative; padding-left:28px;}
-  .log::before{
-    content:''; position:absolute; left:6px; top:6px; bottom:6px; width:1px;
-    background:var(--line);
-  }
-  .commit{position:relative; padding-bottom:28px;}
-  .commit::before{
-    content:''; position:absolute; left:-28px; top:4px;
-    width:11px; height:11px; border-radius:50%;
-    background:var(--ink); border:2px solid var(--amber);
-  }
-  .commit.active::before{background:var(--teal); border-color:var(--teal); box-shadow:0 0 0 4px rgba(var(--teal-rgb),0.15);}
-  .commit-hash{font-family:var(--mono); font-size:12px; color:var(--paper-dim);}
-  .commit-hash b{color:var(--amber);}
-  .commit-msg{font-size:15px; font-weight:600; margin:4px 0 4px;}
-  .commit-meta{font-family:var(--mono); font-size:12px; color:var(--paper-dim); display:flex; gap:10px; flex-wrap:wrap;}
-  .commit-meta .status{color:var(--teal);}
-
-  /* ---------- CREDENTIALS ---------- */
-  .creds{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
-  @media(max-width:600px){.creds{grid-template-columns:1fr;}}
-  .cred{
-    border:1px solid var(--line); border-radius:var(--r-sm); padding:18px 20px;
-    font-size:14px; box-shadow:var(--shadow-card);
-    transition:border-color .3s var(--ease), transform .3s var(--ease);
-  }
-  .cred:hover{ border-color:var(--line-strong); transform:translateY(-2px); }
-  .cred .k{font-family:var(--mono); font-size:11px; color:var(--rose); display:block; margin-bottom:4px;}
 
   /* ---------- FOOTER ---------- */
   footer{
@@ -930,6 +902,7 @@
     transition:box-shadow .25s var(--ease), filter .2s;
   }
   footer .request-link:hover{ filter:brightness(1.08); box-shadow:0 18px 38px -12px rgba(var(--amber-rgb),0.6); }
+  footer .request-link:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; }
   footer .copyright{margin-top:40px; color:var(--paper-dim); font-size:11px; font-family:var(--mono); opacity:.6; letter-spacing:0.02em;}
   footer .visit-count{display:block; margin-top:6px;}
   footer .footer-btn-row{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:32px;}
@@ -946,6 +919,7 @@
   .change-row{display:flex; gap:16px; align-items:baseline; border-bottom:1px solid var(--line); padding-bottom:14px;}
   .change-ver{font-family:var(--mono); color:var(--amber); font-size:13px; font-weight:700; flex-shrink:0; min-width:38px;}
   .change-desc{font-size:14px; color:var(--paper-dim); line-height:1.65;}
+  .log-cursor{display:inline-block; width:7px; height:14px; background:var(--amber); vertical-align:middle; animation:blink 1s step-end infinite;}
 
   /* ---------- PORTFOLIO MODAL ---------- */
   .portfolio-modal{
@@ -1002,10 +976,12 @@
     display:flex; gap:14px; align-items:baseline;
     border-bottom:1px solid var(--line);
     padding:11px 10px; font-size:13px;
-    margin:0 -10px; border-radius:8px;
+    margin:0 -10px; border-radius:var(--r-sm);
+    text-decoration:none; color:inherit;
     transition:background .2s, border-color .2s;
   }
-  .commit-row:hover{ background:rgba(255,255,255,0.02); border-color:transparent; }
+  .commit-row:hover{ background:rgba(var(--amber-rgb),0.07); border-color:transparent; }
+  .commit-row:focus-visible{ outline:2px solid var(--amber); outline-offset:-2px; background:rgba(var(--amber-rgb),0.07); }
   .commit-row .c-hash{font-family:var(--mono); color:var(--amber); flex-shrink:0;}
   .commit-row .c-msg{color:var(--paper); flex:1; min-width:0; overflow-wrap:break-word;}
   .commit-row .c-repo{font-family:var(--mono); color:var(--paper-dim); font-size:11px; flex-shrink:0;}
@@ -1103,8 +1079,8 @@
   }
 
   /* ---------- SPOTLIGHT HOVER GLOW ---------- */
-  .gitem, .interest, .stack-item, .cred{ position:relative; isolation:isolate; }
-  .interest::before, .stack-item::before, .cred::before{
+  .gitem, .interest, .stack-item{ position:relative; isolation:isolate; }
+  .interest::before, .stack-item::before{
     content:''; position:absolute; inset:0; border-radius:inherit;
     background:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%), rgba(var(--amber-rgb),0.16), transparent 70%);
     opacity:0; transition:opacity .4s var(--ease);
@@ -1116,10 +1092,10 @@
     opacity:0; transition:opacity .4s var(--ease);
     pointer-events:none; mix-blend-mode:overlay;
   }
-  .interest.spotlit::before, .stack-item.spotlit::before, .cred.spotlit::before,
+  .interest.spotlit::before, .stack-item.spotlit::before,
   .gitem.spotlit::after{ opacity:1; }
   @media(hover:none){
-    .interest::before, .stack-item::before, .cred::before, .gitem::after{ display:none; }
+    .interest::before, .stack-item::before, .gitem::after{ display:none; }
   }
 
   /* ---------- BUTTON SHIMMER SWEEP ---------- */
@@ -1227,7 +1203,7 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .term-line, .caret{animation:none !important; opacity:1;}
+    .term-line, .caret, .log-cursor{animation:none !important; opacity:1;}
   }
 
   /* ---------- INTRO OVERLAY ---------- */
@@ -1467,7 +1443,7 @@
     background:radial-gradient(circle 480px at var(--hx,50%) var(--hy,30%), rgba(var(--amber-rgb),0.16), transparent 70%);
   }
   html[data-theme="light"] .interest::before,
-  html[data-theme="light"] .stack-item::before, html[data-theme="light"] .cred::before{
+  html[data-theme="light"] .stack-item::before{
     background:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%), rgba(var(--amber-rgb),0.22), transparent 70%);
   }
   html[data-theme="light"] .orb{ opacity:.4; filter:blur(70px); }
@@ -1883,6 +1859,7 @@
       <div class="change-row">
         <span class="change-ver">v2.8</span>
         <span class="change-desc" data-en="Updated a few gallery photo captions">갤러리 사진 캡션 일부 수정</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.7</span>
@@ -2238,8 +2215,11 @@
       pushes.forEach(ev => {
         const commit = ev.payload.commits && ev.payload.commits[0];
         if (!commit) return;
-        const row = document.createElement('div');
+        const row = document.createElement('a');
         row.className = 'commit-row';
+        row.href = `https://github.com/${ev.repo.name}/commit/${commit.sha}`;
+        row.target = '_blank';
+        row.rel = 'noopener';
         row.innerHTML = `
           <span class="c-hash">${commit.sha.slice(0,7)}</span>
           <span class="c-msg">${commit.message.split('\n')[0]}</span>
@@ -2313,17 +2293,23 @@
     galleryIndex = (i + galleryImgs.length) % galleryImgs.length;
     const img = galleryImgs[galleryIndex];
     lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt || '';
     const cap = img.parentElement.querySelector('.gcap');
-    lightboxCaption.textContent = cap ? cap.textContent : (img.alt || '');
+    const capText = cap ? cap.textContent : (img.alt || '');
+    lightboxCaption.textContent = `${capText} · ${galleryIndex + 1}/${galleryImgs.length}`;
     lightboxPrev.hidden = false;
     lightboxNext.hidden = false;
   }
 
   galleryImgs.forEach((img, i) => {
     img.style.cursor = 'zoom-in';
-    img.addEventListener('click', () => {
-      showGalleryAt(i);
-      lightbox.classList.add('show');
+    img.tabIndex = 0;
+    img.setAttribute('role', 'button');
+    img.setAttribute('aria-label', `${img.alt || '사진'} 크게 보기`);
+    const open = () => { showGalleryAt(i); lightbox.classList.add('show'); };
+    img.addEventListener('click', open);
+    img.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
     });
   });
   lightbox.addEventListener('click', () => lightbox.classList.remove('show'));
@@ -3048,7 +3034,7 @@
       });
     }
     document.querySelectorAll('.gitem').forEach(card => attachCardEffect(card, false));
-    document.querySelectorAll('.interest, .stack-item, .cred').forEach(card => attachCardEffect(card, false));
+    document.querySelectorAll('.interest, .stack-item').forEach(card => attachCardEffect(card, false));
   })();
 </script>
 </body>
