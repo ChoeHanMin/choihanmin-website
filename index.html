@@ -402,6 +402,10 @@
   @keyframes pulseDot{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
 
   /* ---------- SNS ---------- */
+  .verified-badge{
+    width:20px; height:20px; flex-shrink:0; align-self:center;
+    filter:drop-shadow(0 2px 8px rgba(29,155,240,0.4));
+  }
   .sns-grid{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
@@ -1539,7 +1543,7 @@
 
   <!-- SNS -->
   <section id="sns" class="reveal slide-left">
-    <div class="sec-head"><span class="tag">SOCIAL</span><h2 data-en="Hanmin's SNS">최한민의 SNS</h2></div>
+    <div class="sec-head"><span class="tag">SOCIAL</span><h2 data-en="Hanmin's SNS">최한민의 SNS</h2><svg class="verified-badge" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12.00,1.00 14.23,3.69 17.50,2.47 18.08,5.92 21.53,6.50 20.31,9.77 23.00,12.00 20.31,14.23 21.53,17.50 18.08,18.08 17.50,21.53 14.23,20.31 12.00,23.00 9.77,20.31 6.50,21.53 5.92,18.08 2.47,17.50 3.69,14.23 1.00,12.00 3.69,9.77 2.47,6.50 5.92,5.92 6.50,2.47 9.77,3.69" fill="#1D9BF0"/><path d="M9.5 12.8 L11.3 14.6 L15 10.4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
     <p class="sec-sub">$ open ~/social-links</p>
     <div class="sns-grid">
       <a class="sns-card" href="https://www.instagram.com/choihanmin_/" target="_blank" rel="noopener">
