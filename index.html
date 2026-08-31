@@ -410,24 +410,31 @@
     position:relative;
     padding:22px;
     border-radius:calc(var(--r-sm) + 10px);
+    background:linear-gradient(180deg, rgba(56,189,248,0.07), rgba(56,189,248,0.015));
     box-shadow:
-      0 0 0 1px rgba(56,189,248,0.25),
-      0 0 40px 6px rgba(56,189,248,0.16),
-      0 0 90px 16px rgba(56,189,248,0.08);
-    animation:snsNeonPulse 3.4s ease-in-out infinite;
+      0 0 0 2px rgba(56,189,248,0.8),
+      0 0 22px 3px rgba(56,189,248,0.7),
+      0 0 55px 10px rgba(56,189,248,0.5),
+      0 0 120px 28px rgba(56,189,248,0.26),
+      inset 0 0 34px 3px rgba(56,189,248,0.16);
+    animation:snsNeonPulse 3.2s ease-in-out infinite;
   }
   @keyframes snsNeonPulse{
     0%,100%{
       box-shadow:
-        0 0 0 1px rgba(56,189,248,0.25),
-        0 0 40px 6px rgba(56,189,248,0.16),
-        0 0 90px 16px rgba(56,189,248,0.08);
+        0 0 0 2px rgba(56,189,248,0.8),
+        0 0 22px 3px rgba(56,189,248,0.7),
+        0 0 55px 10px rgba(56,189,248,0.5),
+        0 0 120px 28px rgba(56,189,248,0.26),
+        inset 0 0 34px 3px rgba(56,189,248,0.16);
     }
     50%{
       box-shadow:
-        0 0 0 1px rgba(56,189,248,0.4),
-        0 0 55px 10px rgba(56,189,248,0.28),
-        0 0 110px 24px rgba(56,189,248,0.13);
+        0 0 0 2px rgba(56,189,248,1),
+        0 0 32px 5px rgba(56,189,248,0.95),
+        0 0 75px 18px rgba(56,189,248,0.65),
+        0 0 150px 38px rgba(56,189,248,0.34),
+        inset 0 0 46px 5px rgba(56,189,248,0.24);
     }
   }
   @media (prefers-reduced-motion: reduce){ .sns-neon-wrap{ animation:none; } }
