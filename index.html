@@ -930,6 +930,14 @@
     transition:border-color .3s var(--ease), transform .3s var(--ease);
   }
   .stack-item:hover{ border-color:var(--line-strong); transform:translateY(-2px); }
+  .view-source-link{
+    display:inline-block; margin-top:20px;
+    font-family:var(--mono); font-size:13px; font-weight:600;
+    color:var(--amber); letter-spacing:.01em;
+    border-bottom:1px solid rgba(var(--amber-rgb),0.4);
+    transition:border-color .2s, opacity .2s;
+  }
+  .view-source-link:hover{ border-color:var(--amber); opacity:.85; }
   .stack-item b{display:block; font-size:13px; margin-bottom:4px; color:var(--amber); font-family:var(--mono);}
   .stack-item span{font-size:13px; color:var(--paper-dim);}
 
@@ -1741,6 +1749,7 @@
       <div class="stack-item"><b data-en="How it's made">제작 방식</b><span data-en="Blood, sweat, and tears of Choi Hanmin">최한민의 피 땀 눈물</span></div>
       <div class="stack-item"><b data-en="Weather / Commits">날씨/커밋</b><span data-en="Live via Open-Meteo & GitHub Public API">Open-Meteo · GitHub Public API 실시간 연동</span></div>
     </div>
+    <a class="view-source-link magnetic" href="https://github.com/ChoeHanMin/choihanmin-website/blob/main/index.html" target="_blank" rel="noopener" data-en="View source on GitHub →">소스 코드 보기 →</a>
   </section>
 
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
@@ -1754,6 +1763,10 @@
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
+      <div class="change-row">
+        <span class="change-ver">v2.7</span>
+        <span class="change-desc" data-en="Added a link to view the site's source code on GitHub">사이트 소스 코드 보기 링크 추가</span>
+      </div>
       <div class="change-row">
         <span class="change-ver">v2.6</span>
         <span class="change-desc" data-en="Accessibility: html lang attribute now switches with the language toggle, password field has a proper label">접근성: 언어 전환 시 html lang 속성도 함께 변경, 비밀번호 입력창에 라벨 추가</span>
