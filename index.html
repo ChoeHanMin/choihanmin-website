@@ -930,6 +930,14 @@
     transition:border-color .3s var(--ease), transform .3s var(--ease);
   }
   .stack-item:hover{ border-color:var(--line-strong); transform:translateY(-2px); }
+  .view-source-link{
+    display:inline-block; margin-top:20px;
+    font-family:var(--mono); font-size:13px; font-weight:600;
+    color:var(--amber); letter-spacing:.01em;
+    border-bottom:1px solid rgba(var(--amber-rgb),0.4);
+    transition:border-color .2s, opacity .2s;
+  }
+  .view-source-link:hover{ border-color:var(--amber); opacity:.85; }
   .stack-item b{display:block; font-size:13px; margin-bottom:4px; color:var(--amber); font-family:var(--mono);}
   .stack-item span{font-size:13px; color:var(--paper-dim);}
 
@@ -1741,6 +1749,7 @@
       <div class="stack-item"><b data-en="How it's made">제작 방식</b><span data-en="Blood, sweat, and tears of Choi Hanmin">최한민의 피 땀 눈물</span></div>
       <div class="stack-item"><b data-en="Weather / Commits">날씨/커밋</b><span data-en="Live via Open-Meteo & GitHub Public API">Open-Meteo · GitHub Public API 실시간 연동</span></div>
     </div>
+    <a class="view-source-link magnetic" href="https://github.com/ChoeHanMin/choihanmin-website/blob/main/index.html" target="_blank" rel="noopener" data-en="View source on GitHub →">소스 코드 보기 →</a>
   </section>
 
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
@@ -1754,6 +1763,14 @@
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
+      <div class="change-row">
+        <span class="change-ver">v2.7</span>
+        <span class="change-desc" data-en="Added a link to view the site's source code on GitHub">사이트 소스 코드 보기 링크 추가</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v2.6</span>
+        <span class="change-desc" data-en="Accessibility: html lang attribute now switches with the language toggle, password field has a proper label">접근성: 언어 전환 시 html lang 속성도 함께 변경, 비밀번호 입력창에 라벨 추가</span>
+      </div>
       <div class="change-row">
         <span class="change-ver">v2.5</span>
         <span class="change-desc" data-en="Accessibility fixes: close buttons are now real keyboard-focusable buttons, font-size buttons have distinguishing labels">접근성 개선: 닫기 버튼을 키보드 포커스 가능한 진짜 버튼으로 교체, 글자크기 버튼에 구분 라벨 추가</span>
@@ -1866,7 +1883,7 @@
     <button class="portfolio-modal-close" id="portfolioModalClose" type="button" aria-label="닫기">✕</button>
     <h3 data-en="Enter Password">비밀번호를 입력하세요</h3>
     <p class="portfolio-modal-sub" data-en="This isn't real security — just to keep casual visitors from grabbing it. Ask Hanmin for the password.">진짜 보안은 아니고, 아무나 무심코 다운받지 않도록 하는 정도예요. 비밀번호는 저에게 직접 물어보세요.</p>
-    <input type="password" id="portfolioPwInput" placeholder="Password" autocomplete="off">
+    <input type="password" id="portfolioPwInput" placeholder="Password" autocomplete="off" aria-label="비밀번호">
     <button id="portfolioPwSubmit" data-en="Unlock">확인</button>
     <p class="portfolio-modal-err" id="portfolioPwErr" data-en="Wrong password, try again.">비밀번호가 틀렸어요, 다시 시도해주세요.</p>
   </div>
@@ -2398,6 +2415,7 @@
   langBtn.addEventListener('click', () => {
     currentLang = currentLang === 'kr' ? 'en' : 'kr';
     langBtn.textContent = currentLang === 'kr' ? 'EN' : '한';
+    document.documentElement.lang = currentLang === 'en' ? 'en' : 'ko';
     document.querySelectorAll('[data-en]').forEach(el => {
       if (!el.dataset.kr) el.dataset.kr = el.textContent;
       el.textContent = currentLang === 'en' ? el.dataset.en : el.dataset.kr;
