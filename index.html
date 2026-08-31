@@ -1755,6 +1755,10 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.6</span>
+        <span class="change-desc" data-en="Accessibility: html lang attribute now switches with the language toggle, password field has a proper label">접근성: 언어 전환 시 html lang 속성도 함께 변경, 비밀번호 입력창에 라벨 추가</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.5</span>
         <span class="change-desc" data-en="Accessibility fixes: close buttons are now real keyboard-focusable buttons, font-size buttons have distinguishing labels">접근성 개선: 닫기 버튼을 키보드 포커스 가능한 진짜 버튼으로 교체, 글자크기 버튼에 구분 라벨 추가</span>
       </div>
@@ -1866,7 +1870,7 @@
     <button class="portfolio-modal-close" id="portfolioModalClose" type="button" aria-label="닫기">✕</button>
     <h3 data-en="Enter Password">비밀번호를 입력하세요</h3>
     <p class="portfolio-modal-sub" data-en="This isn't real security — just to keep casual visitors from grabbing it. Ask Hanmin for the password.">진짜 보안은 아니고, 아무나 무심코 다운받지 않도록 하는 정도예요. 비밀번호는 저에게 직접 물어보세요.</p>
-    <input type="password" id="portfolioPwInput" placeholder="Password" autocomplete="off">
+    <input type="password" id="portfolioPwInput" placeholder="Password" autocomplete="off" aria-label="비밀번호">
     <button id="portfolioPwSubmit" data-en="Unlock">확인</button>
     <p class="portfolio-modal-err" id="portfolioPwErr" data-en="Wrong password, try again.">비밀번호가 틀렸어요, 다시 시도해주세요.</p>
   </div>
@@ -2398,6 +2402,7 @@
   langBtn.addEventListener('click', () => {
     currentLang = currentLang === 'kr' ? 'en' : 'kr';
     langBtn.textContent = currentLang === 'kr' ? 'EN' : '한';
+    document.documentElement.lang = currentLang === 'en' ? 'en' : 'ko';
     document.querySelectorAll('[data-en]').forEach(el => {
       if (!el.dataset.kr) el.dataset.kr = el.textContent;
       el.textContent = currentLang === 'en' ? el.dataset.en : el.dataset.kr;
