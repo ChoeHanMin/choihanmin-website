@@ -1864,9 +1864,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.11</span>
+        <span class="change-desc" data-en="Performance: fixed scroll/resize jank (removed forced layout reads on scroll, dead scroll handler, and resize-triggered canvas thrashing on mobile)">성능 개선: 스크롤·리사이즈 버벅임 수정 (스크롤 시 강제 레이아웃 읽기·죽은 핸들러 제거, 모바일 리사이즈로 인한 캔버스 재생성 방지)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.10</span>
         <span class="change-desc" data-en="Added Intel Supporters to the live activity tracker">대외활동 진행 현황에 인텔 서포터즈 추가</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.9</span>
@@ -2041,6 +2045,17 @@
 
 
 <script>
+  /* ---- PERF UTIL: debounce (used for resize handlers below — mobile browsers
+     fire 'resize' repeatedly while the address bar shows/hides during scroll,
+     so anything expensive on resize needs to wait for it to settle) ---- */
+  function debounce(fn, wait){
+    let t = null;
+    return function(...args){
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), wait);
+    };
+  }
+
   /* ---- TERMINAL TYPEWRITER + WEATHER ---- */
   function typeText(el, text, speed){
     return new Promise(resolve => {
@@ -2247,7 +2262,13 @@
       document.getElementById('commitList').innerHTML = '<p class="commit-loading">최근 커밋을 불러올 수 없습니다.</p>';
     });
 
-  /* ---- CURSOR TRAIL ---- */
+  /* ---- CURSOR TRAIL ----
+     mousemove is throttled to ~60fps worth of samples (some mice/trackpads fire
+     it at 120-500Hz, which is far more than the ~30fps this actually renders at)
+     and the resize handler is debounced (mobile browsers fire 'resize' repeatedly
+     while the address bar shows/hides during scroll — resizing the canvas backing
+     store on every one of those was a real source of scroll jank on mobile even
+     though this canvas itself is desktop-only). */
   const trailCanvas = document.getElementById('trailCanvas');
   let particles = [];
   let trailCtx = null;
@@ -2259,10 +2280,14 @@
       trailCanvas.height = window.innerHeight;
     }
     resizeTrailCanvas();
-    window.addEventListener('resize', resizeTrailCanvas);
+    window.addEventListener('resize', debounce(resizeTrailCanvas, 200));
+    let lastTrailSample = 0;
     window.addEventListener('mousemove', (e) => {
+      const now = performance.now();
+      if (now - lastTrailSample < 16) return; // ~60fps sample cap
+      lastTrailSample = now;
       particles.push({ x: e.clientX, y: e.clientY, life: 1 });
-      if (particles.length > 24) particles.shift();
+      if (particles.length > 18) particles.shift();
     }, { passive: true });
   }
 
@@ -2341,12 +2366,30 @@
     if (e.key === 'ArrowRight' && galleryIndex !== -1) showGalleryAt(galleryIndex + 1);
   });
 
-  /* ---- SCROLL PROGRESS BAR ---- */
+  /* ---- SCROLL PROGRESS BAR ----
+     scrollHeight/clientHeight force a synchronous layout read — doing that on
+     every native 'scroll' event (which can fire dozens of times per frame
+     during momentum/trackpad scrolling) was causing layout thrash on every
+     scroll gesture. Now it's only measured on resize/load, and the actual
+     width update is rAF-batched so a burst of scroll events only paints once
+     per frame. */
   const scrollBar = document.getElementById('scrollProgress');
-  window.addEventListener('scroll', () => {
+  let scrollMax = 1;
+  function updateScrollMax(){
     const h = document.documentElement;
-    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-    scrollBar.style.width = scrolled + '%';
+    scrollMax = Math.max(1, h.scrollHeight - h.clientHeight);
+  }
+  updateScrollMax();
+  window.addEventListener('resize', debounce(updateScrollMax, 200));
+  window.addEventListener('load', updateScrollMax);
+  let scrollBarScheduled = false;
+  window.addEventListener('scroll', () => {
+    if (scrollBarScheduled) return;
+    scrollBarScheduled = true;
+    requestAnimationFrame(() => {
+      scrollBarScheduled = false;
+      scrollBar.style.width = (window.scrollY / scrollMax * 100) + '%';
+    });
   }, { passive: true });
 
   /* ---- COUNT-UP STATS ---- */
@@ -2437,7 +2480,7 @@
     }));
   }
   initStars();
-  window.addEventListener('resize', initStars);
+  window.addEventListener('resize', debounce(initStars, 200));
   function isLightMode(){ return document.documentElement.getAttribute('data-theme') === 'light'; }
 
   /* ---- OCCASIONAL SHOOTING STAR ---- */
@@ -2560,15 +2603,16 @@
     });
   });
 
-  /* ---- 1. PARALLAX SCROLL (orbs) ---- */
-  const orbEls = document.querySelectorAll('.orb');
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    orbEls.forEach((orb, i) => {
-      const factor = 0.08 + i * 0.04;
-      orb.style.transform = `translateY(${y * factor}px)`;
-    });
-  }, { passive: true });
+  /* ---- 1. (removed) scroll-linked orb parallax ----
+     .orb already has its own infinite CSS keyframe animation on `transform`
+     (orbFloat1/orbFloat2 — the ambient drifting motion). A JS scroll handler
+     here used to also write `orb.style.transform` on every scroll event, but
+     the CSS animation's computed value always wins over an inline style on
+     the same property, so that write was a complete no-op — confirmed via
+     computed-style inspection, the inline value never actually reached the
+     screen. It still cost a scroll-handler call (and 3 style writes) on
+     every single scroll event with nothing to show for it, so it's gone;
+     the orbs' drifting motion is unchanged. */
 
   /* ---- 2. MAGNETIC BUTTONS (rect cached on enter, rAF-batched like the other pointer effects) ---- */
   document.querySelectorAll('.magnetic').forEach(btn => {
