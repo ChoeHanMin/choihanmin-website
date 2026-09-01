@@ -553,6 +553,82 @@
     }
   }
 
+  /* ---------- AI CHAT (rule-based FAQ, reuses the .term terminal look) ---------- */
+  .aichat-term{
+    background:linear-gradient(180deg, var(--ink-3), var(--ink-2));
+    border:1px solid var(--line-strong);
+    border-radius:var(--r-md);
+    overflow:hidden;
+    box-shadow:var(--shadow-card);
+  }
+  .aichat-log{
+    max-height:340px; overflow-y:auto;
+    padding:20px 20px 6px;
+    display:flex; flex-direction:column; gap:14px;
+    scroll-behavior:smooth;
+  }
+  .aichat-msg{ display:flex; gap:10px; align-items:flex-start; max-width:88%; }
+  .aichat-msg.user{ align-self:flex-end; flex-direction:row-reverse; max-width:80%; }
+  .aichat-avatar{
+    flex-shrink:0; width:28px; height:28px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; background:rgba(var(--teal-rgb),0.14); border:1px solid rgba(var(--teal-rgb),0.3);
+  }
+  .aichat-bubble{
+    font-size:13.5px; line-height:1.6;
+    padding:11px 15px; border-radius:14px;
+    background:rgba(255,255,255,0.04); border:1px solid var(--line);
+    color:var(--paper-dim);
+  }
+  .aichat-msg.bot .aichat-bubble{ border-top-left-radius:4px; }
+  .aichat-msg.user .aichat-bubble{
+    border-top-right-radius:4px;
+    background:rgba(var(--amber-rgb),0.12); border-color:rgba(var(--amber-rgb),0.3);
+    color:var(--paper);
+  }
+  .aichat-msg.typing .aichat-bubble{ display:flex; gap:4px; padding:13px 15px; }
+  .aichat-dot{
+    width:5px; height:5px; border-radius:50%; background:var(--paper-dim);
+    animation:aichatTyping 1.1s ease-in-out infinite;
+  }
+  .aichat-dot:nth-child(2){ animation-delay:.15s; }
+  .aichat-dot:nth-child(3){ animation-delay:.3s; }
+  @keyframes aichatTyping{ 0%,60%,100%{ opacity:.3; transform:translateY(0); } 30%{ opacity:1; transform:translateY(-2px); } }
+  @media (prefers-reduced-motion: reduce){ .aichat-dot{ animation:none; opacity:.7; } }
+  .aichat-suggest{
+    display:flex; flex-wrap:wrap; gap:8px;
+    padding:2px 20px 16px;
+  }
+  .aichat-suggest button{
+    font-family:var(--mono); font-size:11.5px; color:var(--teal);
+    background:rgba(var(--teal-rgb),0.08); border:1px solid rgba(var(--teal-rgb),0.3);
+    border-radius:999px; padding:6px 13px; cursor:pointer;
+    transition:background .2s, transform .15s;
+  }
+  .aichat-suggest button:hover{ background:rgba(var(--teal-rgb),0.18); transform:translateY(-1px); }
+  .aichat-input-row{
+    display:flex; gap:10px;
+    padding:14px 16px; border-top:1px solid var(--line);
+    background:rgba(255,255,255,0.015);
+  }
+  .aichat-input{
+    flex:1; min-width:0;
+    padding:11px 15px; border-radius:999px; border:1px solid var(--line);
+    background:var(--ink); color:var(--paper); font-family:var(--sans); font-size:13.5px;
+  }
+  .aichat-input:focus{ outline:none; border-color:var(--amber); }
+  .aichat-send{
+    flex-shrink:0; width:40px; height:40px; border-radius:50%; border:none;
+    background:var(--amber); color:var(--ink); font-size:16px; font-weight:700;
+    cursor:pointer; transition:filter .2s, transform .15s;
+  }
+  .aichat-send:hover{ filter:brightness(1.08); transform:scale(1.05); }
+  @media(max-width:560px){
+    .aichat-log{ max-height:300px; padding:16px 14px 4px; }
+    .aichat-suggest{ padding:2px 14px 14px; }
+    .aichat-input-row{ padding:12px 12px; }
+  }
+
   /* ---------- STAMINA GAUGE ---------- */
   .gauge-wrap{
     display:flex; align-items:center; gap:40px; flex-wrap:wrap;
@@ -1564,6 +1640,7 @@
   <button data-target="skills"><span class="dot-label">기술스택</span></button>
   <button data-target="interests"><span class="dot-label">관심사</span></button>
   <button data-target="favsong"><span class="dot-label">좋아하는 노래</span></button>
+  <button data-target="aichat"><span class="dot-label">AI 챗봇</span></button>
   <button data-target="guestbook"><span class="dot-label">방명록</span></button>
   <button data-target="gallery"><span class="dot-label">갤러리</span></button>
   <button data-target="commits"><span class="dot-label">커밋</span></button>
@@ -1859,6 +1936,40 @@
     <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
+  <!-- AI CHAT -->
+  <section id="aichat" class="reveal slide-left">
+    <div class="sec-head"><span class="tag">Q&amp;A</span><h2 data-en="Chat with AI Hanmin">AI 최한민과 대화하기</h2></div>
+    <p class="sec-sub" data-en="$ note: preset FAQ answers, not a free-form LLM">$ 참고: 자유 대화 AI가 아니라, 자주 묻는 질문에 미리 준비된 답변으로 응답해요</p>
+    <div class="aichat-term">
+      <div class="term-bar">
+        <div class="term-dot" style="background:#ff5f57"></div>
+        <div class="term-dot" style="background:#febc2e"></div>
+        <div class="term-dot" style="background:#28c840"></div>
+        <span>ai-hanmin — chat</span>
+      </div>
+      <div class="aichat-log" id="aichatLog" role="log" aria-live="polite">
+        <div class="aichat-msg bot"><span class="aichat-avatar">🤖</span><div class="aichat-bubble">안녕하세요! 저는 최한민의 질문에 미리 답을 준비해둔 AI예요 🙂 전공, 게임, 대외활동, 연락처 뭐든 물어보세요!</div></div>
+      </div>
+      <div class="aichat-suggest" id="aichatSuggest">
+        <button type="button">전공이 뭐야?</button>
+        <button type="button">어떤 게임 만들었어?</button>
+        <button type="button">연락처 알려줘</button>
+        <button type="button">대외활동 뭐 했어?</button>
+        <button type="button">취미가 뭐야?</button>
+      </div>
+      <form class="aichat-input-row" id="aichatForm">
+        <input type="text" id="aichatInput" class="aichat-input" placeholder="궁금한 걸 물어보세요…" aria-label="AI 최한민에게 질문하기" autocomplete="off">
+        <button type="submit" class="aichat-send" id="aichatSend" aria-label="전송">↑</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- GUESTBOOK -->
   <section id="guestbook" class="reveal slide-left">
     <div class="sec-head"><span class="tag">GUESTBOOK</span><h2 data-en="Guestbook">방명록</h2></div>
@@ -1956,9 +2067,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.13</span>
+        <span class="change-desc" data-en="Added an 'AI Hanmin' FAQ chat section (preset keyword-matched answers, no backend)">'AI 최한민과 대화하기' FAQ 챗봇 섹션 추가 (키워드 매칭 기반, 서버 없이 클라이언트에서 동작)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.12</span>
         <span class="change-desc" data-en="Added a neon 'Hanmin's Favorite Song' section with an audio player">'최한민이 좋아하는 노래' 네온 섹션 추가 (오디오 플레이어 포함)</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.11</span>
@@ -3132,6 +3247,99 @@
       el.textContent = '💻 GitHub에서 넘어오셨군요.';
     } else {
       el.textContent = '👀 어디선가 링크를 타고 오셨네요.';
+    }
+  })();
+
+  /* ---- AI CHAT (rule-based FAQ — keyword matching over a small preset
+     knowledge base, entirely client-side. Not a real LLM: no backend, no
+     API key, no cost. See the sec-sub disclaimer above the widget. ---- */
+  (function(){
+    const log = document.getElementById('aichatLog');
+    const form = document.getElementById('aichatForm');
+    const input = document.getElementById('aichatInput');
+    const suggestWrap = document.getElementById('aichatSuggest');
+    if (!log || !form || !input) return;
+
+    const KB = [
+      { kw: ['전공', '학교', '대학', '외대', '컴공', '컴퓨터공학', 'ces', '학번'],
+        a: '한국외국어대학교 컴퓨터공학과(CES)에서 공부하고 있어요, 학번은 202003621이에요.' },
+      { kw: ['게임', '스튜디오', '수달', 'soodal', '미니법정', '출시', 'steam', '스팀', '플레이스토어'],
+        a: "인디 게임 스튜디오 'Soodal Games'를 운영하면서 게임 7종을 기획·개발해 Google Play와 Steam에 정식 출시했어요. 대표작은 미니법정(Mini Court)! 전체 게임 목록은 soodalgames.com에서 볼 수 있어요." },
+      { kw: ['봉사', '나눔'],
+        a: 'LiNK 국제 NGO 영어회화 프로그램 버디, 농촌 봉사, 연탄 배달, 발달장애 아동 대상 봉사 등을 해왔어요.' },
+      { kw: ['대외활동', '서포터즈', '활동', '경력', '인턴'],
+        a: "지금까지 20건이 넘는 조직과 함께 일해왔어요 — LG CNS AI Genius, 삼성 갤럭시 서포터즈, 하나 소셜벤처, LiNK English Buddy 등등요. 위쪽 '대외활동 진행 현황' 섹션에서 지금 하고 있는 활동을 실시간으로 볼 수 있어요." },
+      { kw: ['기술', '스택', '언어', '프로그래밍', '코딩', 'python', '파이썬', '자바스크립트', 'javascript'],
+        a: 'Python, C++, C, JavaScript, HTML/CSS를 다루고, MediaPipe·CLIP·FAISS·YOLOv8 같은 AI/비전 툴도 써봤어요. 디자인 쪽은 Figma·Canva·CapCut·Illustrator·Photoshop을 씁니다.' },
+      { kw: ['영어', 'english', '토익', 'toeic', '캐나다', '남아공', '남아프리카'],
+        a: '영어는 Native 수준이에요. 캐나다에서 2년, 남아프리카공화국에서 6개월 살았고 TOEIC 810점이에요. 지금은 LiNK English Buddy로 북한 출신 청년분들 영어 회화 코칭도 하고 있어요.' },
+      { kw: ['연락처', '이메일', '메일', 'contact', '연락'],
+        a: '이메일은 rokafhanmin@gmail.com 이에요. 페이지 맨 아래에서 이메일 주소를 누르면 자동으로 복사돼요! GitHub는 github.com/ChoeHanMin 이고요.' },
+      { kw: ['인스타', 'sns', 'instagram', '블로그'],
+        a: '인스타그램은 @choihanmin_ (일상용)이랑 @dae.hanmin.guk (대외활동용) 두 개를 운영해요. 네이버 블로그는 blog.naver.com/choehanmin 이에요.' },
+      { kw: ['포트폴리오', '이력서', 'resume', 'cv'],
+        a: "페이지 맨 아래 '전체 포트폴리오 다운로드' 버튼을 누르면 비밀번호 입력창이 떠요. 비밀번호는 저한테 직접 물어봐 주세요!" },
+      { kw: ['취미', '좋아하는', '관심사', '여가', '노래', '음악'],
+        a: "FPS 게임(Overwatch, 레인보우식스 시즈), 스쿠버다이빙, 골프, 승마를 좋아해요. 요즘 듣는 노래는 'When I get old'랑, 제 이름 넣어 만든 셀프 응원가 '야르송'이에요 — 위쪽 노래 섹션에서 들어보실 수 있어요 🎧" },
+      { kw: ['나이', '생일', '생년월일', '몇살', '몇 살'],
+        a: '정확한 나이는 이 페이지엔 안 나와 있어요! 학번이 202003621이라는 것만 힌트로 드릴게요 😄' },
+      { kw: ['사이트', '홈페이지', '만들었', '제작', '개발자'],
+        a: '이 사이트는 Pretendard + Noto Serif KR 폰트로, 순수 HTML/CSS/JS 한 파일로 직접 만들었어요. GitHub Pages에 올라가 있고요.' },
+      { kw: ['갤럭시', '삼성', '방장', '갤캠스'],
+        a: '삼성 갤럭시 대학생 서포터즈 6기에서 갤럭시 캠퍼스 스토어 방장을 맡아 7인 팀을 이끌었고, 우수방장으로 인정받았어요.' },
+      { kw: ['안녕', 'hi', 'hello', '반가워'],
+        a: '안녕하세요! 전공, 게임, 대외활동, 연락처, 취미… 뭐든 편하게 물어보세요 🙂' }
+    ];
+    const FALLBACK = '음, 그 질문은 아직 준비 못 했어요 😅 방명록에 남겨주시면 진짜 최한민이 답해드릴게요 — 급하면 이메일(rokafhanmin@gmail.com)로도 연락 가능해요!';
+
+    function findAnswer(question){
+      const q = question.toLowerCase().replace(/\s+/g, '');
+      let best = null, bestScore = 0;
+      KB.forEach(entry => {
+        let score = 0;
+        entry.kw.forEach(k => { if (q.includes(k.toLowerCase().replace(/\s+/g, ''))) score++; });
+        if (score > bestScore) { bestScore = score; best = entry; }
+      });
+      return best ? best.a : FALLBACK;
+    }
+
+    function addMessage(text, who){
+      const row = document.createElement('div');
+      row.className = 'aichat-msg ' + who;
+      row.innerHTML = `<span class="aichat-avatar">${who === 'user' ? '🙂' : '🤖'}</span><div class="aichat-bubble"></div>`;
+      row.querySelector('.aichat-bubble').textContent = text;
+      log.appendChild(row);
+      log.scrollTop = log.scrollHeight;
+      return row;
+    }
+
+    function ask(question){
+      question = question.trim();
+      if (!question) return;
+      addMessage(question, 'user');
+      input.value = '';
+
+      const typingRow = document.createElement('div');
+      typingRow.className = 'aichat-msg bot typing';
+      typingRow.innerHTML = '<span class="aichat-avatar">🤖</span><div class="aichat-bubble"><span class="aichat-dot"></span><span class="aichat-dot"></span><span class="aichat-dot"></span></div>';
+      log.appendChild(typingRow);
+      log.scrollTop = log.scrollHeight;
+
+      const answer = findAnswer(question);
+      setTimeout(() => {
+        typingRow.remove();
+        addMessage(answer, 'bot');
+      }, 450 + Math.random() * 300);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      ask(input.value);
+    });
+    if (suggestWrap) {
+      suggestWrap.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => ask(btn.textContent));
+      });
     }
   })();
 
