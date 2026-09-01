@@ -51,6 +51,12 @@
 }
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://api.open-meteo.com">
+<link rel="dns-prefetch" href="https://api.github.com">
+<link rel="dns-prefetch" href="https://api.countapi.xyz">
+<link rel="dns-prefetch" href="https://api.qrserver.com">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1680,7 +1686,7 @@
     <div class="name-row">
       <h1 class="name">최한민 (Choi Hanmin)</h1>
       <div class="mascot-wrap">
-        <img class="mascot" id="mascotImg" src="images/profile.jpg" alt="최한민 프로필 사진" loading="lazy">
+        <img class="mascot" id="mascotImg" src="images/profile.jpg" alt="최한민 프로필 사진" loading="lazy" decoding="async">
         <span class="mascot-bubble" id="mascotBubble"></span>
       </div>
     </div>
@@ -1915,7 +1921,7 @@
     <p class="sec-sub">$ afplay ~/favorites/야르송.mp3</p>
     <div class="song-neon-wrap">
       <div class="song-card">
-        <img class="song-cover" src="images/hanmin-song-cover.jpg" alt="야르송 (최한민 ver.) 커버 이미지" loading="lazy">
+        <img class="song-cover" src="images/hanmin-song-cover.jpg" alt="야르송 (최한민 ver.) 커버 이미지" loading="lazy" decoding="async">
         <div class="song-main">
           <b class="song-title">야르송 (최한민 ver.)</b>
           <audio class="song-player" controls preload="none">
@@ -1992,32 +1998,32 @@
     <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2 data-en="Daily Gallery">일상 갤러리</h2></div>
     <p class="sec-sub">$ ls ~/photos --recent</p>
     <div class="gallery-grid">
-      <div class="gitem"><img src="images/web/photo23.jpg" loading="lazy" alt="승마 체험"><span class="new-tag">NEW</span><span class="gcap" data-en="Saying hi to a horse">말이랑 인사하기</span></div>
-      <div class="gitem"><img src="images/web/photo29.jpg" loading="lazy" alt="특수분장 체험"><span class="new-tag">NEW</span><span class="gcap" data-en="Zombie makeup at the folk village">민속촌 좀비 분장 체험</span></div>
-      <div class="gitem"><img src="images/web/photo21.jpg" loading="lazy" alt="헬스장 덤벨 운동"><span class="gcap" data-en="Dumbbell curls at the gym">헬스장에서 덤벨 컬</span></div>
-      <div class="gitem"><img src="images/web/photo22.jpg" loading="lazy" alt="웨이트 트레이닝"><span class="gcap" data-en="Weight training">웨이트 트레이닝 중</span></div>
-      <div class="gitem"><img src="images/web/photo24.jpg" loading="lazy" alt="단체사진 포즈 패러디"><span class="gcap" data-en="A little too nice — at the exhibition">너무 착한데?전시회에서</span></div>
-      <div class="gitem tall"><img src="images/web/photo26.jpg" loading="lazy" alt="고궁 산책"><span class="gcap" data-en="Sunset at the old palace">고궁에서 노을 보기</span></div>
-      <div class="gitem"><img src="images/web/photo25.jpg" loading="lazy" alt="호숫가에서"><span class="gcap" data-en="A walk by the lake">호숫가 산책</span></div>
-      <div class="gitem"><img src="images/web/photo27.jpg" loading="lazy" alt="조명 설치미술 전시"><span class="gcap" data-en="At a light installation exhibit">조명 설치미술 전시에서</span></div>
-      <div class="gitem"><img src="images/web/photo28.jpg" loading="lazy" alt="강변 산책"><span class="gcap" data-en="Gapyeong riverside">가평 빠지</span></div>
-      <div class="gitem"><img src="images/web/photo30.jpg" loading="lazy" alt="부엉이 인형과"><span class="gcap" data-en="With an owl plushie at a budae-jjigae spot">부대찌개 맛집에서 부엉이 인형과</span></div>
-      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="gcap" data-en="LG CNS AI Genius Supporters 16th">LG CNS AI Genius 서포터즈 16기</span></div>
-      <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="외대 조교"><span class="gcap" data-en="TA at HUFS">외대 조교</span></div>
-      <div class="gitem"><img src="images/web/photo04.jpg" loading="lazy" alt="AI 육성센터"><span class="gcap" data-en="Yongin Daou Digital Square AI Development Center">용인 다우디지털스퀘어 AI 육성센터</span></div>
-      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="gcap" data-en="Stacking rock cairns at a summer valley">여름 계곡에서 돌탑 쌓기</span></div>
-      <div class="gitem tall"><img src="images/web/photo12.jpg" loading="lazy" alt="농촌 봉사활동"><span class="gcap" data-en="Gapyeong rural volunteering — pepper harvest">가평 농촌 봉사활동 — 고추 수확</span></div>
-      <div class="gitem"><img src="images/web/photo01.jpg" loading="lazy" alt="봉사활동"><span class="gcap" data-en="Local volunteering">지역 봉사활동 현장</span></div>
-      <div class="gitem"><img src="images/web/photo08.jpg" loading="lazy" alt="산림 봉사"><span class="gcap" data-en="Forest volunteering">숲 속 봉사활동</span></div>
-      <div class="gitem"><img src="images/web/photo06.jpg" loading="lazy" alt="화이트보드 알고리즘"><span class="gcap" data-en="Working out an algorithm on the whiteboard">화이트보드에 알고리즘 정리 중</span></div>
-      <div class="gitem"><img src="images/web/photo17.jpg" loading="lazy" alt="물놀이"><span class="gcap" data-en="Summer water activities">여름 워터 액티비티</span></div>
-      <div class="gitem"><img src="images/web/photo02.jpg" loading="lazy" alt="다우디지털스퀘어 작업"><span class="gcap" data-en="In the TutoGen workspace">TutoGen 작업 공간에서</span></div>
-      <div class="gitem"><img src="images/web/photo07.jpg" loading="lazy" alt="예비군 훈련"><span class="gcap" data-en="Off to reserve forces training ㅠㅠ">예비군 가는 나 ㅠㅠ</span></div>
-      <div class="gitem"><img src="images/web/photo20.jpg" loading="lazy" alt="친구들과"><span class="gcap" data-en="With teammates">동료들과 함께</span></div>
-      <div class="gitem"><img src="images/web/photo05.jpg" loading="lazy" alt="캠퍼스 축제"><span class="gcap" data-en="HUFS campus festival">HUFS 캠퍼스 축제 현장</span></div>
-      <div class="gitem"><img src="images/web/photo19.jpg" loading="lazy" alt="사무실 작업"><span class="gcap" data-en="Developing at the office">사무실에서 개발 작업 중</span></div>
-      <div class="gitem"><img src="images/web/photo10.jpg" loading="lazy" alt="발표"><span class="gcap" data-en="Giving a Computational Thinking TA presentation">컴퓨팅사고 TA 발표 중</span></div>
-      <div class="gitem"><img src="images/web/photo13.jpg" loading="lazy" alt="개발 작업"><span class="gcap" data-en="Late-night coding">밤샘 개발 중</span></div>
+      <div class="gitem"><img src="images/web/photo23.jpg" loading="lazy" alt="승마 체험" decoding="async"><span class="new-tag">NEW</span><span class="gcap" data-en="Saying hi to a horse">말이랑 인사하기</span></div>
+      <div class="gitem"><img src="images/web/photo29.jpg" loading="lazy" alt="특수분장 체험" decoding="async"><span class="new-tag">NEW</span><span class="gcap" data-en="Zombie makeup at the folk village">민속촌 좀비 분장 체험</span></div>
+      <div class="gitem"><img src="images/web/photo21.jpg" loading="lazy" alt="헬스장 덤벨 운동" decoding="async"><span class="gcap" data-en="Dumbbell curls at the gym">헬스장에서 덤벨 컬</span></div>
+      <div class="gitem"><img src="images/web/photo22.jpg" loading="lazy" alt="웨이트 트레이닝" decoding="async"><span class="gcap" data-en="Weight training">웨이트 트레이닝 중</span></div>
+      <div class="gitem"><img src="images/web/photo24.jpg" loading="lazy" alt="단체사진 포즈 패러디" decoding="async"><span class="gcap" data-en="A little too nice — at the exhibition">너무 착한데?전시회에서</span></div>
+      <div class="gitem tall"><img src="images/web/photo26.jpg" loading="lazy" alt="고궁 산책" decoding="async"><span class="gcap" data-en="Sunset at the old palace">고궁에서 노을 보기</span></div>
+      <div class="gitem"><img src="images/web/photo25.jpg" loading="lazy" alt="호숫가에서" decoding="async"><span class="gcap" data-en="A walk by the lake">호숫가 산책</span></div>
+      <div class="gitem"><img src="images/web/photo27.jpg" loading="lazy" alt="조명 설치미술 전시" decoding="async"><span class="gcap" data-en="At a light installation exhibit">조명 설치미술 전시에서</span></div>
+      <div class="gitem"><img src="images/web/photo28.jpg" loading="lazy" alt="강변 산책" decoding="async"><span class="gcap" data-en="Gapyeong riverside">가평 빠지</span></div>
+      <div class="gitem"><img src="images/web/photo30.jpg" loading="lazy" alt="부엉이 인형과" decoding="async"><span class="gcap" data-en="With an owl plushie at a budae-jjigae spot">부대찌개 맛집에서 부엉이 인형과</span></div>
+      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈" decoding="async"><span class="gcap" data-en="LG CNS AI Genius Supporters 16th">LG CNS AI Genius 서포터즈 16기</span></div>
+      <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="외대 조교" decoding="async"><span class="gcap" data-en="TA at HUFS">외대 조교</span></div>
+      <div class="gitem"><img src="images/web/photo04.jpg" loading="lazy" alt="AI 육성센터" decoding="async"><span class="gcap" data-en="Yongin Daou Digital Square AI Development Center">용인 다우디지털스퀘어 AI 육성센터</span></div>
+      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑" decoding="async"><span class="gcap" data-en="Stacking rock cairns at a summer valley">여름 계곡에서 돌탑 쌓기</span></div>
+      <div class="gitem tall"><img src="images/web/photo12.jpg" loading="lazy" alt="농촌 봉사활동" decoding="async"><span class="gcap" data-en="Gapyeong rural volunteering — pepper harvest">가평 농촌 봉사활동 — 고추 수확</span></div>
+      <div class="gitem"><img src="images/web/photo01.jpg" loading="lazy" alt="봉사활동" decoding="async"><span class="gcap" data-en="Local volunteering">지역 봉사활동 현장</span></div>
+      <div class="gitem"><img src="images/web/photo08.jpg" loading="lazy" alt="산림 봉사" decoding="async"><span class="gcap" data-en="Forest volunteering">숲 속 봉사활동</span></div>
+      <div class="gitem"><img src="images/web/photo06.jpg" loading="lazy" alt="화이트보드 알고리즘" decoding="async"><span class="gcap" data-en="Working out an algorithm on the whiteboard">화이트보드에 알고리즘 정리 중</span></div>
+      <div class="gitem"><img src="images/web/photo17.jpg" loading="lazy" alt="물놀이" decoding="async"><span class="gcap" data-en="Summer water activities">여름 워터 액티비티</span></div>
+      <div class="gitem"><img src="images/web/photo02.jpg" loading="lazy" alt="다우디지털스퀘어 작업" decoding="async"><span class="gcap" data-en="In the TutoGen workspace">TutoGen 작업 공간에서</span></div>
+      <div class="gitem"><img src="images/web/photo07.jpg" loading="lazy" alt="예비군 훈련" decoding="async"><span class="gcap" data-en="Off to reserve forces training ㅠㅠ">예비군 가는 나 ㅠㅠ</span></div>
+      <div class="gitem"><img src="images/web/photo20.jpg" loading="lazy" alt="친구들과" decoding="async"><span class="gcap" data-en="With teammates">동료들과 함께</span></div>
+      <div class="gitem"><img src="images/web/photo05.jpg" loading="lazy" alt="캠퍼스 축제" decoding="async"><span class="gcap" data-en="HUFS campus festival">HUFS 캠퍼스 축제 현장</span></div>
+      <div class="gitem"><img src="images/web/photo19.jpg" loading="lazy" alt="사무실 작업" decoding="async"><span class="gcap" data-en="Developing at the office">사무실에서 개발 작업 중</span></div>
+      <div class="gitem"><img src="images/web/photo10.jpg" loading="lazy" alt="발표" decoding="async"><span class="gcap" data-en="Giving a Computational Thinking TA presentation">컴퓨팅사고 TA 발표 중</span></div>
+      <div class="gitem"><img src="images/web/photo13.jpg" loading="lazy" alt="개발 작업" decoding="async"><span class="gcap" data-en="Late-night coding">밤샘 개발 중</span></div>
     </div>
   </section>
 
@@ -2187,7 +2193,7 @@
       </div>
     </div>
     <a id="portfolioRealLink" href="files/portfolio-locked.pdf" download="Choi_Hanmin_Portfolio.pdf" style="display:none;" aria-hidden="true"></a>
-    <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy">
+    <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=8&color=237-234-226&bgcolor=13-14-18&data=https://www.choihanmin.com" alt="사이트 QR코드" loading="lazy" decoding="async">
 
     <div class="otter-fact-card">
       <span class="otter-fact-emoji" aria-hidden="true">🦦</span>
@@ -2245,7 +2251,7 @@
 <div id="lightbox" class="lightbox">
   <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">✕</button>
   <button class="lightbox-nav prev" id="lightboxPrev" aria-label="이전 사진" type="button">‹</button>
-  <img id="lightboxImg" src="" alt="확대 이미지">
+  <img id="lightboxImg" src="" alt="확대 이미지" decoding="async">
   <button class="lightbox-nav next" id="lightboxNext" aria-label="다음 사진" type="button">›</button>
   <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
