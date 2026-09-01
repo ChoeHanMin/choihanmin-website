@@ -553,6 +553,82 @@
     }
   }
 
+  /* ---------- AI CHAT (rule-based FAQ, reuses the .term terminal look) ---------- */
+  .aichat-term{
+    background:linear-gradient(180deg, var(--ink-3), var(--ink-2));
+    border:1px solid var(--line-strong);
+    border-radius:var(--r-md);
+    overflow:hidden;
+    box-shadow:var(--shadow-card);
+  }
+  .aichat-log{
+    max-height:340px; overflow-y:auto;
+    padding:20px 20px 6px;
+    display:flex; flex-direction:column; gap:14px;
+    scroll-behavior:smooth;
+  }
+  .aichat-msg{ display:flex; gap:10px; align-items:flex-start; max-width:88%; }
+  .aichat-msg.user{ align-self:flex-end; flex-direction:row-reverse; max-width:80%; }
+  .aichat-avatar{
+    flex-shrink:0; width:28px; height:28px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; background:rgba(var(--teal-rgb),0.14); border:1px solid rgba(var(--teal-rgb),0.3);
+  }
+  .aichat-bubble{
+    font-size:13.5px; line-height:1.6;
+    padding:11px 15px; border-radius:14px;
+    background:rgba(255,255,255,0.04); border:1px solid var(--line);
+    color:var(--paper-dim);
+  }
+  .aichat-msg.bot .aichat-bubble{ border-top-left-radius:4px; }
+  .aichat-msg.user .aichat-bubble{
+    border-top-right-radius:4px;
+    background:rgba(var(--amber-rgb),0.12); border-color:rgba(var(--amber-rgb),0.3);
+    color:var(--paper);
+  }
+  .aichat-msg.typing .aichat-bubble{ display:flex; gap:4px; padding:13px 15px; }
+  .aichat-dot{
+    width:5px; height:5px; border-radius:50%; background:var(--paper-dim);
+    animation:aichatTyping 1.1s ease-in-out infinite;
+  }
+  .aichat-dot:nth-child(2){ animation-delay:.15s; }
+  .aichat-dot:nth-child(3){ animation-delay:.3s; }
+  @keyframes aichatTyping{ 0%,60%,100%{ opacity:.3; transform:translateY(0); } 30%{ opacity:1; transform:translateY(-2px); } }
+  @media (prefers-reduced-motion: reduce){ .aichat-dot{ animation:none; opacity:.7; } }
+  .aichat-suggest{
+    display:flex; flex-wrap:wrap; gap:8px;
+    padding:2px 20px 16px;
+  }
+  .aichat-suggest button{
+    font-family:var(--mono); font-size:11.5px; color:var(--teal);
+    background:rgba(var(--teal-rgb),0.08); border:1px solid rgba(var(--teal-rgb),0.3);
+    border-radius:999px; padding:6px 13px; cursor:pointer;
+    transition:background .2s, transform .15s;
+  }
+  .aichat-suggest button:hover{ background:rgba(var(--teal-rgb),0.18); transform:translateY(-1px); }
+  .aichat-input-row{
+    display:flex; gap:10px;
+    padding:14px 16px; border-top:1px solid var(--line);
+    background:rgba(255,255,255,0.015);
+  }
+  .aichat-input{
+    flex:1; min-width:0;
+    padding:11px 15px; border-radius:999px; border:1px solid var(--line);
+    background:var(--ink); color:var(--paper); font-family:var(--sans); font-size:13.5px;
+  }
+  .aichat-input:focus{ outline:none; border-color:var(--amber); }
+  .aichat-send{
+    flex-shrink:0; width:40px; height:40px; border-radius:50%; border:none;
+    background:var(--amber); color:var(--ink); font-size:16px; font-weight:700;
+    cursor:pointer; transition:filter .2s, transform .15s;
+  }
+  .aichat-send:hover{ filter:brightness(1.08); transform:scale(1.05); }
+  @media(max-width:560px){
+    .aichat-log{ max-height:300px; padding:16px 14px 4px; }
+    .aichat-suggest{ padding:2px 14px 14px; }
+    .aichat-input-row{ padding:12px 12px; }
+  }
+
   /* ---------- STAMINA GAUGE ---------- */
   .gauge-wrap{
     display:flex; align-items:center; gap:40px; flex-wrap:wrap;
@@ -1558,16 +1634,17 @@
 <nav id="navDots" class="nav-dots">
   <button data-target="hero-top"><span class="dot-label">home</span></button>
   <button data-target="sns"><span class="dot-label">SNS</span></button>
-  <button data-target="stamina"><span class="dot-label">체력바</span></button>
-  <button data-target="highlights"><span class="dot-label">하이라이트</span></button>
-  <button data-target="tracker"><span class="dot-label">진행현황</span></button>
-  <button data-target="skills"><span class="dot-label">기술스택</span></button>
-  <button data-target="interests"><span class="dot-label">관심사</span></button>
-  <button data-target="favsong"><span class="dot-label">좋아하는 노래</span></button>
-  <button data-target="guestbook"><span class="dot-label">방명록</span></button>
-  <button data-target="gallery"><span class="dot-label">갤러리</span></button>
-  <button data-target="commits"><span class="dot-label">커밋</span></button>
-  <button data-target="madewith"><span class="dot-label">제작기</span></button>
+  <button data-target="stamina"><span class="dot-label" data-en="Stamina">체력바</span></button>
+  <button data-target="highlights"><span class="dot-label" data-en="Highlights">하이라이트</span></button>
+  <button data-target="tracker"><span class="dot-label" data-en="Tracker">진행현황</span></button>
+  <button data-target="skills"><span class="dot-label" data-en="Skills">기술스택</span></button>
+  <button data-target="interests"><span class="dot-label" data-en="Interests">관심사</span></button>
+  <button data-target="favsong"><span class="dot-label" data-en="Song">좋아하는 노래</span></button>
+  <button data-target="aichat"><span class="dot-label" data-en="AI Chat">AI 챗봇</span></button>
+  <button data-target="guestbook"><span class="dot-label" data-en="Guestbook">방명록</span></button>
+  <button data-target="gallery"><span class="dot-label" data-en="Gallery">갤러리</span></button>
+  <button data-target="commits"><span class="dot-label" data-en="Commits">커밋</span></button>
+  <button data-target="madewith"><span class="dot-label" data-en="Made With">제작기</span></button>
 </nav>
 
 <div class="wrap">
@@ -1639,11 +1716,11 @@
       <div class="sns-grid">
         <a class="sns-card ig-red" href="https://www.instagram.com/choihanmin_/" target="_blank" rel="noopener">
           <span class="sic">📷</span>
-          <div><b>Instagram <span class="sns-tag">#일상생활용</span></b><span>@choihanmin_</span></div>
+          <div><b>Instagram <span class="sns-tag" data-en="#personal">#일상생활용</span></b><span>@choihanmin_</span></div>
         </a>
         <a class="sns-card ig-blue" href="https://www.instagram.com/dae.hanmin.guk/" target="_blank" rel="noopener">
           <span class="sic">📷</span>
-          <div><b>Instagram <span class="sns-tag">#대외활동용</span></b><span>@dae.hanmin.guk</span></div>
+          <div><b>Instagram <span class="sns-tag" data-en="#activities">#대외활동용</span></b><span>@dae.hanmin.guk</span></div>
         </a>
         <a class="sns-card blog-green" href="https://blog.naver.com/choehanmin" target="_blank" rel="noopener">
           <span class="sic">📝</span>
@@ -1662,7 +1739,7 @@
   <!-- STAMINA GAUGE -->
   <section id="stamina" class="reveal slide-right">
     <div class="sec-head"><span class="tag">STATUS</span><h2 data-en="Hanmin's Battery Level">최한민의 체력바</h2></div>
-    <p class="sec-sub">현재 상태: 방전 직전 · 재충전 필요</p>
+    <p class="sec-sub" data-en="Current status: about to die · needs recharging">현재 상태: 방전 직전 · 재충전 필요</p>
     <div class="gauge-wrap">
       <svg viewBox="0 0 220 130" class="gauge">
         <path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>
@@ -1683,10 +1760,10 @@
         </g>
         <circle cx="110" cy="110" r="8" fill="var(--amber)"/>
       </svg>
-      <p class="gauge-caption">밤새 게임 만들고, 새벽에 버그 고치고, 아침엔 수업 듣고 나니… 바늘이 E 근처에 있습니다. 그래도 재밌어서 계속하는 중.
-        <span class="status-line">🔧 이번 주 작업 중: Stealth Ops 신규 스테이지 밸런싱</span>
-        <span class="status-line">📚 이번 달 배운 것: 스크롤 리빌 애니메이션 (Intersection Observer)</span>
-        <span class="status-line">🔮 다음 업데이트 예고: Time Heist 24 신규 모드 스크린샷 공개 예정</span>
+      <p class="gauge-caption"><span data-en="Made games all night, fixed bugs before dawn, then sat through morning classes… the needle's near E. Still fun enough to keep going.">밤새 게임 만들고, 새벽에 버그 고치고, 아침엔 수업 듣고 나니… 바늘이 E 근처에 있습니다. 그래도 재밌어서 계속하는 중.</span>
+        <span class="status-line" data-en="🔧 Working on this week: balancing Stealth Ops' new stage">🔧 이번 주 작업 중: Stealth Ops 신규 스테이지 밸런싱</span>
+        <span class="status-line" data-en="📚 Learned this month: scroll-reveal animation (Intersection Observer)">📚 이번 달 배운 것: 스크롤 리빌 애니메이션 (Intersection Observer)</span>
+        <span class="status-line" data-en="🔮 Coming up next: Time Heist 24 new-mode screenshots">🔮 다음 업데이트 예고: Time Heist 24 신규 모드 스크린샷 공개 예정</span>
       </p>
     </div>
   </section>
@@ -1823,7 +1900,7 @@
       <div class="interest"><span class="ic">⛳</span><div><b data-en="Golf">골프</b><span data-en="More obsessed with swing form than the score">스코어보다 스윙 폼에 집착하는 편</span></div></div>
       <div class="interest"><span class="ic">🐴</span><div><b data-en="Horseback Riding">승마</b><span data-en="The horse reads the room faster than I do">말이 내 마음보다 눈치가 빠름</span></div></div>
     </div>
-    <p class="song-widget" id="songWidget">🎧 요즘 듣는 노래: When I get old - Christopher &amp; 청하</p>
+    <p class="song-widget" id="songWidget" data-en="🎧 On repeat lately: When I get old - Christopher &amp; Chungha">🎧 요즘 듣는 노래: When I get old - Christopher &amp; 청하</p>
   </section>
 
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
@@ -1846,7 +1923,7 @@
           </audio>
         </div>
         <div class="song-credit">
-          <span>원곡: 알라미 Alarmy</span>
+          <span data-en="Original: Alarmy">원곡: 알라미 Alarmy</span>
           <span>IG: @alarmy_official_kr</span>
         </div>
       </div>
@@ -1859,14 +1936,48 @@
     <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
+  <!-- AI CHAT -->
+  <section id="aichat" class="reveal slide-left">
+    <div class="sec-head"><span class="tag">Q&amp;A</span><h2 data-en="Chat with AI Hanmin">AI 최한민과 대화하기</h2></div>
+    <p class="sec-sub" data-en="$ note: preset FAQ answers, not a free-form LLM">$ 참고: 자유 대화 AI가 아니라, 자주 묻는 질문에 미리 준비된 답변으로 응답해요</p>
+    <div class="aichat-term">
+      <div class="term-bar">
+        <div class="term-dot" style="background:#ff5f57"></div>
+        <div class="term-dot" style="background:#febc2e"></div>
+        <div class="term-dot" style="background:#28c840"></div>
+        <span>ai-hanmin — chat</span>
+      </div>
+      <div class="aichat-log" id="aichatLog" role="log" aria-live="polite">
+        <div class="aichat-msg bot"><span class="aichat-avatar">🤖</span><div class="aichat-bubble" data-en="Hi! I'm an AI pre-loaded with answers about Choi Hanmin 🙂 Ask me anything about my major, games, activities, or contact info!">안녕하세요! 저는 최한민의 질문에 미리 답을 준비해둔 AI예요 🙂 전공, 게임, 대외활동, 연락처 뭐든 물어보세요!</div></div>
+      </div>
+      <div class="aichat-suggest" id="aichatSuggest">
+        <button type="button" data-en="What's your major?">전공이 뭐야?</button>
+        <button type="button" data-en="What games have you made?">어떤 게임 만들었어?</button>
+        <button type="button" data-en="How can I contact you?">연락처 알려줘</button>
+        <button type="button" data-en="What activities have you done?">대외활동 뭐 했어?</button>
+        <button type="button" data-en="What are your hobbies?">취미가 뭐야?</button>
+      </div>
+      <form class="aichat-input-row" id="aichatForm">
+        <input type="text" id="aichatInput" class="aichat-input" placeholder="궁금한 걸 물어보세요…" aria-label="AI 최한민에게 질문하기" autocomplete="off">
+        <button type="submit" class="aichat-send" id="aichatSend" aria-label="전송">↑</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- GUESTBOOK -->
   <section id="guestbook" class="reveal slide-left">
     <div class="sec-head"><span class="tag">GUESTBOOK</span><h2 data-en="Guestbook">방명록</h2></div>
-    <p class="sec-sub">$ echo "한마디 남기기" | mail -s "방명록"</p>
+    <p class="sec-sub" data-en='$ echo "leave a note" | mail -s "guestbook"'>$ echo "한마디 남기기" | mail -s "방명록"</p>
     <p class="guestbook-desc" data-en="If you made it all the way here, please leave even a short note. Just your name is more than welcome.">이 사이트까지 와주셨다면, 짧게라도 한마디 남겨주세요. 이름 하나만 남기셔도 반갑습니다.</p>
     <a class="guestbook-link magnetic" href="https://forms.gle/JfN6Vd65476TEj6x8" target="_blank" rel="noopener" data-en="Leave a note →">한마디 남기기 →</a>
     <div id="guestbookPreview" class="guestbook-preview">
-      <p class="guestbook-empty">아직 방명록 미리보기 연동 전이에요. (설정하면 최근 답변이 여기 뜹니다)</p>
+      <p class="guestbook-empty" data-en="Guestbook preview isn't connected yet. (Once set up, recent entries will show up here)">아직 방명록 미리보기 연동 전이에요. (설정하면 최근 답변이 여기 뜹니다)</p>
     </div>
   </section>
 
@@ -1881,32 +1992,32 @@
     <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2 data-en="Daily Gallery">일상 갤러리</h2></div>
     <p class="sec-sub">$ ls ~/photos --recent</p>
     <div class="gallery-grid">
-      <div class="gitem"><img src="images/web/photo23.jpg" loading="lazy" alt="승마 체험"><span class="new-tag">NEW</span><span class="gcap">말이랑 인사하기</span></div>
-      <div class="gitem"><img src="images/web/photo29.jpg" loading="lazy" alt="특수분장 체험"><span class="new-tag">NEW</span><span class="gcap">민속촌 좀비 분장 체험</span></div>
-      <div class="gitem"><img src="images/web/photo21.jpg" loading="lazy" alt="헬스장 덤벨 운동"><span class="gcap">헬스장에서 덤벨 컬</span></div>
-      <div class="gitem"><img src="images/web/photo22.jpg" loading="lazy" alt="웨이트 트레이닝"><span class="gcap">웨이트 트레이닝 중</span></div>
-      <div class="gitem"><img src="images/web/photo24.jpg" loading="lazy" alt="단체사진 포즈 패러디"><span class="gcap">너무 착한데?전시회에서</span></div>
-      <div class="gitem tall"><img src="images/web/photo26.jpg" loading="lazy" alt="고궁 산책"><span class="gcap">고궁에서 노을 보기</span></div>
-      <div class="gitem"><img src="images/web/photo25.jpg" loading="lazy" alt="호숫가에서"><span class="gcap">호숫가 산책</span></div>
-      <div class="gitem"><img src="images/web/photo27.jpg" loading="lazy" alt="조명 설치미술 전시"><span class="gcap">조명 설치미술 전시에서</span></div>
-      <div class="gitem"><img src="images/web/photo28.jpg" loading="lazy" alt="강변 산책"><span class="gcap">가평 빠지</span></div>
-      <div class="gitem"><img src="images/web/photo30.jpg" loading="lazy" alt="부엉이 인형과"><span class="gcap">부대찌개 맛집에서 부엉이 인형과</span></div>
-      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="gcap">LG CNS AI Genius 서포터즈 16기</span></div>
-      <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="외대 조교"><span class="gcap">외대 조교</span></div>
-      <div class="gitem"><img src="images/web/photo04.jpg" loading="lazy" alt="AI 육성센터"><span class="gcap">용인 다우디지털스퀘어 AI 육성센터</span></div>
-      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="gcap">여름 계곡에서 돌탑 쌓기</span></div>
-      <div class="gitem tall"><img src="images/web/photo12.jpg" loading="lazy" alt="농촌 봉사활동"><span class="gcap">가평 농촌 봉사활동 — 고추 수확</span></div>
-      <div class="gitem"><img src="images/web/photo01.jpg" loading="lazy" alt="봉사활동"><span class="gcap">지역 봉사활동 현장</span></div>
-      <div class="gitem"><img src="images/web/photo08.jpg" loading="lazy" alt="산림 봉사"><span class="gcap">숲 속 봉사활동</span></div>
-      <div class="gitem"><img src="images/web/photo06.jpg" loading="lazy" alt="화이트보드 알고리즘"><span class="gcap">화이트보드에 알고리즘 정리 중</span></div>
-      <div class="gitem"><img src="images/web/photo17.jpg" loading="lazy" alt="물놀이"><span class="gcap">여름 워터 액티비티</span></div>
-      <div class="gitem"><img src="images/web/photo02.jpg" loading="lazy" alt="다우디지털스퀘어 작업"><span class="gcap">TutoGen 작업 공간에서</span></div>
-      <div class="gitem"><img src="images/web/photo07.jpg" loading="lazy" alt="예비군 훈련"><span class="gcap">예비군 가는 나 ㅠㅠ</span></div>
-      <div class="gitem"><img src="images/web/photo20.jpg" loading="lazy" alt="친구들과"><span class="gcap">동료들과 함께</span></div>
-      <div class="gitem"><img src="images/web/photo05.jpg" loading="lazy" alt="캠퍼스 축제"><span class="gcap">HUFS 캠퍼스 축제 현장</span></div>
-      <div class="gitem"><img src="images/web/photo19.jpg" loading="lazy" alt="사무실 작업"><span class="gcap">사무실에서 개발 작업 중</span></div>
-      <div class="gitem"><img src="images/web/photo10.jpg" loading="lazy" alt="발표"><span class="gcap">컴퓨팅사고 TA 발표 중</span></div>
-      <div class="gitem"><img src="images/web/photo13.jpg" loading="lazy" alt="개발 작업"><span class="gcap">밤샘 개발 중</span></div>
+      <div class="gitem"><img src="images/web/photo23.jpg" loading="lazy" alt="승마 체험"><span class="new-tag">NEW</span><span class="gcap" data-en="Saying hi to a horse">말이랑 인사하기</span></div>
+      <div class="gitem"><img src="images/web/photo29.jpg" loading="lazy" alt="특수분장 체험"><span class="new-tag">NEW</span><span class="gcap" data-en="Zombie makeup at the folk village">민속촌 좀비 분장 체험</span></div>
+      <div class="gitem"><img src="images/web/photo21.jpg" loading="lazy" alt="헬스장 덤벨 운동"><span class="gcap" data-en="Dumbbell curls at the gym">헬스장에서 덤벨 컬</span></div>
+      <div class="gitem"><img src="images/web/photo22.jpg" loading="lazy" alt="웨이트 트레이닝"><span class="gcap" data-en="Weight training">웨이트 트레이닝 중</span></div>
+      <div class="gitem"><img src="images/web/photo24.jpg" loading="lazy" alt="단체사진 포즈 패러디"><span class="gcap" data-en="A little too nice — at the exhibition">너무 착한데?전시회에서</span></div>
+      <div class="gitem tall"><img src="images/web/photo26.jpg" loading="lazy" alt="고궁 산책"><span class="gcap" data-en="Sunset at the old palace">고궁에서 노을 보기</span></div>
+      <div class="gitem"><img src="images/web/photo25.jpg" loading="lazy" alt="호숫가에서"><span class="gcap" data-en="A walk by the lake">호숫가 산책</span></div>
+      <div class="gitem"><img src="images/web/photo27.jpg" loading="lazy" alt="조명 설치미술 전시"><span class="gcap" data-en="At a light installation exhibit">조명 설치미술 전시에서</span></div>
+      <div class="gitem"><img src="images/web/photo28.jpg" loading="lazy" alt="강변 산책"><span class="gcap" data-en="Gapyeong riverside">가평 빠지</span></div>
+      <div class="gitem"><img src="images/web/photo30.jpg" loading="lazy" alt="부엉이 인형과"><span class="gcap" data-en="With an owl plushie at a budae-jjigae spot">부대찌개 맛집에서 부엉이 인형과</span></div>
+      <div class="gitem"><img src="images/web/photo16.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈"><span class="gcap" data-en="LG CNS AI Genius Supporters 16th">LG CNS AI Genius 서포터즈 16기</span></div>
+      <div class="gitem"><img src="images/web/photo09.jpg" loading="lazy" alt="외대 조교"><span class="gcap" data-en="TA at HUFS">외대 조교</span></div>
+      <div class="gitem"><img src="images/web/photo04.jpg" loading="lazy" alt="AI 육성센터"><span class="gcap" data-en="Yongin Daou Digital Square AI Development Center">용인 다우디지털스퀘어 AI 육성센터</span></div>
+      <div class="gitem"><img src="images/web/photo14.jpg" loading="lazy" alt="계곡 돌탑"><span class="gcap" data-en="Stacking rock cairns at a summer valley">여름 계곡에서 돌탑 쌓기</span></div>
+      <div class="gitem tall"><img src="images/web/photo12.jpg" loading="lazy" alt="농촌 봉사활동"><span class="gcap" data-en="Gapyeong rural volunteering — pepper harvest">가평 농촌 봉사활동 — 고추 수확</span></div>
+      <div class="gitem"><img src="images/web/photo01.jpg" loading="lazy" alt="봉사활동"><span class="gcap" data-en="Local volunteering">지역 봉사활동 현장</span></div>
+      <div class="gitem"><img src="images/web/photo08.jpg" loading="lazy" alt="산림 봉사"><span class="gcap" data-en="Forest volunteering">숲 속 봉사활동</span></div>
+      <div class="gitem"><img src="images/web/photo06.jpg" loading="lazy" alt="화이트보드 알고리즘"><span class="gcap" data-en="Working out an algorithm on the whiteboard">화이트보드에 알고리즘 정리 중</span></div>
+      <div class="gitem"><img src="images/web/photo17.jpg" loading="lazy" alt="물놀이"><span class="gcap" data-en="Summer water activities">여름 워터 액티비티</span></div>
+      <div class="gitem"><img src="images/web/photo02.jpg" loading="lazy" alt="다우디지털스퀘어 작업"><span class="gcap" data-en="In the TutoGen workspace">TutoGen 작업 공간에서</span></div>
+      <div class="gitem"><img src="images/web/photo07.jpg" loading="lazy" alt="예비군 훈련"><span class="gcap" data-en="Off to reserve forces training ㅠㅠ">예비군 가는 나 ㅠㅠ</span></div>
+      <div class="gitem"><img src="images/web/photo20.jpg" loading="lazy" alt="친구들과"><span class="gcap" data-en="With teammates">동료들과 함께</span></div>
+      <div class="gitem"><img src="images/web/photo05.jpg" loading="lazy" alt="캠퍼스 축제"><span class="gcap" data-en="HUFS campus festival">HUFS 캠퍼스 축제 현장</span></div>
+      <div class="gitem"><img src="images/web/photo19.jpg" loading="lazy" alt="사무실 작업"><span class="gcap" data-en="Developing at the office">사무실에서 개발 작업 중</span></div>
+      <div class="gitem"><img src="images/web/photo10.jpg" loading="lazy" alt="발표"><span class="gcap" data-en="Giving a Computational Thinking TA presentation">컴퓨팅사고 TA 발표 중</span></div>
+      <div class="gitem"><img src="images/web/photo13.jpg" loading="lazy" alt="개발 작업"><span class="gcap" data-en="Late-night coding">밤샘 개발 중</span></div>
     </div>
   </section>
 
@@ -1921,7 +2032,7 @@
     <div class="sec-head"><span class="tag">LIVE</span><h2 data-en="Recent Commits">최근 커밋</h2></div>
     <p class="sec-sub">$ git log --author=ChoeHanMin -5</p>
     <div id="commitList" class="commit-list">
-      <p class="commit-loading">불러오는 중...</p>
+      <p class="commit-loading" data-en="Loading...">불러오는 중...</p>
     </div>
   </section>
 
@@ -1956,9 +2067,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.13</span>
+        <span class="change-desc" data-en="Added an 'AI Hanmin' FAQ chat section (preset keyword-matched answers, no backend)">'AI 최한민과 대화하기' FAQ 챗봇 섹션 추가 (키워드 매칭 기반, 서버 없이 클라이언트에서 동작)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.12</span>
         <span class="change-desc" data-en="Added a neon 'Hanmin's Favorite Song' section with an audio player">'최한민이 좋아하는 노래' 네온 섹션 추가 (오디오 플레이어 포함)</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.11</span>
@@ -2057,13 +2172,13 @@
       <div class="links">
         <span class="email-copy-wrap">
           <a href="mailto:rokafhanmin@gmail.com" id="footerEmail">rokafhanmin@gmail.com</a>
-          <span class="copy-feedback" id="emailCopyFeedback">복사됨 ✓</span>
+          <span class="copy-feedback" id="emailCopyFeedback" data-en="Copied ✓">복사됨 ✓</span>
         </span>
         <a href="https://github.com/ChoeHanMin" target="_blank" rel="noopener">GitHub</a>
         <a href="https://www.soodalgames.com/" target="_blank" rel="noopener" data-en="Soodal Games (games) →">Soodal Games (게임) →</a>
         <span class="email-copy-wrap">
           <button class="footer-link-btn" id="shareBtn" type="button" data-en="Share this page">이 페이지 공유</button>
-          <span class="copy-feedback" id="shareCopyFeedback">링크 복사됨 ✓</span>
+          <span class="copy-feedback" id="shareCopyFeedback" data-en="Link copied ✓">링크 복사됨 ✓</span>
         </span>
       </div>
       <div class="footer-btn-row">
@@ -2084,7 +2199,7 @@
     </div>
 
     <div class="copyright">
-      © 2026 최한민닷컴(한민닷컴) · Choi Hanmin · Soodal Games
+      <span data-en="© 2026 choihanmin.com (hanmin.com) · Choi Hanmin · Soodal Games">© 2026 최한민닷컴(한민닷컴) · Choi Hanmin · Soodal Games</span>
       <span id="visitCount" class="visit-count"></span>
     </div>
   </footer>
@@ -2121,10 +2236,10 @@
 
 <div class="mobile-bottom-scrim" aria-hidden="true"></div>
 <div id="shortcutPanel" class="shortcut-panel">
-  <button id="scGames"><b>G</b>게임</button>
-  <button id="scGallery"><b>P</b>갤러리</button>
-  <button id="scHome"><b>⌂</b>맨위</button>
-  <button id="scHelp"><b>?</b>단축키</button>
+  <button id="scGames"><b>G</b><span data-en="Games">게임</span></button>
+  <button id="scGallery"><b>P</b><span data-en="Gallery">갤러리</span></button>
+  <button id="scHome"><b>⌂</b><span data-en="Top">맨위</span></button>
+  <button id="scHelp"><b>?</b><span data-en="Shortcuts">단축키</span></button>
 </div>
 
 <div id="lightbox" class="lightbox">
@@ -2165,18 +2280,52 @@
     });
   }
 
+  const weatherCodeMap = {
+    0:{kr:'☀️ 맑음',en:'☀️ Clear'},1:{kr:'🌤️ 대체로 맑음',en:'🌤️ Mostly clear'},2:{kr:'⛅ 구름 조금',en:'⛅ Partly cloudy'},3:{kr:'☁️ 흐림',en:'☁️ Cloudy'},
+    45:{kr:'🌫️ 안개',en:'🌫️ Foggy'},48:{kr:'🌫️ 안개',en:'🌫️ Foggy'},
+    51:{kr:'🌦️ 이슬비',en:'🌦️ Light drizzle'},53:{kr:'🌦️ 이슬비',en:'🌦️ Drizzle'},55:{kr:'🌧️ 이슬비',en:'🌧️ Dense drizzle'},
+    61:{kr:'🌧️ 비',en:'🌧️ Rain'},63:{kr:'🌧️ 비',en:'🌧️ Rain'},65:{kr:'🌧️ 강한 비',en:'🌧️ Heavy rain'},
+    71:{kr:'🌨️ 눈',en:'🌨️ Snow'},73:{kr:'🌨️ 눈',en:'🌨️ Snow'},75:{kr:'❄️ 강한 눈',en:'❄️ Heavy snow'},
+    80:{kr:'🌦️ 소나기',en:'🌦️ Showers'},81:{kr:'🌦️ 소나기',en:'🌦️ Showers'},82:{kr:'⛈️ 강한 소나기',en:'⛈️ Heavy showers'},95:{kr:'⛈️ 뇌우',en:'⛈️ Thunderstorm'}
+  };
+  let weatherData = null, weatherFailed = false;
+  const out3El = document.getElementById('out3');
+  function renderWeather(){
+    if (!out3El) return;
+    if (weatherFailed) {
+      out3El.innerHTML = currentLang === 'en' ? 'Could not load weather.' : '날씨 정보를 불러올 수 없습니다.';
+      return;
+    }
+    if (!weatherData) return;
+    const entry = weatherCodeMap[weatherData.weathercode];
+    const desc = entry ? (currentLang === 'en' ? entry.en : entry.kr) : (currentLang === 'en' ? 'Weather info' : '날씨 정보');
+    const city = currentLang === 'en' ? 'Seongnam' : '성남시';
+    out3El.innerHTML = `<span class="teal">${city}</span> ${desc} · ${Math.round(weatherData.temperature)}°C`;
+  }
   function getWeatherHTML(){
     return fetch('https://api.open-meteo.com/v1/forecast?latitude=37.3826&longitude=127.1189&current_weather=true')
       .then(r => r.json())
       .then(data => {
-        const cw = data.current_weather;
-        const codeMap = {0:'☀️ 맑음',1:'🌤️ 대체로 맑음',2:'⛅ 구름 조금',3:'☁️ 흐림',45:'🌫️ 안개',48:'🌫️ 안개',
-          51:'🌦️ 이슬비',53:'🌦️ 이슬비',55:'🌧️ 이슬비',61:'🌧️ 비',63:'🌧️ 비',65:'🌧️ 강한 비',
-          71:'🌨️ 눈',73:'🌨️ 눈',75:'❄️ 강한 눈',80:'🌦️ 소나기',81:'🌦️ 소나기',82:'⛈️ 강한 소나기',95:'⛈️ 뇌우'};
-        const desc = codeMap[cw.weathercode] || '날씨 정보';
-        return `<span class="teal">성남시</span> ${desc} · ${Math.round(cw.temperature)}°C`;
+        weatherData = data.current_weather;
+        return true;
       })
-      .catch(() => '날씨 정보를 불러올 수 없습니다.');
+      .catch(() => { weatherFailed = true; return false; });
+  }
+
+  const heroOut1 = {
+    kr: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 (게임 목록 → soodalgames.com)<br>동시에 <span class="teal">15+ 대내외 활동</span>, 20+ 조직과 협업 중`,
+    en: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>Running the indie game studio <span class="amber">Soodal Games</span> (game list → soodalgames.com)<br>Currently juggling <span class="teal">15+ activities</span>, working with 20+ organizations`
+  };
+  const heroOut2 = {
+    kr: `<span class="amber">a1c9f2e</span> feat: LiNK English Buddy 활동 진행 중 — 탈북 청년 대상 1:1 영어 코칭`,
+    en: `<span class="amber">a1c9f2e</span> feat: LiNK English Buddy program ongoing — 1:1 English coaching for North Korean defector youth`
+  };
+  function renderHeroTerminalLang(){
+    const out1El = document.getElementById('out1');
+    const out2El = document.getElementById('out2');
+    if (out1El) out1El.innerHTML = currentLang === 'en' ? heroOut1.en : heroOut1.kr;
+    if (out2El) out2El.innerHTML = currentLang === 'en' ? heroOut2.en : heroOut2.kr;
+    renderWeather();
   }
 
   async function runTerminal(){
@@ -2189,9 +2338,11 @@
       const cmdEl = lines[i].querySelector('.cmd');
       await typeText(cmdEl, cmdEl.dataset.cmd, 35);
       await new Promise(r => setTimeout(r, 150));
+      if (i === 0) outs[i].innerHTML = currentLang === 'en' ? heroOut1.en : heroOut1.kr;
+      if (i === 1) outs[i].innerHTML = currentLang === 'en' ? heroOut2.en : heroOut2.kr;
       if (i === 2) {
-        const weatherHTML = await weatherPromise;
-        outs[i].innerHTML = weatherHTML;
+        await weatherPromise;
+        renderWeather();
       }
       outs[i].classList.add('appear');
       await new Promise(r => setTimeout(r, 300));
@@ -2213,12 +2364,14 @@
     const el = document.getElementById('roleCycleText');
     if (!el) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const phrases = ['CES STUDENT @ HUFS', 'GAME DEVELOPER', 'SOODAL GAMES 운영자', 'SERIAL COLLABORATOR'];
+    const phrasesKr = ['CES STUDENT @ HUFS', 'GAME DEVELOPER', 'SOODAL GAMES 운영자', 'SERIAL COLLABORATOR'];
+    const phrasesEn = ['CES STUDENT @ HUFS', 'GAME DEVELOPER', 'SOODAL GAMES OPERATOR', 'SERIAL COLLABORATOR'];
     let idx = 0;
     while (true) {
       await new Promise(r => setTimeout(r, 2000));
       await deleteText(el, 22);
-      idx = (idx + 1) % phrases.length;
+      idx = (idx + 1) % phrasesKr.length;
+      const phrases = currentLang === 'en' ? phrasesEn : phrasesKr;
       await typeText(el, phrases[idx], 45);
     }
   }
@@ -2283,7 +2436,7 @@
       document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
       themeBtn.textContent = '☀️';
-      unlockAchievement('lightmode', '라이트모드 발견! 🌈');
+      unlockAchievement('lightmode', '라이트모드 발견! 🌈', 'Discovered light mode! 🌈');
     }
     updateAccentRGB();
   });
@@ -2291,13 +2444,15 @@
   /* ---- OTTER EASTER EGG ---- */
   const mascot = document.getElementById('mascotImg');
   const bubble = document.getElementById('mascotBubble');
-  const phrases = ['안녕!', '다시 왔구나', '보고 싶었어', '오늘도 방문 감사~', '심심하면 게임이나 하고 가', '체력바 좀 보고 가'];
+  const phrasesKr = ['안녕!', '다시 왔구나', '보고 싶었어', '오늘도 방문 감사~', '심심하면 게임이나 하고 가', '체력바 좀 보고 가'];
+  const phrasesEn = ['Hi!', 'You\'re back', 'Missed you', 'Thanks for visiting~', 'Bored? Go play a game', 'Check out the stamina bar'];
   let bubbleTimer = null;
   mascot.addEventListener('click', () => {
     mascot.classList.remove('boop');
     void mascot.offsetWidth;
     mascot.classList.add('boop');
 
+    const phrases = currentLang === 'en' ? phrasesEn : phrasesKr;
     const phrase = phrases[Math.floor(Math.random() * phrases.length)];
     bubble.textContent = phrase;
     bubble.classList.add('show');
@@ -2320,21 +2475,31 @@
   });
 
   /* ---- VISITOR COUNTER ---- */
+  let visitCountVal = null;
+  function renderVisitCount(){
+    const el = document.getElementById('visitCount');
+    if (!el || visitCountVal === null) return;
+    el.textContent = currentLang === 'en' ? `${visitCountVal.toLocaleString()} total visits` : `누적 방문 ${visitCountVal.toLocaleString()}회`;
+  }
   fetch('https://api.countapi.xyz/hit/choihanmin-com/visits')
     .then(r => r.json())
     .then(data => {
-      document.getElementById('visitCount').textContent = `누적 방문 ${data.value.toLocaleString()}회`;
+      visitCountVal = data.value;
+      renderVisitCount();
     })
     .catch(() => {});
 
   /* ---- RECENT COMMITS ---- */
+  function commitLoadFailText(){
+    return currentLang === 'en' ? "Couldn't load recent commits." : '최근 커밋을 불러올 수 없습니다.';
+  }
   fetch('https://api.github.com/users/ChoeHanMin/events/public')
     .then(r => r.json())
     .then(events => {
       const pushes = events.filter(e => e.type === 'PushEvent').slice(0, 5);
       const list = document.getElementById('commitList');
       if (!pushes.length) {
-        list.innerHTML = '<p class="commit-loading">최근 커밋을 불러올 수 없습니다.</p>';
+        list.innerHTML = `<p class="commit-loading" data-en="Couldn't load recent commits.">${commitLoadFailText()}</p>`;
         return;
       }
       list.innerHTML = '';
@@ -2355,7 +2520,7 @@
       });
     })
     .catch(() => {
-      document.getElementById('commitList').innerHTML = '<p class="commit-loading">최근 커밋을 불러올 수 없습니다.</p>';
+      document.getElementById('commitList').innerHTML = `<p class="commit-loading" data-en="Couldn't load recent commits.">${commitLoadFailText()}</p>`;
     });
 
   /* ---- CURSOR TRAIL ----
@@ -2539,10 +2704,19 @@
 
   /* ---- LIVE VISITOR COUNT (approximate, real technique via countapi.xyz) ---- */
   const liveEl = document.getElementById('liveVisitors');
+  let liveVisitorVal = null;
+  function renderLiveVisitors(){
+    if (!liveEl || liveVisitorVal === null) return;
+    const n = Math.max(1, liveVisitorVal);
+    liveEl.innerHTML = currentLang === 'en'
+      ? `<span class="dot"></span>Roughly ${n} people have viewed this site recently`
+      : `<span class="dot"></span>대략 ${n}명이 최근 이 사이트를 보고 있어요`;
+  }
   fetch('https://api.countapi.xyz/hit/choihanmin-com/online')
     .then(r => r.json())
     .then(data => {
-      liveEl.innerHTML = `<span class="dot"></span>대략 ${Math.max(1, data.value)}명이 최근 이 사이트를 보고 있어요`;
+      liveVisitorVal = data.value;
+      renderLiveVisitors();
     })
     .catch(() => {});
   window.addEventListener('beforeunload', () => {
@@ -2684,6 +2858,13 @@
     if (mottoEl) {
       mottoEl.textContent = currentLang === 'en' ? enMottos[0] : quotes[0];
     }
+    renderHeroTerminalLang();
+    renderVisitCount();
+    renderLiveVisitors();
+    const aichatInputEl = document.getElementById('aichatInput');
+    if (aichatInputEl) {
+      aichatInputEl.placeholder = currentLang === 'en' ? 'Ask me anything…' : '궁금한 걸 물어보세요…';
+    }
   });
 
   /* ---- FONT SIZE TOGGLE (zoom-based, Chrome/Safari/Edge) ---- */
@@ -2819,9 +3000,9 @@
           if (rows.length > lastSeenCount) {
             const newest = rows[rows.length - 1];
             const vals = Object.values(newest);
-            const name = vals[1] || '누군가';
+            const name = vals[1] || (currentLang === 'en' ? 'Someone' : '누군가');
             const gbToast = document.getElementById('guestbookToast');
-            gbToast.textContent = `📝 ${name}님이 방명록에 남겼어요`;
+            gbToast.textContent = currentLang === 'en' ? `📝 ${name} left a note in the guestbook` : `📝 ${name}님이 방명록에 남겼어요`;
             gbToast.classList.add('show');
             setTimeout(() => gbToast.classList.remove('show'), 4000);
             lastSeenCount = rows.length;
@@ -2886,11 +3067,11 @@
     requestAnimationFrame(frame);
   }
 
-  function unlockAchievement(key, label){
+  function unlockAchievement(key, labelKr, labelEn){
     if (localStorage.getItem('ach_' + key)) return;
     localStorage.setItem('ach_' + key, '1');
     const toast = document.getElementById('achievementToast');
-    document.getElementById('achievementText').textContent = label;
+    document.getElementById('achievementText').textContent = currentLang === 'en' ? labelEn : labelKr;
     toast.classList.add('show');
     fireConfetti();
     setTimeout(() => toast.classList.remove('show'), 3500);
@@ -2899,7 +3080,7 @@
   document.getElementById('mascotImg').addEventListener('click', () => {
     otterClickCount++;
     localStorage.setItem('otterClickCount', otterClickCount);
-    if (otterClickCount >= 5) unlockAchievement('otter5', '최한민과 친해짐 — 5번 클릭 달성!');
+    if (otterClickCount >= 5) unlockAchievement('otter5', '최한민과 친해짐 — 5번 클릭 달성!', 'Got close with Hanmin — clicked 5 times!');
   });
   /* ---- SCROLL-TO-END ACHIEVEMENT ---- */
   const footerEl = document.querySelector('footer');
@@ -2907,7 +3088,7 @@
     const footerIO = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          unlockAchievement('finished', '완주 — 페이지 끝까지 다 보셨네요!');
+          unlockAchievement('finished', '완주 — 페이지 끝까지 다 보셨네요!', 'Finished — you made it all the way to the bottom!');
           footerIO.unobserve(entry.target);
         }
       });
@@ -2937,7 +3118,9 @@
     btn.addEventListener('click', async () => {
       const shareData = {
         title: '최한민 (Choi Hanmin)',
-        text: '최한민의 개인 홈페이지 — 개발, 대외활동, 게임 스튜디오 Soodal Games',
+        text: currentLang === 'en'
+          ? "Choi Hanmin's personal homepage — dev work, outside activities, and the game studio Soodal Games"
+          : '최한민의 개인 홈페이지 — 개발, 대외활동, 게임 스튜디오 Soodal Games',
         url: 'https://www.choihanmin.com'
       };
       if (navigator.share) {
@@ -2959,21 +3142,21 @@
     if (!activeList) return;
 
     const activities = [
-      { name: '시대에듀 에듀메이트 서포터즈 2기', sub: null, start: '2026-08-11', end: '2026-09-06' },
-      { name: '삼성 갤럭시 대학생 서포터즈 6기', sub: '갤럭시 캠퍼스 스토어 방장', start: '2026-03-01', end: '2026-12-31' },
-      { name: '2030 신메뉴 리서치 & 모니터링 서포터즈', sub: null, start: '2026-08-01', end: '2026-10-31' },
-      { name: '코드하나 코더스 서포터즈', sub: '주강사 · 초등 SW·AI 교육', start: '2026-08-01', end: '2027-01-31' },
-      { name: '인텔 서포터즈', sub: '다나와 아카데미 인텔 부스 콘텐츠 크리에이터', start: '2026-08-01', end: '2026-11-30' },
-      { name: '죽전 다우디지털스퀘어 AI 육성센터', sub: null, start: '2026-06-01', end: '2028-03-31' },
-      { name: 'K애디터즈 서포터즈 8기', sub: '한국특수판매공제조합', start: '2026-08-24', end: '2026-10-30' },
-      { name: '멈블 앰버서더 5기', sub: "팀장 · 팀 '속닥속닥'", start: '2026-08-31', end: '2026-10-25' },
-      { name: '굿네이버스 AI 캠페인 크리에이터 2기', sub: '경기남부사업본부', start: '2026-08-31', end: '2026-09-29' },
-      { name: 'AJ 게임 개발 동아리', sub: null, start: '2020-03-01', end: null },
-      { name: 'LG CNS AI Genius 서포터즈 16기', sub: null, start: '2026-09-01', end: '2026-12-31' },
-      { name: '서울 디지털 성범죄 안심 서포터즈', sub: null, start: '2026-09-01', end: '2026-11-30' },
-      { name: 'LiNK LELP English Buddy', sub: null, start: '2026-09-01', end: '2026-11-28' },
-      { name: '해커스 블로그 리포터 해블리 17기', sub: '학습 후기 콘텐츠 크리에이터', start: '2026-09-09', end: '2026-10-07' },
-      { name: '한국중소벤처기업유통원 TOPS 서포터즈', sub: '소상공인 성장 지원 SNS 홍보', start: '2026-09-01', end: '2026-12-19' }
+      { name: '시대에듀 에듀메이트 서포터즈 2기', nameEn: 'Sidaegosi Edumate Supporters 2nd', sub: null, subEn: null, start: '2026-08-11', end: '2026-09-06' },
+      { name: '삼성 갤럭시 대학생 서포터즈 6기', nameEn: 'Samsung Galaxy Campus Supporters 6th', sub: '갤럭시 캠퍼스 스토어 방장', subEn: 'Galaxy Campus Store Captain', start: '2026-03-01', end: '2026-12-31' },
+      { name: '2030 신메뉴 리서치 & 모니터링 서포터즈', nameEn: '2030 New Menu Research & Monitoring Supporters', sub: null, subEn: null, start: '2026-08-01', end: '2026-10-31' },
+      { name: '코드하나 코더스 서포터즈', nameEn: 'Codehana Coders Supporters', sub: '주강사 · 초등 SW·AI 교육', subEn: 'Lead Instructor · Elementary SW/AI Education', start: '2026-08-01', end: '2027-01-31' },
+      { name: '인텔 서포터즈', nameEn: 'Intel Supporters', sub: '다나와 아카데미 인텔 부스 콘텐츠 크리에이터', subEn: 'Danawa Academy Intel Booth Content Creator', start: '2026-08-01', end: '2026-11-30' },
+      { name: '죽전 다우디지털스퀘어 AI 육성센터', nameEn: 'Jukjeon Daou Digital Square AI Development Center', sub: null, subEn: null, start: '2026-06-01', end: '2028-03-31' },
+      { name: 'K애디터즈 서포터즈 8기', nameEn: 'K-Editors Supporters 8th', sub: '한국특수판매공제조합', subEn: 'Korea Special Sale Business Mutual Aid Association', start: '2026-08-24', end: '2026-10-30' },
+      { name: '멈블 앰버서더 5기', nameEn: 'Mumble Ambassador 5th', sub: "팀장 · 팀 '속닥속닥'", subEn: "Team Lead · Team 'Sokdak-sokdak'", start: '2026-08-31', end: '2026-10-25' },
+      { name: '굿네이버스 AI 캠페인 크리에이터 2기', nameEn: 'Good Neighbors AI Campaign Creator 2nd', sub: '경기남부사업본부', subEn: 'Gyeonggi South Regional Office', start: '2026-08-31', end: '2026-09-29' },
+      { name: 'AJ 게임 개발 동아리', nameEn: 'AJ Game Dev Club', sub: null, subEn: null, start: '2020-03-01', end: null },
+      { name: 'LG CNS AI Genius 서포터즈 16기', nameEn: 'LG CNS AI Genius Supporters 16th', sub: null, subEn: null, start: '2026-09-01', end: '2026-12-31' },
+      { name: '서울 디지털 성범죄 안심 서포터즈', nameEn: 'Seoul Digital Sex Crime Safety Supporters', sub: null, subEn: null, start: '2026-09-01', end: '2026-11-30' },
+      { name: 'LiNK LELP English Buddy', nameEn: 'LiNK LELP English Buddy', sub: null, subEn: null, start: '2026-09-01', end: '2026-11-28' },
+      { name: '해커스 블로그 리포터 해블리 17기', nameEn: "Hackers Blog Reporter 'Haebly' 17th", sub: '학습 후기 콘텐츠 크리에이터', subEn: 'Study Review Content Creator', start: '2026-09-09', end: '2026-10-07' },
+      { name: '한국중소벤처기업유통원 TOPS 서포터즈', nameEn: 'Korea SMEs Distribution Center TOPS Supporters', sub: '소상공인 성장 지원 SNS 홍보', subEn: 'Small Business Growth Support SNS Promotion', start: '2026-09-01', end: '2026-12-19' }
     ];
 
     function daysBetween(a, b){ return Math.round((b - a) / 86400000); }
@@ -2987,7 +3170,7 @@
     activities.forEach(a => {
       const start = new Date(a.start + 'T00:00:00');
       const end = a.end ? new Date(a.end + 'T00:00:00') : null;
-      const item = { name: a.name, sub: a.sub, start, end };
+      const item = { name: a.name, nameEn: a.nameEn, sub: a.sub, subEn: a.subEn, start, end };
       if (start > now) upcoming.push(item);
       else if (!end || end >= now) active.push(item);
       // past activities (end < now) are intentionally not shown here — see the locked portfolio download
@@ -3011,11 +3194,11 @@
         row.className = 'tracker-item ongoing';
         row.innerHTML = `
           <div class="tracker-item-top">
-            <div><b class="tracker-name">${a.name}</b>${a.sub ? `<span class="tracker-sub">${a.sub}</span>` : ''}</div>
-            <span class="tracker-pct">${years}년째</span>
+            <div><b class="tracker-name" data-en="${a.nameEn}">${a.name}</b>${a.sub ? `<span class="tracker-sub" data-en="${a.subEn}">${a.sub}</span>` : ''}</div>
+            <span class="tracker-pct">${years}<span data-en=" yr">년째</span></span>
           </div>
           <div class="tracker-bar"><div class="tracker-bar-fill"></div></div>
-          <div class="tracker-item-bottom"><span>${fmtDate(a.start)} 시작</span><span>종료일 없음 · 상시 활동</span></div>
+          <div class="tracker-item-bottom"><span>${fmtDate(a.start)} <span data-en="start">시작</span></span><span data-en="No end date · ongoing">종료일 없음 · 상시 활동</span></div>
         `;
       } else {
         const total = daysBetween(a.start, a.end);
@@ -3024,11 +3207,11 @@
         row.className = 'tracker-item';
         row.innerHTML = `
           <div class="tracker-item-top">
-            <div><b class="tracker-name">${a.name}</b>${a.sub ? `<span class="tracker-sub">${a.sub}</span>` : ''}</div>
+            <div><b class="tracker-name" data-en="${a.nameEn}">${a.name}</b>${a.sub ? `<span class="tracker-sub" data-en="${a.subEn}">${a.sub}</span>` : ''}</div>
             <span class="tracker-pct">${prefersReducedMotion ? pct + '%' : pct.toFixed(4) + '%'}</span>
           </div>
           <div class="tracker-bar"><div class="tracker-bar-fill" data-w="${pct}"></div></div>
-          <div class="tracker-item-bottom"><span>D+${daysBetween(a.start, now)}</span><span>마감까지 D-${daysBetween(now, a.end)}</span></div>
+          <div class="tracker-item-bottom"><span>D+${daysBetween(a.start, now)}</span><span><span data-en="Until deadline: D-">마감까지 D-</span>${daysBetween(now, a.end)}</span></div>
         `;
         if (!prefersReducedMotion && pct < 100) {
           liveTickers.push({ el: row.querySelector('.tracker-pct'), basePct: pct, phase: Math.random() });
@@ -3060,7 +3243,7 @@
       row.className = 'tracker-item upcoming';
       row.innerHTML = `
         <div class="tracker-item-top">
-          <div><b class="tracker-name">${a.name}</b><span class="tracker-sub">${fmtDate(a.start)} ~ ${a.end ? fmtDate(a.end) : ''}</span></div>
+          <div><b class="tracker-name" data-en="${a.nameEn}">${a.name}</b><span class="tracker-sub">${fmtDate(a.start)} ~ ${a.end ? fmtDate(a.end) : ''}</span></div>
           <span class="tracker-dday">D-${daysBetween(now, a.start)}</span>
         </div>
       `;
@@ -3074,15 +3257,23 @@
     const ongoingItem = active.find(a => !a.end);
     if (ongoingItem) {
       const years = Math.max(1, Math.round((now - ongoingItem.start) / (365.25 * 86400000)));
-      document.getElementById('trkLongest').textContent = years + '년+';
+      document.getElementById('trkLongest').innerHTML = years + '<span data-en="+ yr">년+</span>';
     } else {
       let maxDays = 0;
       active.concat(upcoming).forEach(a => { if (a.end) maxDays = Math.max(maxDays, daysBetween(a.start, a.end)); });
-      document.getElementById('trkLongest').textContent = maxDays > 0 ? Math.round(maxDays / 30) + '개월' : '-';
+      document.getElementById('trkLongest').innerHTML = maxDays > 0 ? Math.round(maxDays / 30) + '<span data-en=" mo">개월</span>' : '-';
     }
 
-    const asOf = document.getElementById('trackerAsOf');
-    if (asOf) asOf.textContent = `$ tail -f ~/activities.log  # ${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} 기준`;
+    function renderTrackerAsOf(){
+      const asOf = document.getElementById('trackerAsOf');
+      if (!asOf) return;
+      const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+      asOf.textContent = currentLang === 'en'
+        ? `$ tail -f ~/activities.log  # as of ${dateStr}`
+        : `$ tail -f ~/activities.log  # ${dateStr} 기준`;
+    }
+    renderTrackerAsOf();
+    if (langBtn) langBtn.addEventListener('click', renderTrackerAsOf);
 
     // fill bars on next frame — a one-time width transition, not a looping animation
     requestAnimationFrame(() => {
@@ -3122,16 +3313,131 @@
   (function(){
     const el = document.getElementById('referrerGreeting');
     const ref = document.referrer;
-    if (!ref) {
-      el.textContent = '👋 링크 타고 바로 오셨네요.';
-    } else if (ref.includes('google.')) {
-      el.textContent = '🔍 검색해서 찾아오셨군요, 환영합니다.';
-    } else if (ref.includes('instagram.') || ref.includes('facebook.')) {
-      el.textContent = '📱 SNS 보고 와주셨네요!';
-    } else if (ref.includes('github.')) {
-      el.textContent = '💻 GitHub에서 넘어오셨군요.';
-    } else {
-      el.textContent = '👀 어디선가 링크를 타고 오셨네요.';
+    let key = 'direct';
+    if (!ref) key = 'direct';
+    else if (ref.includes('google.')) key = 'google';
+    else if (ref.includes('instagram.') || ref.includes('facebook.')) key = 'sns';
+    else if (ref.includes('github.')) key = 'github';
+    else key = 'other';
+    const greetings = {
+      direct: { kr: '👋 링크 타고 바로 오셨네요.', en: "👋 Looks like you came straight from a link." },
+      google: { kr: '🔍 검색해서 찾아오셨군요, 환영합니다.', en: '🔍 Found this through search, welcome!' },
+      sns: { kr: '📱 SNS 보고 와주셨네요!', en: '📱 Came from social media!' },
+      github: { kr: '💻 GitHub에서 넘어오셨군요.', en: '💻 Came over from GitHub.' },
+      other: { kr: '👀 어디선가 링크를 타고 오셨네요.', en: '👀 You followed a link in from somewhere.' }
+    };
+    function render(){ el.textContent = currentLang === 'en' ? greetings[key].en : greetings[key].kr; }
+    render();
+    const langBtn = document.getElementById('langToggle');
+    if (langBtn) langBtn.addEventListener('click', render);
+  })();
+
+  /* ---- AI CHAT (rule-based FAQ — keyword matching over a small preset
+     knowledge base, entirely client-side. Not a real LLM: no backend, no
+     API key, no cost. See the sec-sub disclaimer above the widget. ---- */
+  (function(){
+    const log = document.getElementById('aichatLog');
+    const form = document.getElementById('aichatForm');
+    const input = document.getElementById('aichatInput');
+    const suggestWrap = document.getElementById('aichatSuggest');
+    if (!log || !form || !input) return;
+
+    const KB = [
+      { kw: ['전공', '학교', '대학', '외대', '컴공', '컴퓨터공학', 'ces', '학번', 'major', 'university', 'school', 'computer engineering'],
+        a: '한국외국어대학교 컴퓨터공학과(CES)에서 공부하고 있어요, 학번은 202003621이에요.',
+        aEn: "I'm studying Computer Engineering & Science (CES) at Hankuk University of Foreign Studies (HUFS), student ID 202003621." },
+      { kw: ['게임', '스튜디오', '수달', 'soodal', '미니법정', '출시', 'steam', '스팀', '플레이스토어', 'game', 'studio', 'games', 'playstore', 'google play'],
+        a: "인디 게임 스튜디오 'Soodal Games'를 운영하면서 게임 7종을 기획·개발해 Google Play와 Steam에 정식 출시했어요. 대표작은 미니법정(Mini Court)! 전체 게임 목록은 soodalgames.com에서 볼 수 있어요.",
+        aEn: "I run the indie game studio 'Soodal Games' — planned and built 7 games, published on Google Play and Steam. My flagship title is Mini Court! Full game list at soodalgames.com." },
+      { kw: ['봉사', '나눔', 'volunteer', 'volunteering'],
+        a: 'LiNK 국제 NGO 영어회화 프로그램 버디, 농촌 봉사, 연탄 배달, 발달장애 아동 대상 봉사 등을 해왔어요.',
+        aEn: "I've volunteered as a LiNK International NGO English-conversation buddy, in rural farm work, coal-briquette deliveries, and programs for children with developmental disabilities." },
+      { kw: ['대외활동', '서포터즈', '활동', '경력', '인턴', 'activities', 'supporters', 'experience', 'internship'],
+        a: "지금까지 20건이 넘는 조직과 함께 일해왔어요 — LG CNS AI Genius, 삼성 갤럭시 서포터즈, 하나 소셜벤처, LiNK English Buddy 등등요. 위쪽 '대외활동 진행 현황' 섹션에서 지금 하고 있는 활동을 실시간으로 볼 수 있어요.",
+        aEn: "I've worked with 20+ organizations so far — LG CNS AI Genius, Samsung Galaxy Supporters, Hana Social Venture, LiNK English Buddy, and more. Check the 'Tracker' section above for what I'm doing right now, live." },
+      { kw: ['기술', '스택', '언어', '프로그래밍', '코딩', 'python', '파이썬', '자바스크립트', 'javascript', 'skills', 'tech stack', 'stack', 'coding', 'programming'],
+        a: 'Python, C++, C, JavaScript, HTML/CSS를 다루고, MediaPipe·CLIP·FAISS·YOLOv8 같은 AI/비전 툴도 써봤어요. 디자인 쪽은 Figma·Canva·CapCut·Illustrator·Photoshop을 씁니다.',
+        aEn: 'I work with Python, C++, C, JavaScript, and HTML/CSS, plus AI/vision tools like MediaPipe, CLIP, FAISS, and YOLOv8. For design I use Figma, Canva, CapCut, Illustrator, and Photoshop.' },
+      { kw: ['영어', 'english', '토익', 'toeic', '캐나다', '남아공', '남아프리카', 'canada', 'south africa'],
+        a: '영어는 Native 수준이에요. 캐나다에서 2년, 남아프리카공화국에서 6개월 살았고 TOEIC 810점이에요. 지금은 LiNK English Buddy로 북한 출신 청년분들 영어 회화 코칭도 하고 있어요.',
+        aEn: 'My English is near-native. I lived in Canada for 2 years and South Africa for 6 months, and scored 810 on TOEIC. I currently coach North Korean defector youth in English conversation through LiNK English Buddy.' },
+      { kw: ['연락처', '이메일', '메일', 'contact', '연락', 'email'],
+        a: '이메일은 rokafhanmin@gmail.com 이에요. 페이지 맨 아래에서 이메일 주소를 누르면 자동으로 복사돼요! GitHub는 github.com/ChoeHanMin 이고요.',
+        aEn: 'My email is rokafhanmin@gmail.com — click the email address at the bottom of the page and it auto-copies! My GitHub is github.com/ChoeHanMin.' },
+      { kw: ['인스타', 'sns', 'instagram', '블로그', 'blog'],
+        a: '인스타그램은 @choihanmin_ (일상용)이랑 @dae.hanmin.guk (대외활동용) 두 개를 운영해요. 네이버 블로그는 blog.naver.com/choehanmin 이에요.',
+        aEn: 'I run two Instagram accounts — @choihanmin_ (personal) and @dae.hanmin.guk (activities). My Naver blog is blog.naver.com/choehanmin.' },
+      { kw: ['포트폴리오', '이력서', 'resume', 'cv', 'portfolio'],
+        a: "페이지 맨 아래 '전체 포트폴리오 다운로드' 버튼을 누르면 비밀번호 입력창이 떠요. 비밀번호는 저한테 직접 물어봐 주세요!",
+        aEn: "Click the 'Download Full Portfolio' button at the bottom of the page — it'll ask for a password. Ask me directly for it!" },
+      { kw: ['취미', '좋아하는', '관심사', '여가', '노래', '음악', 'hobby', 'hobbies', 'interests', 'song', 'music'],
+        a: "FPS 게임(Overwatch, 레인보우식스 시즈), 스쿠버다이빙, 골프, 승마를 좋아해요. 요즘 듣는 노래는 'When I get old'랑, 제 이름 넣어 만든 셀프 응원가 '야르송'이에요 — 위쪽 노래 섹션에서 들어보실 수 있어요 🎧",
+        aEn: "I like FPS games (Overwatch, Rainbow Six Siege), scuba diving, golf, and horseback riding. Lately I'm into 'When I get old', plus a self-hype song made with my own name in it — you can listen in the song section above 🎧" },
+      { kw: ['나이', '생일', '생년월일', '몇살', '몇 살', 'age', 'birthday'],
+        a: '정확한 나이는 이 페이지엔 안 나와 있어요! 학번이 202003621이라는 것만 힌트로 드릴게요 😄',
+        aEn: "My exact age isn't listed on this page! I'll just give you a hint — my student ID is 202003621 😄" },
+      { kw: ['사이트', '홈페이지', '만들었', '제작', '개발자', 'website', 'site', 'made this', 'built this'],
+        a: '이 사이트는 Pretendard + Noto Serif KR 폰트로, 순수 HTML/CSS/JS 한 파일로 직접 만들었어요. GitHub Pages에 올라가 있고요.',
+        aEn: 'This site is built by hand as a single HTML/CSS/JS file, using Pretendard + Noto Serif KR fonts, and hosted on GitHub Pages.' },
+      { kw: ['갤럭시', '삼성', '방장', '갤캠스', 'galaxy', 'samsung'],
+        a: '삼성 갤럭시 대학생 서포터즈 6기에서 갤럭시 캠퍼스 스토어 방장을 맡아 7인 팀을 이끌었고, 우수방장으로 인정받았어요.',
+        aEn: "As Samsung Galaxy Campus Supporters 6th, I served as store captain of the Galaxy Campus Store, leading a 7-person team, and was recognized as a top-performing captain." },
+      { kw: ['안녕', 'hi', 'hello', '반가워', 'hey'],
+        a: '안녕하세요! 전공, 게임, 대외활동, 연락처, 취미… 뭐든 편하게 물어보세요 🙂',
+        aEn: "Hi there! Ask me anything — my major, games, activities, contact info, hobbies… 🙂" }
+    ];
+    const FALLBACK = '음, 그 질문은 아직 준비 못 했어요 😅 방명록에 남겨주시면 진짜 최한민이 답해드릴게요 — 급하면 이메일(rokafhanmin@gmail.com)로도 연락 가능해요!';
+    const FALLBACK_EN = "Hmm, I don't have an answer ready for that one 😅 Leave a note in the guestbook and the real Hanmin will get back to you — or email rokafhanmin@gmail.com if it's urgent!";
+
+    function findAnswer(question){
+      const q = question.toLowerCase().replace(/\s+/g, '');
+      let best = null, bestScore = 0;
+      KB.forEach(entry => {
+        let score = 0;
+        entry.kw.forEach(k => { if (q.includes(k.toLowerCase().replace(/\s+/g, ''))) score++; });
+        if (score > bestScore) { bestScore = score; best = entry; }
+      });
+      if (!best) return currentLang === 'en' ? FALLBACK_EN : FALLBACK;
+      return currentLang === 'en' ? (best.aEn || best.a) : best.a;
+    }
+
+    function addMessage(text, who){
+      const row = document.createElement('div');
+      row.className = 'aichat-msg ' + who;
+      row.innerHTML = `<span class="aichat-avatar">${who === 'user' ? '🙂' : '🤖'}</span><div class="aichat-bubble"></div>`;
+      row.querySelector('.aichat-bubble').textContent = text;
+      log.appendChild(row);
+      log.scrollTop = log.scrollHeight;
+      return row;
+    }
+
+    function ask(question){
+      question = question.trim();
+      if (!question) return;
+      addMessage(question, 'user');
+      input.value = '';
+
+      const typingRow = document.createElement('div');
+      typingRow.className = 'aichat-msg bot typing';
+      typingRow.innerHTML = '<span class="aichat-avatar">🤖</span><div class="aichat-bubble"><span class="aichat-dot"></span><span class="aichat-dot"></span><span class="aichat-dot"></span></div>';
+      log.appendChild(typingRow);
+      log.scrollTop = log.scrollHeight;
+
+      const answer = findAnswer(question);
+      setTimeout(() => {
+        typingRow.remove();
+        addMessage(answer, 'bot');
+      }, 450 + Math.random() * 300);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      ask(input.value);
+    });
+    if (suggestWrap) {
+      suggestWrap.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => ask(btn.textContent));
+      });
     }
   })();
 
