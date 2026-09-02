@@ -538,6 +538,7 @@
     }
   }
   @media (prefers-reduced-motion: reduce){ .song-neon-wrap{ animation:none; } }
+  .song-neon-wrap + .song-neon-wrap{ margin-top:18px; }
   .song-card{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
   .song-cover{
     width:76px; height:76px; border-radius:14px; object-fit:cover; flex-shrink:0;
@@ -1937,6 +1938,21 @@
         </div>
       </div>
     </div>
+    <div class="song-neon-wrap">
+      <div class="song-card">
+        <img class="song-cover" src="images/hanmin-song2-cover.jpg" alt="한민이가 왔다잖아 (최한민 ver.) 커버 이미지" loading="lazy" decoding="async">
+        <div class="song-main">
+          <b class="song-title">한민이가 왔다잖아 (최한민 ver.)</b>
+          <audio class="song-player" controls preload="none">
+            <source src="audio/hanmin-song2.mp3" type="audio/mpeg">
+          </audio>
+        </div>
+        <div class="song-credit">
+          <span data-en="Original: Alarmy">원곡: 알라미 Alarmy</span>
+          <span>IG: @alarmy_official_kr</span>
+        </div>
+      </div>
+    </div>
   </section>
 
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
@@ -2076,9 +2092,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.14</span>
+        <span class="change-desc" data-en="Added a second self-hype song, 'Hanmin's Here' (same original credit as the first)">두 번째 셀프 응원가 '한민이가 왔다잖아' 추가 (원곡 크레딧은 첫 곡과 동일)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.13</span>
         <span class="change-desc" data-en="Added an 'AI Hanmin' FAQ chat section (preset keyword-matched answers, no backend)">'AI 최한민과 대화하기' FAQ 챗봇 섹션 추가 (키워드 매칭 기반, 서버 없이 클라이언트에서 동작)</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.12</span>
@@ -3380,8 +3400,8 @@
         a: "페이지 맨 아래 '전체 포트폴리오 다운로드' 버튼을 누르면 비밀번호 입력창이 떠요. 비밀번호는 저한테 직접 물어봐 주세요!",
         aEn: "Click the 'Download Full Portfolio' button at the bottom of the page — it'll ask for a password. Ask me directly for it!" },
       { kw: ['취미', '좋아하는', '관심사', '여가', '노래', '음악', 'hobby', 'hobbies', 'interests', 'song', 'music'],
-        a: "FPS 게임(Overwatch, 레인보우식스 시즈), 스쿠버다이빙, 골프, 승마를 좋아해요. 요즘 듣는 노래는 'When I get old'랑, 제 이름 넣어 만든 셀프 응원가 '야르송'이에요 — 위쪽 노래 섹션에서 들어보실 수 있어요 🎧",
-        aEn: "I like FPS games (Overwatch, Rainbow Six Siege), scuba diving, golf, and horseback riding. Lately I'm into 'When I get old', plus a self-hype song made with my own name in it — you can listen in the song section above 🎧" },
+        a: "FPS 게임(Overwatch, 레인보우식스 시즈), 스쿠버다이빙, 골프, 승마를 좋아해요. 요즘 듣는 노래는 'When I get old'랑, 제 이름 넣어 만든 셀프 응원가 '야르송'·'한민이가 왔다잖아' 두 곡이에요 — 위쪽 노래 섹션에서 들어보실 수 있어요 🎧",
+        aEn: "I like FPS games (Overwatch, Rainbow Six Siege), scuba diving, golf, and horseback riding. Lately I'm into 'When I get old', plus two self-hype songs made with my own name in them — you can listen in the song section above 🎧" },
       { kw: ['나이', '생일', '생년월일', '몇살', '몇 살', 'age', 'birthday'],
         a: '정확한 나이는 이 페이지엔 안 나와 있어요! 학번이 202003621이라는 것만 힌트로 드릴게요 😄',
         aEn: "My exact age isn't listed on this page! I'll just give you a hint — my student ID is 202003621 😄" },
