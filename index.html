@@ -192,6 +192,7 @@
   .out b{color:var(--paper); font-weight:600;}
   .out .amber{color:var(--amber);}
   .out .teal{color:var(--teal);}
+  .paper-dim-note{color:var(--paper-dim); font-size:11px;}
   .caret{display:inline-block; width:8px; height:16px; background:var(--amber); vertical-align:middle; animation:blink 1s step-end infinite;}
   @keyframes appear{to{opacity:1;}}
   @keyframes blink{50%{opacity:0;}}
@@ -1564,6 +1565,7 @@
   <button data-target="gallery"><span class="dot-label" data-en="Gallery">갤러리</span></button>
   <button data-target="commits"><span class="dot-label" data-en="Commits">커밋</span></button>
   <button data-target="madewith"><span class="dot-label" data-en="Made With">제작기</span></button>
+  <button data-target="changelog"><span class="dot-label" data-en="Changelog">업데이트기록</span></button>
 </nav>
 
 <div class="wrap">
@@ -1999,9 +2001,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.20</span>
+        <span class="change-desc" data-en="Weather/commits now cache the last successful response and fall back to it (with a witty line if there's no cache at all) instead of showing a bare error; the section-jump dots now cover the changelog too">날씨·커밋 API 실패 시 마지막 성공 데이터를 캐시해서 보여주도록 개선 (캐시도 없으면 위트있는 대체 문구), 섹션 이동 점 네비게이션에 업데이트 기록 추가</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.19</span>
         <span class="change-desc" data-en="Added a hero status line that echoes the time of day (KST) — a live 4th terminal command">히어로 터미널에 시간대(KST) 기반 실시간 상태 라인 추가 (4번째 명령어)</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.18</span>
@@ -2313,28 +2319,53 @@
     71:{kr:'🌨️ 눈',en:'🌨️ Snow'},73:{kr:'🌨️ 눈',en:'🌨️ Snow'},75:{kr:'❄️ 강한 눈',en:'❄️ Heavy snow'},
     80:{kr:'🌦️ 소나기',en:'🌦️ Showers'},81:{kr:'🌦️ 소나기',en:'🌦️ Showers'},82:{kr:'⛈️ 강한 소나기',en:'⛈️ Heavy showers'},95:{kr:'⛈️ 뇌우',en:'⛈️ Thunderstorm'}
   };
-  let weatherData = null, weatherFailed = false;
+  let weatherData = null, weatherFailed = false, weatherFromCache = false, weatherCacheTs = null;
   const out3El = document.getElementById('out3');
+  function timeAgoText(ts){
+    const mins = Math.max(1, Math.round((Date.now() - ts) / 60000));
+    if (mins < 60) return currentLang === 'en' ? `${mins}m ago` : `${mins}분 전`;
+    const hrs = Math.round(mins / 60);
+    return currentLang === 'en' ? `${hrs}h ago` : `${hrs}시간 전`;
+  }
   function renderWeather(){
     if (!out3El) return;
     if (weatherFailed) {
-      out3El.innerHTML = currentLang === 'en' ? 'Could not load weather.' : '날씨 정보를 불러올 수 없습니다.';
+      out3El.innerHTML = currentLang === 'en'
+        ? "🌡️ The weather API's throwing a tantrum. Just check the window instead."
+        : '🌡️ 날씨 API가 삐졌나 봐요. 그냥 창문 한 번 열어보세요.';
       return;
     }
     if (!weatherData) return;
     const entry = weatherCodeMap[weatherData.weathercode];
     const desc = entry ? (currentLang === 'en' ? entry.en : entry.kr) : (currentLang === 'en' ? 'Weather info' : '날씨 정보');
     const city = currentLang === 'en' ? 'Seongnam' : '성남시';
-    out3El.innerHTML = `<span class="teal">${city}</span> ${desc} · ${Math.round(weatherData.temperature)}°C`;
+    const staleNote = weatherFromCache
+      ? ` <span class="paper-dim-note">(${currentLang === 'en' ? 'cached, ' : '캐시됨, '}${timeAgoText(weatherCacheTs)})</span>`
+      : '';
+    out3El.innerHTML = `<span class="teal">${city}</span> ${desc} · ${Math.round(weatherData.temperature)}°C${staleNote}`;
   }
   function getWeatherHTML(){
     return fetch('https://api.open-meteo.com/v1/forecast?latitude=37.3826&longitude=127.1189&current_weather=true')
       .then(r => r.json())
       .then(data => {
         weatherData = data.current_weather;
+        weatherFromCache = false;
+        localStorage.setItem('weatherCache', JSON.stringify({ data: weatherData, ts: Date.now() }));
         return true;
       })
-      .catch(() => { weatherFailed = true; return false; });
+      .catch(() => {
+        try {
+          const cached = JSON.parse(localStorage.getItem('weatherCache'));
+          if (cached && cached.data) {
+            weatherData = cached.data;
+            weatherFromCache = true;
+            weatherCacheTs = cached.ts;
+            return true;
+          }
+        } catch (e) { /* ignore malformed cache */ }
+        weatherFailed = true;
+        return false;
+      });
   }
 
   const heroOut1 = {
@@ -2540,38 +2571,69 @@
     })
     .catch(() => {});
 
-  /* ---- RECENT COMMITS ---- */
+  /* ---- RECENT COMMITS (localStorage-cached; witty fallback if the API and the cache both miss) ---- */
   function commitLoadFailText(){
-    return currentLang === 'en' ? "Couldn't load recent commits." : '최근 커밋을 불러올 수 없습니다.';
+    return currentLang === 'en'
+      ? "🔌 GitHub's API isn't answering. Let's just pretend this is the latest commit: fix: it is what it is"
+      : "🔌 GitHub API가 응답이 없네요. 대신 이 문구가 최신 커밋이라고 칩시다: fix: 만사가 다 그렇지 뭐";
+  }
+  let lastCommitsState = null; // { rows, fromCache, ts } | 'fail' — re-rendered on lang toggle
+  function rerenderCommitsForLang(){
+    if (lastCommitsState === 'fail') {
+      document.getElementById('commitList').innerHTML = `<p class="commit-loading">${commitLoadFailText()}</p>`;
+    } else if (lastCommitsState) {
+      renderCommitRows(lastCommitsState.rows, lastCommitsState.fromCache, lastCommitsState.ts);
+    }
+  }
+  function renderCommitRows(rows, fromCache, ts){
+    lastCommitsState = { rows, fromCache, ts };
+    const list = document.getElementById('commitList');
+    list.innerHTML = '';
+    if (fromCache) {
+      const note = document.createElement('p');
+      note.className = 'paper-dim-note';
+      note.style.marginBottom = '6px';
+      note.textContent = currentLang === 'en' ? `(cached, ${timeAgoText(ts)})` : `(캐시됨, ${timeAgoText(ts)})`;
+      list.appendChild(note);
+    }
+    rows.forEach(commit => {
+      const row = document.createElement('a');
+      row.className = 'commit-row';
+      row.href = `https://github.com/${commit.repoFullName}/commit/${commit.sha}`;
+      row.target = '_blank';
+      row.rel = 'noopener';
+      row.innerHTML = `
+        <span class="c-hash">${commit.sha.slice(0,7)}</span>
+        <span class="c-msg">${commit.message}</span>
+        <span class="c-repo">${commit.repoName}</span>
+      `;
+      list.appendChild(row);
+    });
   }
   fetch('https://api.github.com/users/ChoeHanMin/events/public')
     .then(r => r.json())
     .then(events => {
       const pushes = events.filter(e => e.type === 'PushEvent').slice(0, 5);
-      const list = document.getElementById('commitList');
-      if (!pushes.length) {
-        list.innerHTML = `<p class="commit-loading" data-en="Couldn't load recent commits.">${commitLoadFailText()}</p>`;
-        return;
-      }
-      list.innerHTML = '';
-      pushes.forEach(ev => {
+      if (!pushes.length) throw new Error('no pushes');
+      const rows = pushes.map(ev => {
         const commit = ev.payload.commits && ev.payload.commits[0];
-        if (!commit) return;
-        const row = document.createElement('a');
-        row.className = 'commit-row';
-        row.href = `https://github.com/${ev.repo.name}/commit/${commit.sha}`;
-        row.target = '_blank';
-        row.rel = 'noopener';
-        row.innerHTML = `
-          <span class="c-hash">${commit.sha.slice(0,7)}</span>
-          <span class="c-msg">${commit.message.split('\n')[0]}</span>
-          <span class="c-repo">${ev.repo.name.split('/')[1]}</span>
-        `;
-        list.appendChild(row);
-      });
+        if (!commit) return null;
+        return { sha: commit.sha, message: commit.message.split('\n')[0], repoFullName: ev.repo.name, repoName: ev.repo.name.split('/')[1] };
+      }).filter(Boolean);
+      if (!rows.length) throw new Error('no commits');
+      localStorage.setItem('commitsCache', JSON.stringify({ rows, ts: Date.now() }));
+      renderCommitRows(rows, false, null);
     })
     .catch(() => {
-      document.getElementById('commitList').innerHTML = `<p class="commit-loading" data-en="Couldn't load recent commits.">${commitLoadFailText()}</p>`;
+      try {
+        const cached = JSON.parse(localStorage.getItem('commitsCache'));
+        if (cached && cached.rows && cached.rows.length) {
+          renderCommitRows(cached.rows, true, cached.ts);
+          return;
+        }
+      } catch (e) { /* ignore malformed cache */ }
+      lastCommitsState = 'fail';
+      document.getElementById('commitList').innerHTML = `<p class="commit-loading">${commitLoadFailText()}</p>`;
     });
 
   /* ---- CURSOR TRAIL ----
@@ -2914,6 +2976,7 @@
     renderHeroTerminalLang();
     renderVisitCount();
     renderLiveVisitors();
+    rerenderCommitsForLang();
     const aichatInputEl = document.getElementById('aichatInput');
     if (aichatInputEl) {
       aichatInputEl.placeholder = currentLang === 'en' ? 'Ask me anything…' : '궁금한 걸 물어보세요…';
