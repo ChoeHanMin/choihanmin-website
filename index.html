@@ -2296,6 +2296,38 @@
     };
   }
 
+  /* ---- SONG PLAYER SAFEGUARD ----
+     Bug report: on some mobile in-app browsers (e.g. Instagram's built-in
+     webview), the song players were starting playback on their own without
+     the user tapping play, and once started, kept playing in the background
+     even after the tab/app was closed, until the track ended. Neither
+     <audio> tag has an autoplay attribute and nothing in this file ever
+     calls .play() itself, so this is an in-app-webview autoplay-policy quirk
+     outside our control — but we can defend against it from here:
+     1) if a song starts playing before the user has interacted with the
+        page at all, that's a reliable sign it wasn't a real tap on the
+        play button, so immediately pause and rewind it.
+     2) pause playback whenever the tab is hidden/backgrounded, so leaving
+        or closing the site actually stops the song instead of it playing
+        out in the background. */
+  (function(){
+    const songPlayers = document.querySelectorAll('.song-player');
+    if (!songPlayers.length) return;
+    let userInteracted = false;
+    const markInteracted = () => { userInteracted = true; };
+    ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(evt => {
+      window.addEventListener(evt, markInteracted, { once: true, passive: true });
+    });
+    songPlayers.forEach(el => {
+      el.addEventListener('play', () => {
+        if (!userInteracted) { el.pause(); el.currentTime = 0; }
+      });
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) songPlayers.forEach(el => { if (!el.paused) el.pause(); });
+    });
+  })();
+
   /* ---- TERMINAL TYPEWRITER + WEATHER ---- */
   function typeText(el, text, speed){
     return new Promise(resolve => {
