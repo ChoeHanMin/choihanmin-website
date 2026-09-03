@@ -1070,6 +1070,24 @@
     box-shadow:none;
   }
   footer .request-link.ghost:hover{background:var(--amber); color:var(--ink); border-color:var(--amber); filter:none;}
+  .cheer-widget{ margin-top:32px; padding-top:28px; border-top:1px solid var(--line); }
+  .cheer-title{
+    font-family:var(--serif); font-size:15px; font-weight:600; color:var(--paper);
+    margin-bottom:14px;
+  }
+  .cheer-btn-row{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .cheer-amount{
+    display:inline-block;
+    font-family:var(--mono); font-size:13px; font-weight:600; color:var(--amber);
+    border:1px solid var(--line-strong); border-radius:999px; padding:9px 18px;
+    transition:background .2s, color .2s, border-color .2s;
+  }
+  .cheer-amount:hover{ background:var(--amber); color:var(--ink); border-color:var(--amber); }
+  .cheer-amount:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; }
+  .cheer-note{
+    font-family:var(--mono); font-size:11px; color:var(--paper-dim); opacity:.75;
+    margin-top:12px;
+  }
 
   /* ---------- CHANGELOG ---------- */
   .change-list{display:flex; flex-direction:column; gap:14px;}
@@ -2092,9 +2110,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.15</span>
+        <span class="change-desc" data-en="Added a 'Cheer Hanmin On' footer button (1,000 / 5,000 / 10,000 won via KakaoPay)">푸터에 '더 열심히 살라고 응원하기' 버튼 추가 (1,000/5,000/10,000원, 카카오페이 연결)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.14</span>
         <span class="change-desc" data-en="Added a second self-hype song, 'Hanmin's Here' (same original credit as the first)">두 번째 셀프 응원가 '한민이가 왔다잖아' 추가 (원곡 크레딧은 첫 곡과 동일)</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.13</span>
@@ -2213,6 +2235,15 @@
       <div class="footer-btn-row">
         <a class="request-link magnetic" href="https://choehanmin.github.io/request/" target="_blank" rel="noopener" data-en="Request something from Hanmin →">최한민에게 요청하기 →</a>
         <button class="request-link magnetic ghost" id="portfolioBtn" type="button" data-en="Download Full Portfolio 🔒">전체 포트폴리오 다운로드 🔒</button>
+      </div>
+      <div class="cheer-widget">
+        <div class="cheer-title" data-en="Cheer Hanmin on to work even harder 💪">더 열심히 살라고 응원하기 💪</div>
+        <div class="cheer-btn-row">
+          <a class="cheer-amount magnetic" href="https://qr.kakaopay.com/FeEPoIAOb" target="_blank" rel="noopener">1,000원</a>
+          <a class="cheer-amount magnetic" href="https://qr.kakaopay.com/FeEPoIAOb" target="_blank" rel="noopener">5,000원</a>
+          <a class="cheer-amount magnetic" href="https://qr.kakaopay.com/FeEPoIAOb" target="_blank" rel="noopener">10,000원</a>
+        </div>
+        <p class="cheer-note" data-en="Opens KakaoPay — please enter the amount you picked there">카카오페이로 연결돼요 — 선택하신 금액을 거기서 입력해주세요</p>
       </div>
     </div>
     <a id="portfolioRealLink" href="files/portfolio-locked.pdf" download="Choi_Hanmin_Portfolio.pdf" style="display:none;" aria-hidden="true"></a>
