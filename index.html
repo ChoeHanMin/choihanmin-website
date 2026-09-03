@@ -759,6 +759,70 @@
   .achievement-toast .ach-icon{ font-size:20px; }
   html[data-theme="dark"] .achievement-toast{ background:rgba(21,22,32,0.85); }
 
+  /* ---------- ACHIEVEMENT DEX MODAL ---------- */
+  .achievements-box{ max-width:400px; text-align:left; }
+  .achievements-box h3{ text-align:center; }
+  .achievements-box .portfolio-modal-sub{ text-align:center; font-family:var(--mono); }
+  .ach-dex-count{ color:var(--amber); font-weight:700; }
+  .ach-dex-list{ display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+  .ach-dex-row{
+    display:flex; align-items:center; gap:14px;
+    padding:12px 14px; border-radius:var(--r-sm);
+    border:1px solid var(--line); background:rgba(var(--amber-rgb),0.03);
+  }
+  .ach-dex-row.locked{ opacity:.55; }
+  .ach-dex-icon{
+    width:36px; height:36px; flex-shrink:0; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px; background:rgba(var(--amber-rgb),0.1); border:1px solid rgba(var(--amber-rgb),0.3);
+  }
+  .ach-dex-row.locked .ach-dex-icon{ filter:grayscale(1); background:var(--ink-3); border-color:var(--line); }
+  .ach-dex-text{ min-width:0; }
+  .ach-dex-name{ font-size:13px; font-weight:600; color:var(--paper); }
+  .ach-dex-hint{ font-size:11.5px; color:var(--paper-dim); font-family:var(--mono); margin-top:2px; }
+
+  /* ---------- HIDDEN MINI TERMINAL (easter egg, ` key) ---------- */
+  .mini-terminal{
+    display:none; position:fixed; inset:0; z-index:70;
+    background:rgba(6,6,9,0.88); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    padding:24px; align-items:center; justify-content:center;
+  }
+  .mini-terminal.open{ display:flex; animation:modalFade .2s var(--ease); }
+  .mini-term-box{
+    width:100%; max-width:620px; height:min(72vh, 520px);
+    background:#0c0c10; border:1px solid #2a2a32; border-radius:var(--r-md);
+    box-shadow:var(--shadow-lift);
+    display:flex; flex-direction:column; overflow:hidden;
+    animation:modalPop .25s var(--ease);
+  }
+  .mini-term-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 14px; background:#16161c; border-bottom:1px solid #2a2a32;
+    font-family:var(--mono); font-size:12px; color:#8a8a92;
+  }
+  .mini-term-header button{
+    background:none; border:none; color:#8a8a92; font-family:inherit; font-size:14px; cursor:pointer; padding:0;
+  }
+  .mini-term-header button:hover{ color:#fff; }
+  .mini-term-body{
+    flex:1; overflow-y:auto; padding:14px 16px;
+    font-family:var(--mono); font-size:13px; line-height:1.7; color:#d8d8dc;
+  }
+  .mini-term-body .mt-line{ white-space:pre-wrap; word-break:break-word; }
+  .mini-term-body .mt-cmd{ color:#7fd9ff; }
+  .mini-term-body .mt-cmd::before{ content:"~$ "; color:#5c6470; }
+  .mini-term-body .mt-out{ color:#b9c4d0; margin:2px 0 10px; }
+  .mini-term-inputline{
+    display:flex; align-items:center; gap:8px;
+    padding:10px 16px; border-top:1px solid #2a2a32;
+    font-family:var(--mono); font-size:13px;
+  }
+  .mini-term-inputline .prompt{ color:#5c6470; flex-shrink:0; }
+  .mini-term-inputline input{
+    flex:1; background:none; border:none; outline:none;
+    color:#7fd9ff; font-family:inherit; font-size:inherit;
+  }
+
   /* ---------- GUESTBOOK LIVE TOAST ---------- */
   .guestbook-toast{
     position:fixed; top:70px; right:18px;
@@ -1525,6 +1589,8 @@
         </div>
         <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="curl wttr.in/seongnam"></span></div>
         <div class="out" id="out3">불러오는 중<span class="caret"></span></div>
+        <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="echo $STATUS"></span></div>
+        <div class="out" id="out4"></div>
       </div>
     </div>
 
@@ -1933,9 +1999,25 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.19</span>
+        <span class="change-desc" data-en="Added a hero status line that echoes the time of day (KST) — a live 4th terminal command">히어로 터미널에 시간대(KST) 기반 실시간 상태 라인 추가 (4번째 명령어)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v2.18</span>
+        <span class="change-desc" data-en="Added a hidden interactive mini terminal easter egg (press `)">숨겨진 미니 터미널 이스터에그 추가 (` 키로 열기, 직접 입력 가능)</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v2.17</span>
+        <span class="change-desc" data-en="Added an Achievement Dex panel showing found/locked achievements (press A)">업적 도감 패널 추가 — 발견/잠김 상태 확인 가능 (A 키로 열기)</span>
+      </div>
+      <div class="change-row">
+        <span class="change-ver">v2.16</span>
+        <span class="change-desc" data-en="Switched the default theme to a bright, spacious premium look (Stripe/Apple-inspired); dark mode kept as an alt theme">기본 테마를 밝고 여백 많은 프리미엄 스타일로 전환 (다크모드는 대체 테마로 유지)</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.15</span>
         <span class="change-desc" data-en="Added a 'Cheer Hanmin On' footer button (1,000 / 5,000 / 10,000 won via KakaoPay)">푸터에 '더 열심히 살라고 응원하기' 버튼 추가 (1,000/5,000/10,000원, 카카오페이 연결)</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.14</span>
@@ -2113,7 +2195,19 @@
       <div class="shortcut-row"><kbd>←</kbd><kbd>→</kbd><span data-en="Prev / next photo (in gallery view)">이전 · 다음 사진 (갤러리 열람 중)</span></div>
       <div class="shortcut-row"><kbd>Esc</kbd><span data-en="Close lightbox or modal">라이트박스 · 모달 닫기</span></div>
       <div class="shortcut-row"><kbd>?</kbd><span data-en="Toggle this help">이 도움말 열기 / 닫기</span></div>
+      <div class="shortcut-row"><kbd>A</kbd><span data-en="Open achievement dex">업적 도감 열기</span></div>
+      <div class="shortcut-row"><kbd>`</kbd><span data-en="Open the hidden terminal">숨겨진 터미널 열기</span></div>
     </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT DEX MODAL -->
+<div id="achievementsModal" class="portfolio-modal">
+  <div class="portfolio-modal-box achievements-box">
+    <button class="portfolio-modal-close" id="achievementsModalClose" type="button" aria-label="닫기">✕</button>
+    <h3 data-en="Achievement Dex">업적 도감</h3>
+    <p class="portfolio-modal-sub" id="achDexCountText"></p>
+    <div class="ach-dex-list" id="achDexList"></div>
   </div>
 </div>
 
@@ -2122,7 +2216,23 @@
   <button id="scGames"><b>G</b><span data-en="Games">게임</span></button>
   <button id="scGallery"><b>P</b><span data-en="Gallery">갤러리</span></button>
   <button id="scHome"><b>⌂</b><span data-en="Top">맨위</span></button>
+  <button id="scAchievements"><b>🏆</b><span data-en="Dex">업적</span></button>
   <button id="scHelp"><b>?</b><span data-en="Shortcuts">단축키</span></button>
+</div>
+
+<!-- HIDDEN MINI TERMINAL EASTER EGG -->
+<div id="miniTerminal" class="mini-terminal" role="dialog" aria-modal="true" aria-label="숨겨진 터미널">
+  <div class="mini-term-box">
+    <div class="mini-term-header">
+      <span>hanmin@secret — bash</span>
+      <button id="miniTermClose" type="button" aria-label="닫기">✕</button>
+    </div>
+    <div class="mini-term-body" id="miniTermBody"></div>
+    <div class="mini-term-inputline">
+      <span class="prompt">~$</span>
+      <input id="miniTermInput" type="text" autocomplete="off" spellcheck="false" aria-label="터미널 명령 입력">
+    </div>
+  </div>
 </div>
 
 <div id="lightbox" class="lightbox">
@@ -2235,11 +2345,33 @@
     kr: `<span class="amber">a1c9f2e</span> feat: LiNK English Buddy 활동 진행 중 — 탈북 청년 대상 1:1 영어 코칭`,
     en: `<span class="amber">a1c9f2e</span> feat: LiNK English Buddy program ongoing — 1:1 English coaching for North Korean defector youth`
   };
+
+  /* ---- TIME-OF-DAY STATUS LINE (KST-based, echoes the hero lede's daily loop) ---- */
+  function getKstHour(){
+    const h = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Seoul', hour: 'numeric', hour12: false }).format(new Date());
+    return parseInt(h, 10) % 24;
+  }
+  const statusByHour = [
+    { from: 7, to: 12, kr: '🎓 아마 지금 컴퓨터공학 수업 듣고 있을 시간입니다.', en: "🎓 It's probably class hours right now — likely sitting through a CS lecture." },
+    { from: 12, to: 17, kr: '🏃 아마 지금 대외활동 다니고 있을 시간입니다.', en: "🏃 It's probably outside-activity hours right now." },
+    { from: 17, to: 20, kr: '💪 아마 지금 운동하고 있을 시간입니다.', en: "💪 It's probably workout hours right now." },
+    { from: 20, to: 24, kr: '🎮 아마 지금 게임 만들고 있을 시간입니다.', en: "🎮 It's probably game-dev hours right now." },
+    { from: 0, to: 3, kr: '🐛 아마 지금 버그 고치고 있을 시간입니다.', en: "🐛 It's probably bug-fixing hours right now." },
+    { from: 3, to: 7, kr: '😴 사실 지금은 자고 있어야 할 시간인데... 안 자고 있다면 최한민도 못 자고 있을 확률이 높습니다.', en: "😴 Honestly should be asleep right now — if it's not, chances are Hanmin isn't either." }
+  ];
+  function heroOut4(){
+    const h = getKstHour();
+    const bucket = statusByHour.find(b => h >= b.from && h < b.to) || statusByHour[0];
+    return { kr: bucket.kr, en: bucket.en };
+  }
+
   function renderHeroTerminalLang(){
     const out1El = document.getElementById('out1');
     const out2El = document.getElementById('out2');
+    const out4El = document.getElementById('out4');
     if (out1El) out1El.innerHTML = currentLang === 'en' ? heroOut1.en : heroOut1.kr;
     if (out2El) out2El.innerHTML = currentLang === 'en' ? heroOut2.en : heroOut2.kr;
+    if (out4El) { const s = heroOut4(); out4El.innerHTML = currentLang === 'en' ? s.en : s.kr; }
     renderWeather();
   }
 
@@ -2259,6 +2391,7 @@
         await weatherPromise;
         renderWeather();
       }
+      if (i === 3) { const s = heroOut4(); outs[i].innerHTML = currentLang === 'en' ? s.en : s.kr; }
       outs[i].classList.add('appear');
       await new Promise(r => setTimeout(r, 300));
     }
@@ -2494,7 +2627,9 @@
     if (e.key === 'p') goGallery();
     if (e.key === 'Home') goHome();
     if (e.key === '?') toggleShortcutsModal();
-    if (e.key === 'Escape') { closeShortcutsModal(); closePortfolioModal(); }
+    if (e.key === 'a') toggleAchievementsModal();
+    if (e.key === '`') openMiniTerminal();
+    if (e.key === 'Escape') { closeShortcutsModal(); closePortfolioModal(); closeAchievementsModal(); closeMiniTerminal(); }
   });
 
   /* ---- LIGHTBOX (with gallery prev/next + captions) ---- */
@@ -2993,7 +3128,141 @@
     toast.classList.add('show');
     fireConfetti();
     setTimeout(() => toast.classList.remove('show'), 3500);
+    if (achievementsModal && achievementsModal.classList.contains('open')) renderAchDex();
   }
+
+  /* ---- ACHIEVEMENT DEX ---- */
+  const ACHIEVEMENTS = [
+    { key: 'darkmode', icon: '🌙', kr: '다크모드 발견!', en: 'Discovered dark mode!', hintKr: '다크모드로 전환해보세요', hintEn: 'Try switching to dark mode' },
+    { key: 'otter5', icon: '🦦', kr: '최한민과 친해짐 — 5번 클릭 달성!', en: 'Got close with Hanmin — clicked 5 times!', hintKr: '프로필 사진을 5번 클릭해보세요', hintEn: 'Click the profile photo 5 times' },
+    { key: 'terminal', icon: '⌨️', kr: '숨겨진 터미널 발견!', en: 'Found the hidden terminal!', hintKr: '<kbd>`</kbd> 키를 눌러보세요', hintEn: 'Try pressing <kbd>`</kbd>' },
+    { key: 'finished', icon: '🏁', kr: '완주 — 페이지 끝까지 다 보셨네요!', en: 'Finished — you made it all the way to the bottom!', hintKr: '페이지 맨 끝까지 스크롤해보세요', hintEn: 'Scroll all the way to the bottom' }
+  ];
+  const achievementsModal = document.getElementById('achievementsModal');
+  const achievementsModalClose = document.getElementById('achievementsModalClose');
+  const achDexList = document.getElementById('achDexList');
+  const achDexCountText = document.getElementById('achDexCountText');
+  function renderAchDex(){
+    if (!achDexList) return;
+    const unlocked = ACHIEVEMENTS.filter(a => localStorage.getItem('ach_' + a.key));
+    achDexCountText.innerHTML = currentLang === 'en'
+      ? `<span class="ach-dex-count">${unlocked.length}/${ACHIEVEMENTS.length}</span> found so far`
+      : `<span class="ach-dex-count">${unlocked.length}/${ACHIEVEMENTS.length}</span>개 발견`;
+    achDexList.innerHTML = ACHIEVEMENTS.map(a => {
+      const isUnlocked = !!localStorage.getItem('ach_' + a.key);
+      const name = currentLang === 'en' ? a.en : a.kr;
+      const hint = currentLang === 'en' ? a.hintEn : a.hintKr;
+      return `
+        <div class="ach-dex-row${isUnlocked ? '' : ' locked'}">
+          <div class="ach-dex-icon">${isUnlocked ? a.icon : '🔒'}</div>
+          <div class="ach-dex-text">
+            <div class="ach-dex-name">${isUnlocked ? name : (currentLang === 'en' ? '??? Locked' : '??? 잠김')}</div>
+            <div class="ach-dex-hint">${isUnlocked ? '' : hint}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  function toggleAchievementsModal(){ achievementsModal.classList.toggle('open'); if (achievementsModal.classList.contains('open')) renderAchDex(); }
+  function closeAchievementsModal(){ achievementsModal.classList.remove('open'); }
+  document.getElementById('scAchievements').addEventListener('click', toggleAchievementsModal);
+  achievementsModalClose.addEventListener('click', closeAchievementsModal);
+  achievementsModal.addEventListener('click', (e) => { if (e.target === achievementsModal) closeAchievementsModal(); });
+
+  /* ---- HIDDEN MINI TERMINAL (easter egg, ` key) ---- */
+  const miniTerminal = document.getElementById('miniTerminal');
+  const miniTermBody = document.getElementById('miniTermBody');
+  const miniTermInput = document.getElementById('miniTermInput');
+  const miniTermClose = document.getElementById('miniTermClose');
+  function mtPrint(cmd, outHtml){
+    if (cmd !== null) {
+      const cmdLine = document.createElement('div');
+      cmdLine.className = 'mt-line mt-cmd';
+      cmdLine.textContent = cmd;
+      miniTermBody.appendChild(cmdLine);
+    }
+    if (outHtml !== null) {
+      const outLine = document.createElement('div');
+      outLine.className = 'mt-line mt-out';
+      outLine.innerHTML = outHtml;
+      miniTermBody.appendChild(outLine);
+    }
+    miniTermBody.scrollTop = miniTermBody.scrollHeight;
+  }
+  function mtWelcome(){
+    miniTermBody.innerHTML = '';
+    mtPrint(null, currentLang === 'en'
+      ? "You found the hidden terminal. Type <b>help</b> to see what's available."
+      : '숨겨진 터미널을 찾으셨네요. <b>help</b>를 입력해보세요.');
+  }
+  function runMtCommand(raw){
+    const cmd = raw.trim();
+    if (!cmd) return;
+    const lower = cmd.toLowerCase();
+    let out;
+    switch (lower) {
+      case 'help':
+        out = currentLang === 'en'
+          ? 'available: help, whoami, ls, cat bugs_to_fix.txt, cat sleep_schedule.txt, date, sudo make me a sandwich, clear, exit'
+          : '사용 가능: help, whoami, ls, cat bugs_to_fix.txt, cat sleep_schedule.txt, date, sudo make me a sandwich, clear, exit';
+        break;
+      case 'whoami':
+        out = currentLang === 'en' ? '최한민 (probably. confidence: 99.9%)' : '최한민 (아마도. 확신도: 99.9%)';
+        break;
+      case 'ls':
+        out = 'README.md&nbsp;&nbsp;bugs_to_fix.txt (999+)&nbsp;&nbsp;sleep_schedule.txt (empty)&nbsp;&nbsp;secrets/';
+        break;
+      case 'cat bugs_to_fix.txt':
+        out = currentLang === 'en' ? 'a very, very long list. ask again some other lifetime.' : '아주, 아주 긴 목록입니다. 다음 생에 다시 물어봐주세요.';
+        break;
+      case 'cat sleep_schedule.txt':
+        out = currentLang === 'en' ? '(file is empty, as expected)' : '(파일이 비어있습니다, 예상대로)';
+        break;
+      case 'cat secrets/':
+      case 'ls secrets/':
+        out = currentLang === 'en' ? 'Permission denied. Nice try though.' : 'Permission denied. 그래도 시도는 좋았습니다.';
+        break;
+      case 'date':
+        out = new Intl.DateTimeFormat(currentLang === 'en' ? 'en-US' : 'ko-KR', { timeZone: 'Asia/Seoul', dateStyle: 'full', timeStyle: 'short' }).format(new Date()) + ' (KST)';
+        break;
+      case 'sudo make me a sandwich':
+        out = currentLang === 'en' ? 'Okay. 🥪' : '네. 🥪';
+        break;
+      case 'make me a sandwich':
+        out = currentLang === 'en' ? 'Permission denied. (try sudo)' : 'Permission denied. (sudo를 붙여보세요)';
+        break;
+      case 'sudo rm -rf /':
+        out = currentLang === 'en' ? "Nice try. 😏 (nothing happened)" : '나이스 시도네요. 😏 (아무 일도 일어나지 않았습니다)';
+        break;
+      case 'clear':
+        miniTermBody.innerHTML = '';
+        return;
+      case 'exit':
+        closeMiniTerminal();
+        return;
+      default:
+        out = currentLang === 'en'
+          ? `command not found: ${cmd} (try 'help')`
+          : `command not found: ${cmd} ('help'를 입력해보세요)`;
+    }
+    mtPrint(cmd, out);
+  }
+  function openMiniTerminal(){
+    if (miniTerminal.classList.contains('open')) return;
+    miniTerminal.classList.add('open');
+    mtWelcome();
+    miniTermInput.value = '';
+    setTimeout(() => miniTermInput.focus(), 50);
+    unlockAchievement('terminal', '숨겨진 터미널 발견!', 'Found the hidden terminal!');
+  }
+  function closeMiniTerminal(){ miniTerminal.classList.remove('open'); }
+  miniTermClose.addEventListener('click', closeMiniTerminal);
+  miniTermInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { runMtCommand(miniTermInput.value); miniTermInput.value = ''; }
+    if (e.key === 'Escape') closeMiniTerminal();
+    e.stopPropagation();
+  });
+  miniTerminal.addEventListener('click', (e) => { if (e.target === miniTerminal) closeMiniTerminal(); });
+
   let otterClickCount = parseInt(localStorage.getItem('otterClickCount') || '0', 10);
   document.getElementById('mascotImg').addEventListener('click', () => {
     otterClickCount++;
