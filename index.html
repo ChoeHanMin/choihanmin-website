@@ -513,7 +513,11 @@
   /* ---------- STAMINA GAUGE ---------- */
   .gauge-wrap{
     display:flex; align-items:center; gap:40px; flex-wrap:wrap;
-    padding:10px 0 12px;
+    padding:28px 32px;
+    border-radius:var(--r-lg);
+    border:1px solid var(--line);
+    background:linear-gradient(135deg, rgba(var(--rose-rgb),0.09), rgba(var(--amber-rgb),0.07) 55%, rgba(var(--teal-rgb),0.06));
+    box-shadow:var(--shadow-card);
   }
   .gauge{width:220px; height:130px; flex:0 0 220px;}
   .gauge-needle{
@@ -1661,8 +1665,14 @@
     <p class="sec-sub" data-en="Current status: about to die · needs recharging">현재 상태: 방전 직전 · 재충전 필요</p>
     <div class="gauge-wrap">
       <svg viewBox="0 0 220 130" class="gauge">
+        <defs>
+          <linearGradient id="fuelGrad" x1="20" y1="110" x2="66" y2="34" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="var(--rose)"/>
+            <stop offset="100%" stop-color="var(--amber-soft)"/>
+          </linearGradient>
+        </defs>
         <path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>
-        <path d="M 20 110 A 90 90 0 0 1 66 34" fill="none" stroke="var(--rose)" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 7"/>
+        <path d="M 20 110 A 90 90 0 0 1 66 34" fill="none" stroke="url(#fuelGrad)" stroke-width="10" stroke-linecap="round"/>
         <g stroke="var(--paper-dim)" stroke-width="2">
           <line x1="20" y1="110" x2="30" y2="103"/>
           <line x1="35" y1="63" x2="44" y2="69"/>
@@ -2001,9 +2011,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.21</span>
+        <span class="change-desc" data-en="Gave the stamina gauge a soft pastel card background and replaced its dashed 'E zone' arc with a smooth gradient stroke">체력바 게이지에 은은한 파스텔 카드 배경 추가, 점선으로 뭉쳐 보이던 E존 아크를 매끄러운 그라데이션 선으로 교체</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.20</span>
         <span class="change-desc" data-en="Weather/commits now cache the last successful response and fall back to it (with a witty line if there's no cache at all) instead of showing a bare error; the section-jump dots now cover the changelog too">날씨·커밋 API 실패 시 마지막 성공 데이터를 캐시해서 보여주도록 개선 (캐시도 없으면 위트있는 대체 문구), 섹션 이동 점 네비게이션에 업데이트 기록 추가</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.19</span>
