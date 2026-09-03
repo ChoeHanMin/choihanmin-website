@@ -64,11 +64,42 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0A0A0D;
-    --ink-2:#151620;
-    --ink-3:#1C1D28;
-    --paper:#EEEBE3;
-    --paper-dim:#9A968D;
+    /* ---- Premium light theme (default). Warm off-white ground, deep
+       charcoal ink, and a restrained bronze/teal/terracotta accent trio —
+       the same hue family the dark theme below uses, just deepened enough
+       to hold up against a bright ground instead of a near-black one. ---- */
+    --ink:#FFFFFF;
+    --ink-2:#F7F6F2;
+    --ink-3:#F0EEE7;
+    --paper:#18181C;
+    --paper-dim:#6B6862;
+    --amber:#A6752B;
+    --amber-soft:#C99B4E;
+    --teal:#3E7A6C;
+    --rose:#9C5A45;
+    --amber-rgb:166,117,43;
+    --teal-rgb:62,122,108;
+    --rose-rgb:156,90,69;
+    --line: rgba(24,24,28,0.08);
+    --line-strong: rgba(24,24,28,0.14);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Pretendard', -apple-system, sans-serif;
+    --serif: 'Noto Serif KR', serif;
+    --r-sm:12px;
+    --r-md:18px;
+    --r-lg:26px;
+    --ease: cubic-bezier(.16,1,.3,1);
+    --shadow-card: 0 1px 0 rgba(255,255,255,0.7) inset, 0 18px 40px -28px rgba(24,24,28,0.14);
+    --shadow-lift: 0 30px 60px -24px rgba(24,24,28,0.18), 0 0 0 1px rgba(var(--amber-rgb),0.12);
+  }
+  /* ---------- DARK THEME (alt): same restrained accent trio, refined
+     near-black ground — no neon glow, just a quieter room ---------- */
+  html[data-theme="dark"]{
+    --ink:#0B0B0D;
+    --ink-2:#141416;
+    --ink-3:#1B1B1F;
+    --paper:#F2F1EE;
+    --paper-dim:#8B8A86;
     --amber:#CDA968;
     --amber-soft:#E4C88A;
     --teal:#6FA090;
@@ -76,36 +107,10 @@
     --amber-rgb:205,169,104;
     --teal-rgb:111,160,144;
     --rose-rgb:188,131,112;
-    --line: rgba(238,235,227,0.09);
-    --line-strong: rgba(238,235,227,0.16);
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Pretendard', -apple-system, sans-serif;
-    --serif: 'Noto Serif KR', serif;
-    --r-sm:10px;
-    --r-md:16px;
-    --r-lg:22px;
-    --ease: cubic-bezier(.16,1,.3,1);
-    --shadow-card: 0 1px 0 rgba(255,255,255,0.03) inset, 0 18px 40px -22px rgba(0,0,0,0.55);
-    --shadow-lift: 0 26px 60px -18px rgba(0,0,0,0.6), 0 0 0 1px rgba(var(--amber-rgb),0.22);
-  }
-  /* ---------- LIGHT THEME: vivid neon-sign palette (dark theme above is untouched) ---------- */
-  html[data-theme="light"]{
-    --ink:#FFFFFF;
-    --ink-2:#FAF6FF;
-    --ink-3:#F2EBFF;
-    --paper:#1B1730;
-    --paper-dim:#71698F;
-    --amber:#FF2E93;
-    --amber-soft:#FF8FC7;
-    --teal:#00D4C2;
-    --rose:#9B4DFF;
-    --amber-rgb:255,46,147;
-    --teal-rgb:0,212,194;
-    --rose-rgb:155,77,255;
-    --line: rgba(27,23,48,0.09);
-    --line-strong: rgba(27,23,48,0.18);
-    --shadow-card: 0 1px 0 rgba(255,255,255,0.6) inset, 0 18px 40px -24px rgba(90,40,140,0.18);
-    --shadow-lift: 0 26px 60px -20px rgba(90,40,140,0.22), 0 0 0 1px rgba(var(--amber-rgb),0.3);
+    --line: rgba(242,241,238,0.08);
+    --line-strong: rgba(242,241,238,0.14);
+    --shadow-card: 0 1px 0 rgba(255,255,255,0.03) inset, 0 18px 40px -22px rgba(0,0,0,0.5);
+    --shadow-lift: 0 30px 60px -22px rgba(0,0,0,0.55), 0 0 0 1px rgba(var(--amber-rgb),0.18);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
@@ -137,91 +142,17 @@
   .hero::before{
     content:'';
     position:absolute; inset:0;
-    background:
-      radial-gradient(ellipse 700px 340px at 12% -4%, rgba(var(--amber-rgb),0.13), transparent 62%),
-      radial-gradient(ellipse 560px 440px at 92% 104%, rgba(var(--teal-rgb),0.10), transparent 62%),
-      radial-gradient(ellipse 420px 340px at 60% 40%, rgba(var(--rose-rgb),0.05), transparent 65%);
+    background: radial-gradient(ellipse 780px 480px at 18% -8%, rgba(var(--amber-rgb),0.06), transparent 62%);
     pointer-events:none;
   }
   .hero-spotlight{
     position:absolute; inset:0;
-    background:radial-gradient(circle 480px at var(--hx,50%) var(--hy,30%), rgba(var(--amber-rgb),0.10), transparent 70%);
+    background:radial-gradient(circle 520px at var(--hx,50%) var(--hy,30%), rgba(var(--amber-rgb),0.05), transparent 70%);
     opacity:0; transition:opacity .5s var(--ease);
     pointer-events:none; z-index:0;
   }
   .hero.spotlit .hero-spotlight{ opacity:1; }
   @media(hover:none), (max-width:900px){ .hero-spotlight{ display:none; } }
-  .orb{
-    position:absolute; border-radius:50%;
-    filter:blur(60px);
-    pointer-events:none; z-index:0;
-    opacity:.5;
-  }
-  .orb1{ width:260px; height:260px; top:8%; left:6%; background:var(--amber); animation:orbFloat1 16s ease-in-out infinite; }
-  .orb2{ width:200px; height:200px; bottom:10%; right:8%; background:var(--teal); animation:orbFloat2 20s ease-in-out infinite; }
-  .orb3{ width:150px; height:150px; top:45%; right:20%; background:var(--rose); animation:orbFloat1 13s ease-in-out infinite reverse; opacity:.3; }
-  .orb{ will-change:transform; }
-
-  /* ---------- HERO WATERMARK ---------- */
-  .hero-watermark{
-    position:absolute; top:52%; left:50%;
-    transform:translate(-50%,-50%);
-    font-family:var(--serif); font-weight:700;
-    font-size:clamp(90px, 20vw, 260px);
-    letter-spacing:-0.02em;
-    color:transparent;
-    -webkit-text-stroke:1px var(--line-strong);
-    background:linear-gradient(180deg, rgba(var(--amber-rgb),0.07), transparent 70%);
-    -webkit-background-clip:text; background-clip:text;
-    -webkit-text-fill-color:transparent;
-    white-space:nowrap;
-    pointer-events:none; z-index:0;
-    user-select:none;
-  }
-  @media(max-width:700px){ .hero-watermark{ display:none; } }
-
-  /* ---------- AURORA (dark mode only) ----------
-     Static gradient wash — no per-frame animation. A blurred full-width
-     gradient that keeps repainting forever (whether via background-position
-     or transform, under software rendering both cost real CPU time every
-     frame) was a genuine, measured jank source; the color wash itself
-     doesn't need to move to look good, so it's simply not animated. */
-  .aurora{
-    position:fixed; top:0; left:0; right:0; height:280px;
-    z-index:0; pointer-events:none;
-    background:linear-gradient(120deg, rgba(var(--amber-rgb),0.12), rgba(110,156,137,0.10), rgba(183,126,104,0.10), rgba(var(--amber-rgb),0.12));
-    filter:blur(50px);
-    opacity:.6;
-  }
-  html[data-theme="light"] .aurora{ display:none; }
-
-  /* ---------- LIGHT AURORA (light mode only): full-page neon mesh wash ----------
-     Also static for the same reason — a continuously-animated full-viewport
-     multi-gradient layer measurably hurt frame time; the colorful wash is
-     unaffected by not moving. */
-  .light-aurora{
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    display:none;
-    background:
-      radial-gradient(ellipse 900px 700px at 6% 4%, rgba(var(--amber-rgb),0.22), transparent 55%),
-      radial-gradient(ellipse 820px 680px at 96% 10%, rgba(var(--teal-rgb),0.20), transparent 55%),
-      radial-gradient(ellipse 780px 820px at 12% 60%, rgba(var(--rose-rgb),0.18), transparent 55%),
-      radial-gradient(ellipse 760px 700px at 92% 55%, rgba(var(--amber-rgb),0.16), transparent 55%),
-      radial-gradient(ellipse 900px 760px at 30% 100%, rgba(var(--teal-rgb),0.18), transparent 55%),
-      radial-gradient(ellipse 820px 700px at 85% 100%, rgba(var(--rose-rgb),0.16), transparent 55%);
-  }
-  html[data-theme="light"] .light-aurora{ display:block; }
-  @keyframes orbFloat1{
-    0%,100%{ transform:translate(0,0) scale(1); }
-    50%{ transform:translate(40px,30px) scale(1.15); }
-  }
-  @keyframes orbFloat2{
-    0%,100%{ transform:translate(0,0) scale(1); }
-    50%{ transform:translate(-35px,-25px) scale(1.1); }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .orb{ animation:none; }
-  }
   .term{
     background:linear-gradient(180deg, var(--ink-3), var(--ink-2));
     border:1px solid var(--line-strong);
@@ -267,7 +198,7 @@
 
   h1.name{
     font-family:var(--serif);
-    font-size:clamp(34px, 6.4vw, 56px);
+    font-size:clamp(38px, 7vw, 68px);
     font-weight:700;
     letter-spacing:-0.015em;
     line-height:1.12;
@@ -378,23 +309,13 @@
   .stat:last-child{border-right:none;}
   .stat b{
     display:block; font-family:var(--mono); font-size:clamp(24px,5vw,34px);
-    font-weight:700; letter-spacing:-0.02em;
-    background:linear-gradient(100deg, var(--amber) 30%, var(--amber-soft) 45%, var(--amber) 60%);
-    background-size:250% auto;
-    -webkit-background-clip:text; background-clip:text;
-    -webkit-text-fill-color:transparent; color:var(--amber);
-    animation:statShimmer 5s linear infinite;
+    font-weight:700; letter-spacing:-0.02em; color:var(--amber);
+    transition:opacity .5s var(--ease);
   }
-  @keyframes statShimmer{
-    0%{ background-position:200% center; }
-    100%{ background-position:-50% center; }
-  }
-  @media (prefers-reduced-motion: reduce){ .stat b{ animation:none; background-position:0 center; } }
-  .stat b.stat-pulse{ animation:statGlow .9s var(--ease); }
-  @keyframes statGlow{
-    0%{ text-shadow:0 0 0 rgba(var(--amber-rgb),0); }
-    35%{ text-shadow:0 0 22px rgba(var(--amber-rgb),0.75), 0 0 46px rgba(var(--amber-rgb),0.35); }
-    100%{ text-shadow:0 0 0 rgba(var(--amber-rgb),0); }
+  .stat b.stat-pulse{ animation:statSettle .5s var(--ease); }
+  @keyframes statSettle{
+    0%{ opacity:.45; }
+    100%{ opacity:1; }
   }
   @media (prefers-reduced-motion: reduce){ .stat b.stat-pulse{ animation:none; } }
   .stat span{font-size:12px; color:var(--paper-dim); letter-spacing:0.01em;}
@@ -418,35 +339,12 @@
   .sns-neon-wrap{
     position:relative;
     padding:22px;
-    border-radius:calc(var(--r-sm) + 10px);
-    background:linear-gradient(180deg, rgba(56,189,248,0.07), rgba(56,189,248,0.015));
-    box-shadow:
-      0 0 0 2px rgba(56,189,248,0.8),
-      0 0 22px 3px rgba(56,189,248,0.7),
-      0 0 55px 10px rgba(56,189,248,0.5),
-      0 0 120px 28px rgba(56,189,248,0.26),
-      inset 0 0 34px 3px rgba(56,189,248,0.16);
-    animation:snsNeonPulse 3.2s ease-in-out infinite;
+    border-radius:var(--r-lg);
+    border:1px solid var(--line-strong);
+    background:linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
+    box-shadow:var(--shadow-card);
   }
-  @keyframes snsNeonPulse{
-    0%,100%{
-      box-shadow:
-        0 0 0 2px rgba(56,189,248,0.8),
-        0 0 22px 3px rgba(56,189,248,0.7),
-        0 0 55px 10px rgba(56,189,248,0.5),
-        0 0 120px 28px rgba(56,189,248,0.26),
-        inset 0 0 34px 3px rgba(56,189,248,0.16);
-    }
-    50%{
-      box-shadow:
-        0 0 0 2px rgba(56,189,248,1),
-        0 0 32px 5px rgba(56,189,248,0.95),
-        0 0 75px 18px rgba(56,189,248,0.65),
-        0 0 150px 38px rgba(56,189,248,0.34),
-        inset 0 0 46px 5px rgba(56,189,248,0.24);
-    }
-  }
-  @media (prefers-reduced-motion: reduce){ .sns-neon-wrap{ animation:none; } }
+  html[data-theme="dark"] .sns-neon-wrap{ background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); }
   .sns-grid{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
@@ -480,70 +378,42 @@
     letter-spacing:.01em; margin-left:5px; opacity:.85;
   }
   /* per-account pastel accents */
-  .sns-card.ig-red{ background:linear-gradient(180deg, rgba(255,107,107,0.14), transparent); border-color:rgba(255,107,107,0.32); }
-  .sns-card.ig-red:hover{ border-color:rgba(255,107,107,0.55); }
-  .sns-card.ig-red .sic{ background:radial-gradient(circle at 35% 30%, rgba(255,107,107,0.32), rgba(255,107,107,0.08)); border:1px solid rgba(255,107,107,0.38); }
-  .sns-card.ig-red .sns-tag{ color:#FF8A80; }
+  .sns-card.ig-red{ background:linear-gradient(180deg, rgba(255,107,107,0.14), rgba(255,107,107,0.03)); border-color:rgba(255,107,107,0.28); }
+  .sns-card.ig-red:hover{ border-color:rgba(255,107,107,0.5); }
+  .sns-card.ig-red .sic{ background:radial-gradient(circle at 35% 30%, rgba(255,107,107,0.28), rgba(255,107,107,0.06)); border:1px solid rgba(255,107,107,0.32); }
+  .sns-card.ig-red .sns-tag{ color:#D9483F; }
 
-  .sns-card.ig-blue{ background:linear-gradient(180deg, rgba(93,169,255,0.14), transparent); border-color:rgba(93,169,255,0.32); }
-  .sns-card.ig-blue:hover{ border-color:rgba(93,169,255,0.55); }
-  .sns-card.ig-blue .sic{ background:radial-gradient(circle at 35% 30%, rgba(93,169,255,0.32), rgba(93,169,255,0.08)); border:1px solid rgba(93,169,255,0.38); }
-  .sns-card.ig-blue .sns-tag{ color:#82B1FF; }
+  .sns-card.ig-blue{ background:linear-gradient(180deg, rgba(93,169,255,0.14), rgba(93,169,255,0.03)); border-color:rgba(93,169,255,0.28); }
+  .sns-card.ig-blue:hover{ border-color:rgba(93,169,255,0.5); }
+  .sns-card.ig-blue .sic{ background:radial-gradient(circle at 35% 30%, rgba(93,169,255,0.28), rgba(93,169,255,0.06)); border:1px solid rgba(93,169,255,0.32); }
+  .sns-card.ig-blue .sns-tag{ color:#2F6FE0; }
 
-  .sns-card.blog-green{ background:linear-gradient(180deg, rgba(156,204,101,0.14), transparent); border-color:rgba(156,204,101,0.32); }
-  .sns-card.blog-green:hover{ border-color:rgba(156,204,101,0.55); }
-  .sns-card.blog-green .sic{ background:radial-gradient(circle at 35% 30%, rgba(156,204,101,0.32), rgba(156,204,101,0.08)); border:1px solid rgba(156,204,101,0.38); }
+  .sns-card.blog-green{ background:linear-gradient(180deg, rgba(120,171,79,0.14), rgba(120,171,79,0.03)); border-color:rgba(120,171,79,0.28); }
+  .sns-card.blog-green:hover{ border-color:rgba(120,171,79,0.5); }
+  .sns-card.blog-green .sic{ background:radial-gradient(circle at 35% 30%, rgba(120,171,79,0.28), rgba(120,171,79,0.06)); border:1px solid rgba(120,171,79,0.32); }
 
-  html[data-theme="light"] .sns-card.ig-red{ background:linear-gradient(180deg, rgba(255,107,107,0.24), rgba(255,107,107,0.05)); }
-  html[data-theme="light"] .sns-card.ig-blue{ background:linear-gradient(180deg, rgba(93,169,255,0.24), rgba(93,169,255,0.05)); }
-  html[data-theme="light"] .sns-card.blog-green{ background:linear-gradient(180deg, rgba(156,204,101,0.24), rgba(156,204,101,0.05)); }
+  html[data-theme="dark"] .sns-card.ig-red{ background:linear-gradient(180deg, rgba(255,107,107,0.14), transparent); }
+  html[data-theme="dark"] .sns-card.ig-red .sns-tag{ color:#FF8A80; }
+  html[data-theme="dark"] .sns-card.ig-blue{ background:linear-gradient(180deg, rgba(93,169,255,0.14), transparent); }
+  html[data-theme="dark"] .sns-card.ig-blue .sns-tag{ color:#82B1FF; }
+  html[data-theme="dark"] .sns-card.blog-green{ background:linear-gradient(180deg, rgba(156,204,101,0.14), transparent); }
 
-  /* ---------- FAVORITE SONG (neon, magenta↔cyan pulse — same lightweight
-     box-shadow-only technique as .sns-neon-wrap, just two-tone) ---------- */
-  .song-neon-title{ animation:songTitleGlow 3.2s ease-in-out infinite; }
-  @keyframes songTitleGlow{
-    0%,100%{ text-shadow:0 0 10px rgba(217,70,239,0.55), 0 0 22px rgba(217,70,239,0.28); }
-    50%{ text-shadow:0 0 10px rgba(56,189,248,0.55), 0 0 22px rgba(56,189,248,0.28); }
-  }
-  @media (prefers-reduced-motion: reduce){ .song-neon-title{ animation:none; } }
+  /* ---------- FAVORITE SONG (refined card — same treatment as .sns-neon-wrap) ---------- */
   .song-neon-wrap{
     position:relative;
     padding:24px 26px;
-    border-radius:calc(var(--r-sm) + 10px);
-    background:linear-gradient(180deg, rgba(217,70,239,0.08), rgba(56,189,248,0.02));
-    box-shadow:
-      0 0 0 2px rgba(217,70,239,0.75),
-      0 0 22px 3px rgba(217,70,239,0.6),
-      0 0 55px 10px rgba(217,70,239,0.38),
-      0 0 120px 28px rgba(217,70,239,0.2),
-      inset 0 0 34px 3px rgba(217,70,239,0.14);
-    animation:songNeonPulse 3.2s ease-in-out infinite;
+    border-radius:var(--r-lg);
+    border:1px solid var(--line-strong);
+    background:linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
+    box-shadow:var(--shadow-card);
   }
-  @keyframes songNeonPulse{
-    0%,100%{
-      box-shadow:
-        0 0 0 2px rgba(217,70,239,0.75),
-        0 0 22px 3px rgba(217,70,239,0.6),
-        0 0 55px 10px rgba(217,70,239,0.38),
-        0 0 120px 28px rgba(217,70,239,0.2),
-        inset 0 0 34px 3px rgba(217,70,239,0.14);
-    }
-    50%{
-      box-shadow:
-        0 0 0 2px rgba(56,189,248,0.85),
-        0 0 30px 5px rgba(56,189,248,0.75),
-        0 0 70px 16px rgba(56,189,248,0.5),
-        0 0 140px 34px rgba(56,189,248,0.28),
-        inset 0 0 44px 5px rgba(56,189,248,0.2);
-    }
-  }
-  @media (prefers-reduced-motion: reduce){ .song-neon-wrap{ animation:none; } }
+  html[data-theme="dark"] .song-neon-wrap{ background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); }
   .song-neon-wrap + .song-neon-wrap{ margin-top:18px; }
   .song-card{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
   .song-cover{
     width:76px; height:76px; border-radius:14px; object-fit:cover; flex-shrink:0;
     border:1px solid var(--line-strong);
-    box-shadow:0 8px 20px -8px rgba(217,70,239,0.55);
+    box-shadow:0 8px 20px -10px rgba(var(--amber-rgb),0.4);
   }
   .song-main{ display:flex; flex-direction:column; gap:9px; min-width:220px; flex:1 1 260px; }
   .song-title{ font-family:var(--serif); font-size:16px; font-weight:600; letter-spacing:-0.01em; color:var(--paper); }
@@ -876,7 +746,7 @@
   .achievement-toast{
     position:fixed; bottom:22px; left:50%;
     transform:translate(-50%, 20px);
-    background:rgba(21,22,32,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     border:1px solid var(--amber);
     color:var(--paper); font-family:var(--mono); font-size:13px;
     padding:14px 24px; border-radius:var(--r-md);
@@ -887,12 +757,12 @@
   }
   .achievement-toast.show{ opacity:1; transform:translate(-50%, 0); pointer-events:auto; cursor:pointer; }
   .achievement-toast .ach-icon{ font-size:20px; }
-  html[data-theme="light"] .achievement-toast{ background:rgba(255,255,255,0.88); }
+  html[data-theme="dark"] .achievement-toast{ background:rgba(21,22,32,0.85); }
 
   /* ---------- GUESTBOOK LIVE TOAST ---------- */
   .guestbook-toast{
     position:fixed; top:70px; right:18px;
-    background:rgba(21,22,32,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     border:1px solid var(--teal);
     color:var(--paper); font-family:var(--mono); font-size:12px;
     padding:11px 18px; border-radius:var(--r-md);
@@ -903,7 +773,7 @@
     box-shadow:var(--shadow-lift);
   }
   .guestbook-toast.show{ opacity:1; transform:translateX(0); pointer-events:auto; cursor:pointer; }
-  html[data-theme="light"] .guestbook-toast{ background:rgba(255,255,255,0.88); }
+  html[data-theme="dark"] .guestbook-toast{ background:rgba(21,22,32,0.85); }
 
   /* ---------- GAMES MOVED NOTE ---------- */
   .games-moved-note{
@@ -928,8 +798,8 @@
   .guestbook-entry b{color:var(--paper); font-weight:600;}
 
   /* ---------- SECTION HEADERS ---------- */
-  section{padding:96px 0;}
-  @media(max-width:700px){ section{padding:72px 0;} }
+  section{padding:120px 0;}
+  @media(max-width:700px){ section{padding:76px 0;} }
   .sec-head{
     display:flex; align-items:baseline; gap:14px;
     margin-bottom:36px;
@@ -942,9 +812,8 @@
   .sec-head .tag::before{
     content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
     width:9px; height:1px; background:var(--amber);
-    box-shadow:0 0 8px 1px rgba(var(--amber-rgb),0.6);
   }
-  .sec-head h2{font-family:var(--serif); font-size:clamp(24px,3.4vw,30px); font-weight:700; letter-spacing:-0.01em;}
+  .sec-head h2{font-family:var(--serif); font-size:clamp(26px,3.8vw,34px); font-weight:700; letter-spacing:-0.015em;}
   .sec-sub{color:var(--paper-dim); font-size:14px; margin:-22px 0 36px; font-family:var(--mono); opacity:.85;}
 
   /* ---------- GALLERY ---------- */
@@ -1227,14 +1096,14 @@
   }
   .shortcut-panel button{
     font-family:var(--mono); font-size:11px;
-    background:rgba(21,22,32,0.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    background:rgba(255,255,255,0.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     color:var(--paper-dim);
     border:1px solid var(--line); border-radius:var(--r-sm);
     padding:9px 10px; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; gap:2px;
     transition:color .2s, border-color .2s, transform .15s, background .2s;
   }
-  html[data-theme="light"] .shortcut-panel button{ background:rgba(247,244,236,0.6); }
+  html[data-theme="dark"] .shortcut-panel button{ background:rgba(21,22,32,0.55); }
   .shortcut-panel button b{color:var(--amber); font-size:13px;}
   .shortcut-panel button:hover{color:var(--paper); border-color:var(--amber); transform:scale(1.05); background:var(--ink-2);}
   .mobile-bottom-scrim{
@@ -1257,7 +1126,7 @@
   .gitem, .interest, .stack-item{ position:relative; isolation:isolate; }
   .interest::before, .stack-item::before{
     content:''; position:absolute; inset:0; border-radius:inherit;
-    background:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%), rgba(var(--amber-rgb),0.16), transparent 70%);
+    background:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%), rgba(var(--amber-rgb),0.10), transparent 70%);
     opacity:0; transition:opacity .4s var(--ease);
     pointer-events:none; z-index:-1;
   }
@@ -1286,21 +1155,6 @@
   .guestbook-link:hover::after, footer .request-link:not(.ghost):hover::after{ left:130%; }
   @media (prefers-reduced-motion: reduce){
     .guestbook-link::after, footer .request-link:not(.ghost)::after{ display:none; }
-  }
-
-  /* ---------- TERMINAL AMBIENT GLOW BORDER ----------
-     Static now (was a rotating conic-gradient animated forever via a
-     registered custom property) — a continuously repainting gradient mask
-     on an always-visible hero element was a real, measured jank source
-     for no real visual benefit over a fixed glow. */
-  .term{ position:relative; }
-  .term::before{
-    content:''; position:absolute; inset:-1px; border-radius:inherit; z-index:-1;
-    padding:1px;
-    background:conic-gradient(from 200deg, transparent 0%, rgba(var(--amber-rgb),0.5) 12%, transparent 24%);
-    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude;
-    opacity:.7;
   }
 
   /* ---------- LIGHTBOX ---------- */
@@ -1418,14 +1272,12 @@
   .star-canvas{
     position:fixed; inset:0; z-index:0;
     pointer-events:none;
+    display:none;
   }
-  html[data-theme="light"] .star-canvas{ display:none; }
+  html[data-theme="dark"] .star-canvas{ display:block; }
 
-  /* ---------- NAME GLOW ---------- */
-  h1.name{ transition:text-shadow .3s; position:relative; }
-  h1.name:hover{
-    text-shadow:0 0 14px rgba(var(--amber-rgb),0.55), 0 0 32px rgba(var(--amber-rgb),0.3);
-  }
+  /* ---------- NAME UNDERLINE ---------- */
+  h1.name{ position:relative; }
   h1.name::after{
     content:''; position:absolute; left:2px; bottom:-8px;
     height:3px; width:0%; max-width:calc(100% - 4px);
@@ -1467,24 +1319,24 @@
   .lang-toggle{
     position:fixed; top:18px; right:66px; z-index:20;
     width:40px; height:40px; border-radius:50%;
-    background:rgba(21,22,32,0.55); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    background:rgba(255,255,255,0.72); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     border:1px solid var(--line-strong);
     color:var(--paper); font-family:var(--mono); font-size:11px; font-weight:700; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
     transition:transform .2s, border-color .2s;
   }
-  html[data-theme="light"] .lang-toggle{ background:rgba(247,244,236,0.6); }
+  html[data-theme="dark"] .lang-toggle{ background:rgba(21,22,32,0.55); }
   .lang-toggle:hover{ transform:scale(1.08); border-color:var(--amber); }
 
   /* ---------- FONT SIZE TOGGLE ---------- */
   .fontsize-panel{
     position:fixed; top:18px; right:114px; z-index:20;
     display:flex; gap:4px;
-    background:rgba(21,22,32,0.55); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    background:rgba(255,255,255,0.72); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     border:1px solid var(--line-strong);
     border-radius:999px; padding:4px;
   }
-  html[data-theme="light"] .fontsize-panel{ background:rgba(247,244,236,0.6); }
+  html[data-theme="dark"] .fontsize-panel{ background:rgba(21,22,32,0.55); }
   .fontsize-panel button{
     width:26px; height:26px; border-radius:50%;
     background:transparent; border:none; color:var(--paper-dim);
@@ -1514,9 +1366,9 @@
   /* ---------- PRINT ---------- */
   @media print{
     .side-rail, .shortcut-panel, .theme-toggle, .lang-toggle, .fontsize-panel,
-    .trail-canvas, .star-canvas, .scroll-progress, .grain-overlay, .orb,
+    .trail-canvas, .star-canvas, .scroll-progress, .grain-overlay,
     .lightbox, .intro-overlay, .mascot-bubble, .nav-dots,
-    #liveVisitors, .divider, .mobile-bottom-scrim, .confetti-canvas, .light-aurora{
+    #liveVisitors, .divider, .mobile-bottom-scrim, .confetti-canvas{
       display:none !important;
     }
     body{ background:#fff !important; color:#111 !important; }
@@ -1563,13 +1415,13 @@
   .theme-toggle{
     position:fixed; top:18px; right:18px; z-index:20;
     width:40px; height:40px; border-radius:50%;
-    background:rgba(21,22,32,0.55); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    background:rgba(255,255,255,0.72); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     border:1px solid var(--line-strong);
     color:var(--paper); font-size:17px; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
     transition:transform .2s, background .3s, border-color .2s;
   }
-  html[data-theme="light"] .theme-toggle{ background:rgba(247,244,236,0.6); }
+  html[data-theme="dark"] .theme-toggle{ background:rgba(21,22,32,0.55); }
   .theme-toggle:hover{transform:scale(1.08); border-color:var(--amber);}
 
   /* ---------- SCROLL REVEAL ---------- */
@@ -1607,29 +1459,6 @@
     .divider-glow{ display:none; }
   }
 
-  /* ---------- LIGHT MODE: neon-sign flourishes (dark mode untouched) ---------- */
-  html[data-theme="light"] h1.name{
-    text-shadow:0 0 18px rgba(var(--amber-rgb),0.22), 0 0 40px rgba(var(--rose-rgb),0.14);
-  }
-  html[data-theme="light"] h1.name:hover{
-    text-shadow:0 0 20px rgba(var(--amber-rgb),0.5), 0 0 48px rgba(var(--teal-rgb),0.3);
-  }
-  html[data-theme="light"] .hero-spotlight{
-    background:radial-gradient(circle 480px at var(--hx,50%) var(--hy,30%), rgba(var(--amber-rgb),0.16), transparent 70%);
-  }
-  html[data-theme="light"] .interest::before,
-  html[data-theme="light"] .stack-item::before{
-    background:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%), rgba(var(--amber-rgb),0.22), transparent 70%);
-  }
-  html[data-theme="light"] .orb{ opacity:.4; filter:blur(70px); }
-  html[data-theme="light"] .sec-head .tag::before{
-    box-shadow:0 0 10px 2px rgba(var(--amber-rgb),0.5);
-  }
-  html[data-theme="light"] .term::before{ opacity:.55; }
-  html[data-theme="light"] .mascot{ border-color:var(--amber); }
-  html[data-theme="light"] .stat b.stat-pulse{
-    text-shadow:0 0 22px rgba(var(--amber-rgb),0.55), 0 0 46px rgba(var(--rose-rgb),0.3);
-  }
 </style>
 </head>
 <body>
@@ -1645,8 +1474,6 @@
 <canvas id="starCanvas" class="star-canvas"></canvas>
 <div id="scrollProgress" class="scroll-progress"></div>
 <div class="grain-overlay"></div>
-<div class="aurora"></div>
-<div class="light-aurora" aria-hidden="true"></div>
 
 <div class="side-rail left"><div class="rail-line"></div><span class="rail-label">SOODAL GAMES</span></div>
 <div class="side-rail right"><div class="rail-line"></div><span class="rail-label">CHOI HANMIN</span></div>
@@ -1677,10 +1504,6 @@
 
 <div class="wrap">
   <section class="hero" id="hero-top">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-    <div class="hero-watermark" aria-hidden="true">SOODAL</div>
     <div class="hero-spotlight" aria-hidden="true"></div>
     <div class="term">
       <div class="term-bar">
@@ -2503,32 +2326,35 @@
   }, { threshold: 0.12 });
   revealEls.forEach(el => io.observe(el));
 
-  /* ---- THEME TOGGLE ---- */
+  /* ---- THEME TOGGLE ----
+     Light (premium, warm off-white + deep ink) is now the default look —
+     no data-theme attribute needed for it. data-theme="dark" opts into the
+     refined near-black alt palette. */
   const themeBtn = document.getElementById('themeToggle');
   const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-    themeBtn.textContent = '☀️';
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeBtn.textContent = '🌙';
   }
   /* accentRGB tracks --amber-rgb so canvas-drawn effects (cursor trail, card tilt glow)
      stay in sync with the current theme's accent color instead of a hardcoded value. */
-  let accentRGB = '205,169,104';
+  let accentRGB = '166,117,43';
   function updateAccentRGB(){
     const v = getComputedStyle(document.documentElement).getPropertyValue('--amber-rgb').trim();
     if (v) accentRGB = v;
   }
   updateAccentRGB();
   themeBtn.addEventListener('click', () => {
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    if (isLight) {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
       document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'dark');
-      themeBtn.textContent = '🌙';
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
       themeBtn.textContent = '☀️';
-      unlockAchievement('lightmode', '라이트모드 발견! 🌈', 'Discovered light mode! 🌈');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      themeBtn.textContent = '🌙';
+      unlockAchievement('darkmode', '다크모드 발견! 🌙', 'Discovered dark mode! 🌙');
     }
     updateAccentRGB();
   });
@@ -2843,7 +2669,7 @@
   }
   initStars();
   window.addEventListener('resize', debounce(initStars, 200));
-  function isLightMode(){ return document.documentElement.getAttribute('data-theme') === 'light'; }
+  function isLightMode(){ return document.documentElement.getAttribute('data-theme') !== 'dark'; }
 
   /* ---- OCCASIONAL SHOOTING STAR ---- */
   let shootingStars = [];
