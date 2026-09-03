@@ -91,6 +91,9 @@
     --ease: cubic-bezier(.16,1,.3,1);
     --shadow-card: 0 1px 0 rgba(255,255,255,0.7) inset, 0 18px 40px -28px rgba(24,24,28,0.14);
     --shadow-lift: 0 30px 60px -24px rgba(24,24,28,0.18), 0 0 0 1px rgba(var(--amber-rgb),0.12);
+    /* Light-mode-only pastel sky backdrop (dark theme below neutralizes both to var(--ink)) */
+    --sky-solid:#DCEEFC;
+    --sky-grad: linear-gradient(180deg, #EAF6FF 0%, #DCEEFC 45%, #CDE7F8 100%);
   }
   /* ---------- DARK THEME (alt): same restrained accent trio, refined
      near-black ground — no neon glow, just a quieter room ---------- */
@@ -111,11 +114,13 @@
     --line-strong: rgba(242,241,238,0.14);
     --shadow-card: 0 1px 0 rgba(255,255,255,0.03) inset, 0 18px 40px -22px rgba(0,0,0,0.5);
     --shadow-lift: 0 30px 60px -22px rgba(0,0,0,0.55), 0 0 0 1px rgba(var(--amber-rgb),0.18);
+    --sky-solid: var(--ink);
+    --sky-grad: var(--ink);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
   body{
-    background:var(--ink);
+    background:var(--sky-grad);
     color:var(--paper);
     font-family:var(--sans);
     line-height:1.65;
@@ -1177,7 +1182,7 @@
   .shortcut-panel button:hover{color:var(--paper); border-color:var(--amber); transform:scale(1.05); background:var(--ink-2);}
   .mobile-bottom-scrim{
     position:fixed; left:0; right:0; bottom:0; height:76px;
-    background:linear-gradient(180deg, transparent, var(--ink) 65%);
+    background:linear-gradient(180deg, transparent, var(--sky-solid) 65%);
     z-index:14; pointer-events:none; display:none;
   }
   @media(max-width:640px){
@@ -1307,7 +1312,7 @@
   /* ---------- INTRO OVERLAY ---------- */
   .intro-overlay{
     position:fixed; inset:0; z-index:1000;
-    background:var(--ink);
+    background:var(--sky-solid);
     display:flex; align-items:center; justify-content:center;
     clip-path:circle(150% at 50% 50%);
     transition:clip-path .9s cubic-bezier(.76,0,.24,1), opacity .5s ease .5s;
@@ -1344,6 +1349,54 @@
     display:none;
   }
   html[data-theme="dark"] .star-canvas{ display:block; }
+
+  /* ---------- SKY CLOUDS (light-mode-only ambient backdrop) ---------- */
+  .sky-clouds{
+    position:fixed; inset:0; z-index:-1;
+    overflow:hidden;
+    pointer-events:none;
+    display:block;
+  }
+  html[data-theme="dark"] .sky-clouds{ display:none; }
+  .cloud{
+    position:absolute;
+    background-repeat:no-repeat;
+    filter:blur(1.5px);
+    animation:cloudDrift linear infinite;
+    will-change:transform;
+  }
+  @keyframes cloudDrift{
+    0%{ transform:translateX(-4%); }
+    50%{ transform:translateX(4%); }
+    100%{ transform:translateX(-4%); }
+  }
+  @media (prefers-reduced-motion: reduce){ .cloud{ animation:none; } }
+  .cloud-a{
+    background-image:
+      radial-gradient(circle at 30% 55%, #fff 0 40%, transparent 42%),
+      radial-gradient(circle at 55% 35%, #fff 0 48%, transparent 50%),
+      radial-gradient(circle at 75% 55%, #fff 0 36%, transparent 38%);
+  }
+  .cloud-b{
+    background-image:
+      radial-gradient(circle at 20% 60%, #fff 0 34%, transparent 36%),
+      radial-gradient(circle at 42% 40%, #fff 0 44%, transparent 46%),
+      radial-gradient(circle at 65% 45%, #fff 0 40%, transparent 42%),
+      radial-gradient(circle at 85% 60%, #fff 0 30%, transparent 32%);
+  }
+  .cloud-c{
+    background-image:
+      radial-gradient(circle at 35% 55%, #fff 0 46%, transparent 48%),
+      radial-gradient(circle at 68% 48%, #fff 0 38%, transparent 40%);
+  }
+  .cloud-d{
+    background-image:
+      radial-gradient(circle at 18% 60%, #fff 0 32%, transparent 34%),
+      radial-gradient(circle at 36% 38%, #fff 0 42%, transparent 44%),
+      radial-gradient(circle at 55% 30%, #fff 0 46%, transparent 48%),
+      radial-gradient(circle at 74% 40%, #fff 0 40%, transparent 42%),
+      radial-gradient(circle at 88% 58%, #fff 0 30%, transparent 32%);
+  }
 
   /* ---------- NAME UNDERLINE ---------- */
   h1.name{ position:relative; }
@@ -1541,6 +1594,15 @@
 
 <canvas id="trailCanvas" class="trail-canvas"></canvas>
 <canvas id="starCanvas" class="star-canvas"></canvas>
+<div class="sky-clouds" aria-hidden="true">
+  <div class="cloud cloud-a" style="width:220px;height:100px;top:5%;left:6%;opacity:.7;animation-duration:150s;"></div>
+  <div class="cloud cloud-b" style="width:320px;height:130px;top:14%;left:58%;opacity:.55;animation-duration:210s;animation-delay:-40s;"></div>
+  <div class="cloud cloud-c" style="width:150px;height:75px;top:29%;left:22%;opacity:.65;animation-duration:130s;animation-delay:-70s;"></div>
+  <div class="cloud cloud-d" style="width:380px;height:150px;top:45%;left:68%;opacity:.5;animation-duration:240s;animation-delay:-120s;"></div>
+  <div class="cloud cloud-a" style="width:180px;height:90px;top:63%;left:10%;opacity:.6;animation-duration:170s;animation-delay:-30s;"></div>
+  <div class="cloud cloud-b" style="width:260px;height:110px;top:78%;left:52%;opacity:.55;animation-duration:190s;animation-delay:-90s;"></div>
+  <div class="cloud cloud-c" style="width:130px;height:65px;top:91%;left:30%;opacity:.6;animation-duration:145s;animation-delay:-15s;"></div>
+</div>
 <div id="scrollProgress" class="scroll-progress"></div>
 <div class="grain-overlay"></div>
 
@@ -2011,9 +2073,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.22</span>
+        <span class="change-desc" data-en="Light mode now has a soft pastel sky-blue page background with gently drifting clouds of varied shapes (dark mode unaffected)">라이트모드 배경을 연한 하늘색 파스텔톤으로 변경, 모양이 다른 구름들이 은은하게 떠다니는 효과 추가 (다크모드는 그대로 유지)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.21</span>
         <span class="change-desc" data-en="Gave the stamina gauge a soft pastel card background and replaced its dashed 'E zone' arc with a smooth gradient stroke">체력바 게이지에 은은한 파스텔 카드 배경 추가, 점선으로 뭉쳐 보이던 E존 아크를 매끄러운 그라데이션 선으로 교체</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.20</span>
