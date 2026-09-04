@@ -99,6 +99,17 @@
     --sky-solid:#DCEEFC;
     --sky-grad: linear-gradient(180deg, #EAF6FF 0%, #DCEEFC 45%, #CDE7F8 100%);
     --space-solid:#08080D;
+    /* Site-wide scroll-driven text ink — see initAltitude() in the script.
+       Defaults straight to --paper/--paper-dim (dark mode's own values there
+       neutralize this automatically) until JS overrides it on :root for the
+       whole page in light mode. Bare page text (headings, card copy that
+       sits on the near-transparent card tint, standalone paragraphs) uses
+       this; anything with its own solid opaque surface (the terminal card,
+       modals, buttons, floating chrome) keeps using --paper/--paper-dim
+       directly since its surface never changes color under it. */
+    --scroll-ink: var(--paper);
+    --scroll-ink-dim: var(--paper-dim);
+    --scroll-shadow: transparent;
   }
   /* ---------- DARK THEME (alt): same restrained accent trio, refined
      near-black ground — no neon glow, just a quieter room ---------- */
@@ -127,7 +138,7 @@
   html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
   body{
     background:var(--sky-grad);
-    color:var(--paper);
+    color:var(--scroll-ink);
     font-family:var(--sans);
     line-height:1.65;
     overflow-x:hidden;
@@ -149,23 +160,17 @@
     justify-content:center;
     padding:96px 0 64px;
     position:relative;
-    /* Bare (non-card) hero text needs to stay legible through the "space" zone
-       at the top of the altitude scroll effect, where the page background goes
-       dark — initAltitude() interpolates these back to var(--paper)/(--paper-dim)
-       as the background lightens into "sky". Cards (.term etc.) keep their own
-       fixed light surface regardless, so they don't need this. */
-    --hero-ink: var(--paper);
-    --hero-ink-dim: var(--paper-dim);
-    --hero-shadow: transparent;
   }
-  /* A soft adaptive glow behind every bare hero text element — dark glow when
+  /* A soft adaptive glow behind the hero's own bare text — dark glow when
      text is light (over the space zone), light glow when text is dark (over
-     sky/ground) — kept in lockstep with --hero-ink by initAltitude(). Mostly
+     sky/ground) — kept in lockstep with --scroll-ink by initAltitude(). Mostly
      invisible on a flat single-color backdrop, but pulls text a little further
-     forward wherever the backdrop gets busy (stars, cloud edges, hill line). */
+     forward wherever the backdrop gets busy (stars, cloud edges, hill line).
+     Scoped to the hero specifically (not the rest of the page's --scroll-ink
+     text) so the glow flourish doesn't show up on every paragraph site-wide. */
   .hero :is(h1.name, .lede, .motto, .role, .stat b, .stat span, .games-moved-note, .live-visitors){
-    text-shadow: 0 1px 3px var(--hero-shadow), 0 0 10px var(--hero-shadow), 0 0 22px var(--hero-shadow);
-    /* --hero-ink flips instantly rather than blending through gray (see
+    text-shadow: 0 1px 3px var(--scroll-shadow), 0 0 10px var(--scroll-shadow), 0 0 22px var(--scroll-shadow);
+    /* --scroll-ink flips instantly rather than blending through gray (see
        initAltitude()'s comment on why); this eases that single jump into a
        quick, unobtrusive crossfade instead of a hard pop. */
     transition: color .18s ease, text-shadow .18s ease;
@@ -227,6 +232,10 @@
   .out .amber{color:var(--amber);}
   .out .teal{color:var(--teal);}
   .paper-dim-note{color:var(--paper-dim); font-size:11px;}
+  /* Same look, but for the "cached" note in the (bare-page, not card) commit
+     list — .paper-dim-note above is also used inside the always-light
+     terminal card, so it has to stay fixed; this one needs to track scroll. */
+  .scroll-dim-note{color:var(--scroll-ink-dim); font-size:11px;}
   .caret{display:inline-block; width:8px; height:16px; background:var(--amber); vertical-align:middle; animation:blink 1s step-end infinite;}
   @keyframes appear{to{opacity:1;}}
   @keyframes blink{50%{opacity:0;}}
@@ -238,7 +247,7 @@
     letter-spacing:-0.015em;
     line-height:1.12;
     margin:0;
-    color:var(--hero-ink);
+    color:var(--scroll-ink);
     animation:heroUp .8s var(--ease) both;
     animation-delay:.15s;
   }
@@ -323,7 +332,7 @@
   @media (prefers-reduced-motion: reduce){ .role-caret{ animation:none; } }
   .lede{
     max-width:560px;
-    color:var(--hero-ink-dim);
+    color:var(--scroll-ink-dim);
     font-size:16.5px;
     line-height:1.85;
     animation:heroUp .8s var(--ease) both; animation-delay:.28s;
@@ -354,10 +363,10 @@
     100%{ opacity:1; }
   }
   @media (prefers-reduced-motion: reduce){ .stat b.stat-pulse{ animation:none; } }
-  .stat span{font-size:12px; color:var(--hero-ink-dim); letter-spacing:0.01em;}
+  .stat span{font-size:12px; color:var(--scroll-ink-dim); letter-spacing:0.01em;}
   .live-visitors{
     text-align:center; margin-top:14px;
-    font-family:var(--mono); font-size:11px; color:var(--hero-ink-dim);
+    font-family:var(--mono); font-size:11px; color:var(--scroll-ink-dim);
     opacity:.7;
   }
   .live-visitors .dot{
@@ -408,7 +417,7 @@
   }
   .sns-card:hover .sic{ transform:scale(1.08) rotate(-4deg); }
   .sns-card b{display:block; font-size:14px; letter-spacing:-0.01em; margin-bottom:2px;}
-  .sns-card span{display:block; font-size:12.5px; color:var(--paper-dim); font-family:var(--mono);}
+  .sns-card span{display:block; font-size:12.5px; color:var(--scroll-ink-dim); font-family:var(--mono);}
   .sns-card .sns-tag{
     display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:600;
     letter-spacing:.01em; margin-left:5px; opacity:.85;
@@ -452,11 +461,11 @@
     box-shadow:0 8px 20px -10px rgba(var(--amber-rgb),0.4);
   }
   .song-main{ display:flex; flex-direction:column; gap:9px; min-width:220px; flex:1 1 260px; }
-  .song-title{ font-family:var(--serif); font-size:16px; font-weight:600; letter-spacing:-0.01em; color:var(--paper); }
+  .song-title{ font-family:var(--serif); font-size:16px; font-weight:600; letter-spacing:-0.01em; color:var(--scroll-ink); }
   .song-player{ width:100%; max-width:340px; height:38px; }
   .song-credit{
     display:flex; flex-direction:column; gap:3px;
-    font-family:var(--mono); font-size:12px; color:var(--paper-dim);
+    font-family:var(--mono); font-size:12px; color:var(--scroll-ink-dim);
     text-align:right; margin-left:auto; padding-left:16px;
     border-left:1px solid var(--line);
     white-space:nowrap;
@@ -571,7 +580,7 @@
   }
   .gauge-caption{
     flex:1; min-width:220px;
-    color:var(--paper-dim); font-size:14.5px; line-height:1.75;
+    color:var(--scroll-ink-dim); font-size:14.5px; line-height:1.75;
   }
   .status-line{
     display:block;
@@ -594,7 +603,7 @@
     font-family:var(--serif);
     font-style:italic;
     font-size:clamp(16px, 2.6vw, 20px);
-    color:var(--hero-ink);
+    color:var(--scroll-ink);
     max-width:520px;
     animation:heroUp .8s var(--ease) both; animation-delay:.34s;
   }
@@ -633,7 +642,7 @@
   .interest:nth-child(4) .ic{ background:radial-gradient(circle at 35% 30%, rgba(var(--amber-rgb),0.22), rgba(var(--amber-rgb),0.06)); border-color:rgba(var(--amber-rgb),0.25); }
   .interest:hover .ic{ transform:scale(1.08) rotate(-4deg); }
   .interest b{display:block; font-size:15px; margin-bottom:5px; letter-spacing:-0.01em;}
-  .interest span{font-size:13px; color:var(--paper-dim); line-height:1.55;}
+  .interest span{font-size:13px; color:var(--scroll-ink-dim); line-height:1.55;}
   .reveal.in-view .interest{ animation:cardSettle .5s var(--ease) both; }
   .reveal.in-view .interest:nth-child(1){ animation-delay:.05s; }
   .reveal.in-view .interest:nth-child(2){ animation-delay:.12s; }
@@ -682,7 +691,7 @@
     color:var(--teal); border:1px solid rgba(var(--teal-rgb),0.35);
     background:rgba(var(--teal-rgb),0.08);
   }
-  .highlight-card span.h-desc{display:block; font-size:13px; color:var(--paper-dim); line-height:1.55;}
+  .highlight-card span.h-desc{display:block; font-size:13px; color:var(--scroll-ink-dim); line-height:1.55;}
   .reveal.in-view .highlight-card{ animation:cardSettle .5s var(--ease) both; }
   .reveal.in-view .highlight-card:nth-child(1){ animation-delay:.05s; }
   .reveal.in-view .highlight-card:nth-child(2){ animation-delay:.12s; }
@@ -701,10 +710,10 @@
     background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
   }
   .tstat b{ display:block; font-family:var(--mono); font-size:22px; color:var(--amber); margin-bottom:4px; }
-  .tstat span{ font-size:11px; color:var(--paper-dim); }
+  .tstat span{ font-size:11px; color:var(--scroll-ink-dim); }
   .tracker-label{
     font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--paper-dim); margin:22px 0 10px;
+    color:var(--scroll-ink-dim); margin:22px 0 10px;
   }
   .tracker-group:first-of-type .tracker-label{ margin-top:0; }
   .tracker-list{ display:flex; flex-direction:column; gap:10px; }
@@ -718,7 +727,7 @@
   .tracker-item:hover{ border-color:rgba(var(--amber-rgb),0.4); transform:translateY(-2px); }
   .tracker-item-top{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
   .tracker-name{ font-size:14px; letter-spacing:-0.01em; }
-  .tracker-sub{ display:block; font-size:12px; color:var(--paper-dim); margin-top:3px; }
+  .tracker-sub{ display:block; font-size:12px; color:var(--scroll-ink-dim); margin-top:3px; }
   .tracker-pct{ font-family:var(--mono); font-weight:700; color:var(--amber); font-size:17px; flex-shrink:0; }
   .tracker-bar{
     height:6px; border-radius:999px; background:var(--line); overflow:hidden; margin:12px 0 8px;
@@ -730,7 +739,7 @@
   }
   .tracker-item.ongoing .tracker-bar-fill{ background:linear-gradient(90deg, var(--teal), rgba(var(--teal-rgb),0.7)); width:100% !important; }
   .tracker-item.ongoing .tracker-pct{ color:var(--teal); font-size:13px; }
-  .tracker-item-bottom{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--paper-dim); }
+  .tracker-item-bottom{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--scroll-ink-dim); }
   .tracker-item.upcoming{ opacity:.88; }
   .tracker-item.upcoming .tracker-item-top{ align-items:center; }
   .tracker-dday{
@@ -744,7 +753,7 @@
   .skill-groups{ display:flex; flex-direction:column; gap:20px; }
   .skill-group-label{
     display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em;
-    color:var(--paper-dim); margin-bottom:10px; text-transform:uppercase;
+    color:var(--scroll-ink-dim); margin-bottom:10px; text-transform:uppercase;
   }
   .skill-chips{ display:flex; flex-wrap:wrap; gap:9px; }
   .chip{
@@ -769,7 +778,7 @@
   .reveal.in-view .skill-group:nth-child(3){ animation-delay:.23s; }
 
   /* ---------- GUESTBOOK ---------- */
-  .guestbook-desc{color:var(--paper-dim); font-size:14px; margin-bottom:20px; max-width:460px;}
+  .guestbook-desc{color:var(--scroll-ink-dim); font-size:14px; margin-bottom:20px; max-width:460px;}
   .guestbook-link{
     display:inline-block;
     font-family:var(--mono); font-size:13px; font-weight:600;
@@ -881,7 +890,7 @@
 
   /* ---------- GAMES MOVED NOTE ---------- */
   .games-moved-note{
-    font-family:var(--mono); font-size:12px; color:var(--hero-ink-dim);
+    font-family:var(--mono); font-size:12px; color:var(--scroll-ink-dim);
     margin-top:14px;
   }
   .games-moved-note a{ color:var(--amber); border-bottom:1px solid transparent; transition:border-color .2s; }
@@ -894,12 +903,12 @@
   }
 
   .guestbook-preview{margin-top:24px; display:flex; flex-direction:column; gap:8px;}
-  .guestbook-empty{font-family:var(--mono); font-size:12px; color:var(--paper-dim); opacity:.7;}
+  .guestbook-empty{font-family:var(--mono); font-size:12px; color:var(--scroll-ink-dim); opacity:.7;}
   .guestbook-entry{
     border-left:2px solid var(--teal); padding-left:12px;
-    font-size:13px; color:var(--paper-dim);
+    font-size:13px; color:var(--scroll-ink-dim);
   }
-  .guestbook-entry b{color:var(--paper); font-weight:600;}
+  .guestbook-entry b{color:var(--scroll-ink); font-weight:600;}
 
   /* ---------- SECTION HEADERS ---------- */
   section{padding:120px 0;}
@@ -918,7 +927,7 @@
     width:9px; height:1px; background:var(--amber);
   }
   .sec-head h2{font-family:var(--serif); font-size:clamp(26px,3.8vw,34px); font-weight:700; letter-spacing:-0.015em;}
-  .sec-sub{color:var(--paper-dim); font-size:14px; margin:-22px 0 36px; font-family:var(--mono); opacity:.85;}
+  .sec-sub{color:var(--scroll-ink-dim); font-size:14px; margin:-22px 0 36px; font-family:var(--mono); opacity:.85;}
 
   /* ---------- GALLERY ---------- */
   .gallery-grid{
@@ -998,14 +1007,14 @@
   @media(max-width:600px){ footer .footer-cta{ padding:40px 22px; } }
   footer .footer-title{
     font-family:var(--serif); font-size:clamp(21px,3vw,26px); font-weight:600;
-    color:var(--paper); margin-bottom:24px; letter-spacing:-0.01em;
+    color:var(--scroll-ink); margin-bottom:24px; letter-spacing:-0.01em;
   }
   footer .links{display:flex; gap:30px; flex-wrap:wrap; justify-content:center; font-size:14px;}
-  footer a{color:var(--paper-dim); transition:color .2s;}
+  footer a{color:var(--scroll-ink-dim); transition:color .2s;}
   footer a:hover{color:var(--amber);}
   .footer-link-btn{
     background:none; border:none; padding:0; cursor:pointer;
-    font-family:inherit; font-size:14px; color:var(--paper-dim); transition:color .2s;
+    font-family:inherit; font-size:14px; color:var(--scroll-ink-dim); transition:color .2s;
   }
   .footer-link-btn:hover{color:var(--amber);}
   .email-copy-wrap{ position:relative; display:inline-block; }
@@ -1033,7 +1042,7 @@
   }
   footer .request-link:hover{ filter:brightness(1.08); box-shadow:0 18px 38px -12px rgba(var(--amber-rgb),0.6); }
   footer .request-link:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; }
-  footer .copyright{margin-top:40px; color:var(--paper-dim); font-size:11px; font-family:var(--mono); opacity:.6; letter-spacing:0.02em;}
+  footer .copyright{margin-top:40px; color:var(--scroll-ink-dim); font-size:11px; font-family:var(--mono); opacity:.6; letter-spacing:0.02em;}
   footer .visit-count{display:block; margin-top:6px;}
   footer .footer-btn-row{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:32px;}
   footer .footer-btn-row .request-link{margin-top:0;}
@@ -1045,7 +1054,7 @@
   footer .request-link.ghost:hover{background:var(--amber); color:var(--ink); border-color:var(--amber); filter:none;}
   .cheer-widget{ margin-top:32px; padding-top:28px; border-top:1px solid var(--line); }
   .cheer-title{
-    font-family:var(--serif); font-size:15px; font-weight:600; color:var(--paper);
+    font-family:var(--serif); font-size:15px; font-weight:600; color:var(--scroll-ink);
     margin-bottom:14px;
   }
   .cheer-btn-row{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
@@ -1058,15 +1067,28 @@
   .cheer-amount:hover{ background:var(--amber); color:var(--ink); border-color:var(--amber); }
   .cheer-amount:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; }
   .cheer-note{
-    font-family:var(--mono); font-size:11px; color:var(--paper-dim); opacity:.75;
+    font-family:var(--mono); font-size:11px; color:var(--scroll-ink-dim); opacity:.75;
     margin-top:12px;
   }
 
   /* ---------- CHANGELOG ---------- */
-  .change-list{display:flex; flex-direction:column; gap:14px;}
+  .changelog-toggle{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:13px; font-weight:600;
+    color:var(--amber); background:transparent;
+    border:1px solid var(--line-strong); border-radius:999px;
+    padding:9px 18px; margin-bottom:22px; cursor:pointer;
+    transition:background .2s, border-color .2s;
+  }
+  .changelog-toggle:hover{ background:rgba(var(--amber-rgb),0.08); border-color:var(--amber); }
+  .changelog-toggle-caret{ display:inline-block; transition:transform .25s var(--ease); }
+  .changelog-toggle[aria-expanded="true"] .changelog-toggle-caret{ transform:rotate(180deg); }
+  .change-list{display:none; flex-direction:column; gap:14px;}
+  .change-list.is-open{display:flex; animation:cardSettle .4s var(--ease) both;}
+  @media (prefers-reduced-motion: reduce){ .change-list.is-open{ animation:none; } }
   .change-row{display:flex; gap:16px; align-items:baseline; border-bottom:1px solid var(--line); padding-bottom:14px;}
   .change-ver{font-family:var(--mono); color:var(--amber); font-size:13px; font-weight:700; flex-shrink:0; min-width:38px;}
-  .change-desc{font-size:14px; color:var(--paper-dim); line-height:1.65;}
+  .change-desc{font-size:14px; color:var(--scroll-ink-dim); line-height:1.65;}
   .log-cursor{display:inline-block; width:7px; height:14px; background:var(--amber); vertical-align:middle; animation:blink 1s step-end infinite;}
 
   /* ---------- PORTFOLIO MODAL ---------- */
@@ -1119,7 +1141,7 @@
 
   /* ---------- COMMIT LIST ---------- */
   .commit-list{display:flex; flex-direction:column; gap:4px;}
-  .commit-loading{color:var(--paper-dim); font-family:var(--mono); font-size:13px;}
+  .commit-loading{color:var(--scroll-ink-dim); font-family:var(--mono); font-size:13px;}
   .commit-row{
     display:flex; gap:14px; align-items:baseline;
     border-bottom:1px solid var(--line);
@@ -1131,8 +1153,8 @@
   .commit-row:hover{ background:rgba(var(--amber-rgb),0.07); border-color:transparent; }
   .commit-row:focus-visible{ outline:2px solid var(--amber); outline-offset:-2px; background:rgba(var(--amber-rgb),0.07); }
   .commit-row .c-hash{font-family:var(--mono); color:var(--amber); flex-shrink:0;}
-  .commit-row .c-msg{color:var(--paper); flex:1; min-width:0; overflow-wrap:break-word;}
-  .commit-row .c-repo{font-family:var(--mono); color:var(--paper-dim); font-size:11px; flex-shrink:0;}
+  .commit-row .c-msg{color:var(--scroll-ink); flex:1; min-width:0; overflow-wrap:break-word;}
+  .commit-row .c-repo{font-family:var(--mono); color:var(--scroll-ink-dim); font-size:11px; flex-shrink:0;}
   @media(max-width:480px){
     .commit-row{ flex-wrap:wrap; margin:0 -6px; padding:11px 6px; }
     .commit-row .c-repo{ flex-basis:100%; padding-left:56px; margin-top:-2px; }
@@ -1150,7 +1172,7 @@
   }
   .stack-item:hover{ border-color:var(--line-strong); transform:translateY(-2px); }
   .stack-item b{display:block; font-size:13px; margin-bottom:4px; color:var(--amber); font-family:var(--mono);}
-  .stack-item span{font-size:13px; color:var(--paper-dim);}
+  .stack-item span{font-size:13px; color:var(--scroll-ink-dim);}
 
   /* ---------- DIVIDER ---------- */
   .divider{ margin:8px 0; opacity:.6; }
@@ -1184,7 +1206,7 @@
     font-family:var(--mono); font-size:10px; letter-spacing:.08em;
     color:var(--teal); display:block; margin-bottom:4px;
   }
-  .otter-fact-text{ font-size:13px; color:var(--paper-dim); line-height:1.5; margin-bottom:8px; }
+  .otter-fact-text{ font-size:13px; color:var(--scroll-ink-dim); line-height:1.5; margin-bottom:8px; }
   .otter-fact-next{
     font-family:var(--mono); font-size:11px; letter-spacing:.02em;
     background:none; border:none; padding:0; cursor:pointer;
@@ -1704,7 +1726,7 @@
   .nav-dots button.active{ background:var(--amber); }
   .nav-dots button .dot-label{
     position:absolute; left:18px; top:50%; transform:translateY(-50%);
-    font-family:var(--mono); font-size:10px; color:var(--paper-dim);
+    font-family:var(--mono); font-size:10px; color:var(--scroll-ink-dim);
     white-space:nowrap; opacity:0; transition:opacity .2s;
   }
   .nav-dots button:hover .dot-label{ opacity:1; }
@@ -1753,7 +1775,7 @@
   /* ---------- SONG WIDGET ---------- */
   .song-widget{
     margin-top:14px;
-    font-family:var(--mono); font-size:12px; color:var(--paper-dim);
+    font-family:var(--mono); font-size:12px; color:var(--scroll-ink-dim);
     opacity:.75;
   }
 
@@ -1790,7 +1812,7 @@
   .side-rail .rail-label{
     writing-mode:vertical-rl;
     font-family:var(--mono); font-size:10px; letter-spacing:0.25em;
-    color:var(--paper-dim); opacity:.45;
+    color:var(--scroll-ink-dim); opacity:.45;
   }
   .side-rail.right .rail-label{transform:rotate(180deg);}
   @media(min-width:1180px){ .side-rail{display:flex;} }
@@ -2029,7 +2051,7 @@
         </defs>
         <path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>
         <path d="M 20 110 A 90 90 0 0 1 66 34" fill="none" stroke="url(#fuelGrad)" stroke-width="10" stroke-linecap="round"/>
-        <g stroke="var(--paper-dim)" stroke-width="2">
+        <g stroke="var(--scroll-ink-dim)" stroke-width="2">
           <line x1="20" y1="110" x2="30" y2="103"/>
           <line x1="35" y1="63" x2="44" y2="69"/>
           <line x1="66" y1="34" x2="72" y2="42"/>
@@ -2039,9 +2061,9 @@
           <line x1="200" y1="110" x2="190" y2="103"/>
         </g>
         <text x="24" y="128" font-family="var(--mono)" font-size="13" fill="var(--rose)">E</text>
-        <text x="190" y="128" font-family="var(--mono)" font-size="13" fill="var(--paper-dim)">F</text>
+        <text x="190" y="128" font-family="var(--mono)" font-size="13" fill="var(--scroll-ink-dim)">F</text>
         <g class="gauge-needle" style="transform-origin:110px 110px;">
-          <line x1="110" y1="110" x2="76" y2="51" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/>
+          <line x1="110" y1="110" x2="76" y2="51" stroke="var(--scroll-ink)" stroke-width="3" stroke-linecap="round"/>
         </g>
         <circle cx="110" cy="110" r="8" fill="var(--amber)"/>
       </svg>
@@ -2366,11 +2388,19 @@
   <section id="changelog" class="reveal slide-left">
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
-    <div class="change-list">
+    <button type="button" id="changelogToggle" class="changelog-toggle" aria-expanded="false" aria-controls="changeList">
+      <span data-en="Show update history">업데이트 기록 보기</span>
+      <span class="changelog-toggle-caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="change-list" id="changeList">
+      <div class="change-row">
+        <span class="change-ver">v2.31</span>
+        <span class="change-desc" data-en="This changelog is now collapsed by default behind a 'Show update history' button instead of always being expanded. Also: space/sky/ground now split the *entire* page's scroll into equal thirds (previously only the hero-to-SNS stretch, so ground still dominated everything below it) — this meant page text far beyond the hero also needed to adapt to the backdrop, so the same light/dark switch now covers the whole page, not just the hero, with a couple of real contrast bugs found and fixed in the process.">이 업데이트 기록도 이제 기본적으로 접혀 있고 '업데이트 기록 보기' 버튼을 눌러야 펼쳐짐. 그리고: 우주·하늘·땅이 이제 히어로~SNS 구간이 아니라 페이지 전체 스크롤을 기준으로 정확히 1/3씩 나눠 가짐 (기존엔 그 구간만 1/3씩이라 이후 페이지 전체는 계속 땅이었음) — 이제 히어로 밖의 본문 텍스트도 배경에 맞춰 색이 바뀌어야 해서, 밝기 전환에 따른 글자색 전환을 페이지 전체로 확장하면서 실제 대비 버그 몇 개를 발견해 함께 수정</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
       <div class="change-row">
         <span class="change-ver">v2.30</span>
         <span class="change-desc" data-en="Fixed the intro splash name/subtitle, which used a near-black color against its own near-black backdrop in light mode — now a bright, gently-glowing gold on a properly dark curtain. Space/sky/ground now each get an equal third of the scroll range instead of ground dominating; also fixed a hysteresis bug that could leave hero text stuck dark over the space backdrop after scrolling back up partway. Added more scene detail — a distant asteroid in space, drifting birds in the sky, and a few sunflowers on the ground.">인트로 스플래시 이름/부제 텍스트가 라이트모드에서 배경(거의 검정)과 같은 색(거의 검정)을 쓰고 있어서 거의 안 보이던 문제 발견 — 은은하게 빛나는 밝은 골드색으로, 배경은 제대로 된 검정으로 수정. 우주·하늘·땅 배경 길이를 정확히 1/3씩 동일하게 재조정 (기존엔 땅이 과도하게 길었음), 스크롤을 일부만 되돌렸을 때 히어로 텍스트가 우주 배경 위에서 어두운 색으로 눌러붙어 안 보이던 히스테리시스 버그도 함께 수정. 배경 디테일 추가 — 우주에 멀리 있는 소행성, 하늘엔 날아다니는 새, 땅에는 해바라기 몇 송이</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.29</span>
@@ -3003,7 +3033,7 @@
     list.innerHTML = '';
     if (fromCache) {
       const note = document.createElement('p');
-      note.className = 'paper-dim-note';
+      note.className = 'scroll-dim-note';
       note.style.marginBottom = '6px';
       note.textContent = currentLang === 'en' ? `(cached, ${timeAgoText(ts)})` : `(캐시됨, ${timeAgoText(ts)})`;
       list.appendChild(note);
@@ -3281,8 +3311,10 @@
   function isLightMode(){ return document.documentElement.getAttribute('data-theme') !== 'dark'; }
 
   /* ---- ALTITUDE SCENE (light mode only): the page background scrolls from
-     space (top), through sky, down to ground — fully landed by the bottom of the
-     SNS section, then staying "ground" for the rest of the (very long) page.
+     space (top), through sky, down to ground — space/sky/ground each get an
+     equal third of the *entire page's* scroll range, so ground doesn't end up
+     dominating just because the page is long. Text color (--scroll-ink, see
+     :root) follows the same three thirds, site-wide, not just in the hero.
      Dark mode is untouched: it keeps its own fixed near-black + star-canvas look. */
   function initAltitude(){
     const clouds = document.getElementById('skyClouds');
@@ -3294,9 +3326,8 @@
     const asteroidEl = document.getElementById('altAsteroid');
     const birdsEl = document.getElementById('skyBirds');
     const groundEl = document.getElementById('altGround');
-    const snsEl = document.getElementById('sns');
-    const heroEl = document.querySelector('.hero');
-    if (!clouds || !planetEl || !starsEl || !sparklesEl || !nebulaEl || !moonEl || !asteroidEl || !birdsEl || !groundEl || !snsEl || !heroEl) return;
+    const root = document.documentElement;
+    if (!clouds || !planetEl || !starsEl || !sparklesEl || !nebulaEl || !moonEl || !asteroidEl || !birdsEl || !groundEl) return;
 
     // Space / sky / ground each get an equal third of the total scroll range.
     const SPACE_END = 1/3, SKY_END = 2/3;
@@ -3313,18 +3344,29 @@
     // (interests, changelog, guestbook, …), and at the original saturation
     // the darkest stop only cleared ~2.1:1 contrast against --paper-dim text
     // (measured via the WCAG relative-luminance formula), well under the
-    // 4.5:1 AA floor for normal-size text. See TEXT_LIGHT_DIM below too —
-    // this alone wasn't enough headroom without going pale enough to lose
-    // the "grass" feel, so the dim text color was darkened to match.
+    // 4.5:1 AA floor for normal-size text. This alone wasn't enough headroom
+    // without going pale enough to lose the "grass" feel — see
+    // TEXT_LIGHT_DIM below for the other half of that fix.
     const GROUND = { top:[213,236,218], mid:[174,217,183], bottom:[147,194,157] };
-    // Bare hero text (h1.name, .lede, .motto, stat labels…) needs to stay legible
-    // against the dark space background too — these match dark theme's own
-    // --paper/--paper-dim values, fading back to the normal light-theme dark text
-    // as the background lightens into "sky".
-    const TEXT_SPACE = [242,241,238], TEXT_SPACE_DIM = [139,138,134];
-    // TEXT_LIGHT_DIM mirrors --paper-dim (see :root) — kept in sync so the hero's
-    // dim text and the rest of the page's dim text read as the same tone.
-    const TEXT_LIGHT = [24,24,28],    TEXT_LIGHT_DIM = [66,63,58];
+    // Bare page text — the hero's, and now (since the whole page scrolls
+    // through space/sky/ground, not just the hero) every other section's too
+    // — needs to stay legible against whatever's currently behind it.
+    const TEXT_SPACE = [242,241,238], TEXT_LIGHT = [24,24,28];
+    // --scroll-ink-dim's two tones sit much closer to primary than
+    // --paper-dim's own (fixed, opaque-card-only) 66/63/58 vs 242/241/238
+    // spread. That's deliberate, not a rounding accident: brute-force search
+    // (see contrast_search5.js in this session's validation scratch work)
+    // over threshold pairs found that a true "dim" tone — legible-but-quieter
+    // like --paper-dim — cannot clear even ~1.7:1 worst-case against a
+    // background that continuously sweeps the *entire* dark-space-to-bright-
+    // sky range (this is now a real range: the whole page scrolls through it,
+    // not just the hero). Pushing the dim tones close to the primary ones
+    // (242→230, 24→24, i.e. sacrificing most of the primary/dim contrast
+    // *between each other* for the sake of contrast *against the backdrop*)
+    // recovers ~3.7:1. Once fully landed on ground, this still reads slightly
+    // bolder than --paper-dim's own tone elsewhere in opaque cards — a minor
+    // cosmetic tradeoff for not having secondary text vanish mid-scroll.
+    const TEXT_SPACE_DIM = [230,229,226], TEXT_LIGHT_DIM = [24,24,28];
 
     function lerp(a, b, t){ return Math.round(a + (b - a) * t); }
     function lerpRGB(c1, c2, t){ return [lerp(c1[0],c2[0],t), lerp(c1[1],c2[1],t), lerp(c1[2],c2[2],t)]; }
@@ -3333,7 +3375,7 @@
     // Perceived brightness (0=black, 1=white) of an [r,g,b] triple.
     function brightness(c){ return (0.299*c[0] + 0.587*c[1] + 0.114*c[2]) / 255; }
 
-    // Text color: a hard on/off switch between TEXT_SPACE and TEXT_LIGHT, not a
+    // Text color: a hard on/off switch between the two tones above, not a
     // continuous blend. This was tried as a smooth blend first (tracking
     // brightness through a steep logistic curve) and measured against the
     // actual WCAG contrast formula — but ANY continuous interpolation between
@@ -3342,38 +3384,37 @@
     // a moment where both text and background sit at the same medium gray —
     // contrast ratio ~1:1 right at that crossing, no matter how steep the
     // curve. A hard switch (with a wide hysteresis band so it doesn't flicker)
-    // never lets text sit at an in-between gray, which raises the worst-case
-    // contrast across the whole scroll from ~1:1 to ~3.6:1 — confirmed by
-    // brute-force search over the threshold pair against this exact palette
-    // (see contrast_search2.js in this session's validation scratch work).
-    // The remaining dip right at the flip (a mid-gray bg is just hard for any
-    // fixed two-tone text to read against) is covered by the glow below, which
-    // intensifies specifically in that zone.
+    // never lets text sit at an in-between gray.
     //
-    // The switch itself is keyed off scroll fraction (p), not live brightness.
-    // An earlier version compared bgBrightness to a threshold pair, but at the
-    // very top of the page brightness sat only ~0.005 below the "flip back to
-    // light text" threshold — so scrolling back up from the sky/ground even a
-    // few px short of literal scrollY=0 would fail to flip, leaving dark text
-    // stuck over the space backdrop (near-invisible, same failure mode this
-    // whole hard-switch was built to avoid). p moves in lockstep with
-    // brightness but isn't subject to that razor-thin margin, so the band
-    // below has real width regardless of exact palette values.
+    // The switch is keyed off live background brightness, with the low
+    // threshold kept a real margin *above* the brightness at the very top of
+    // the page (~0.05 with the current near-black SPACE.top) — a earlier
+    // version set it only ~0.005 above that floor, so scrolling back up
+    // anywhere short of literal scrollY=0 failed to flip back to light text,
+    // leaving it stuck dark over the space backdrop. Both threshold pairs
+    // below (and the color choices above) came from the same brute-force
+    // search, which also simulates a full scroll-down-then-back-up-to-the-
+    // top round trip and discards any threshold pair that doesn't reliably
+    // land back on light text at the top.
     let textIsDark = false;
-    const P_FLIP_LIGHT = 0.08, P_FLIP_DARK = 0.24; // hysteresis band, in scroll fraction
-    function pickTextIsDark(p){
-      if (textIsDark && p < P_FLIP_LIGHT) textIsDark = false;
-      else if (!textIsDark && p > P_FLIP_DARK) textIsDark = true;
+    const TEXT_LOW = 0.09, TEXT_HIGH = 0.46; // worst-case ~3.9:1 (primary) / ~3.7:1 (dim)
+    function pickTextIsDark(bgBrightness){
+      if (textIsDark && bgBrightness < TEXT_LOW) textIsDark = false;
+      else if (!textIsDark && bgBrightness > TEXT_HIGH) textIsDark = true;
       return textIsDark;
     }
 
-    // rangeEnd = absolute page Y where the transition should be fully "landed".
-    // Re-measured on resize only (never inside the scroll/render loop, to avoid
-    // forcing a layout read on every scroll tick).
+    // rangeEnd = the page's total scrollable distance (document height minus
+    // viewport height) — space/sky/ground each land on an equal third of
+    // *this*, so the effect spans the whole page instead of finishing early
+    // and leaving "ground" to just sit there for everything after. Re-measured
+    // on resize only (never inside the scroll/render loop, to avoid forcing a
+    // layout read on every scroll tick). Gallery grid rows are a fixed height
+    // (not sized by their lazy-loaded images), so document height is stable
+    // without needing a 'load' listener too.
     let rangeEnd = 1;
     function measure(){
-      const rect = snsEl.getBoundingClientRect();
-      rangeEnd = Math.max(1, window.scrollY + rect.bottom);
+      rangeEnd = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     }
     measure();
     window.addEventListener('resize', debounce(measure, 200));
@@ -3383,9 +3424,9 @@
         // Dark mode: let the CSS (--ink / --paper / star-canvas) take back over.
         document.body.style.background = '';
         document.documentElement.style.removeProperty('--scrim-tint');
-        heroEl.style.removeProperty('--hero-ink');
-        heroEl.style.removeProperty('--hero-ink-dim');
-        heroEl.style.removeProperty('--hero-shadow');
+        root.style.removeProperty('--scroll-ink');
+        root.style.removeProperty('--scroll-ink-dim');
+        root.style.removeProperty('--scroll-shadow');
         return;
       }
       const p = Math.min(1, Math.max(0, window.scrollY / rangeEnd));
@@ -3419,14 +3460,12 @@
       asteroidEl.style.opacity = spaceFade * 0.7;
 
       // Text tracks the brightness of the part of the backdrop it actually sits
-      // over — the hero copy runs from just below the top stop down to around
-      // the 45% ("mid") stop, so average the two rather than picking either
-      // alone. (Still used for the glow's intensity below — only the on/off
-      // switch itself moved to scroll-fraction, see pickTextIsDark's comment.)
+      // over — the viewport spans from the top stop down to around the 45%
+      // ("mid") stop, so average the two rather than picking either alone.
       const heroBgBrightness = (brightness(topRGB) + brightness(midRGB)) / 2;
-      const isDark = pickTextIsDark(p);
-      heroEl.style.setProperty('--hero-ink', isDark ? rgbStr(TEXT_LIGHT) : rgbStr(TEXT_SPACE));
-      heroEl.style.setProperty('--hero-ink-dim', isDark ? rgbStr(TEXT_LIGHT_DIM) : rgbStr(TEXT_SPACE_DIM));
+      const isDark = pickTextIsDark(heroBgBrightness);
+      root.style.setProperty('--scroll-ink', isDark ? rgbStr(TEXT_LIGHT) : rgbStr(TEXT_SPACE));
+      root.style.setProperty('--scroll-ink-dim', isDark ? rgbStr(TEXT_LIGHT_DIM) : rgbStr(TEXT_SPACE_DIM));
       // The glow's own color matches whichever side just switched away from
       // (dark glow behind light text, light glow behind dark text) — but its
       // OPACITY ramps up specifically when the backdrop is near mid-gray,
@@ -3436,7 +3475,7 @@
       const grayness = Math.max(0, 1 - Math.abs(heroBgBrightness - 0.5) * 6); // 1 at bg≈0.5, 0 by bg≈0.33/0.67
       const glowAlpha = (0.28 + 0.6 * grayness).toFixed(2);
       const glowRGB = isDark ? [255,255,255] : [0,0,0];
-      heroEl.style.setProperty('--hero-shadow', `rgba(${glowRGB[0]},${glowRGB[1]},${glowRGB[2]},${glowAlpha})`);
+      root.style.setProperty('--scroll-shadow', `rgba(${glowRGB[0]},${glowRGB[1]},${glowRGB[2]},${glowAlpha})`);
 
       // Clouds (and birds, which share the same sky band) fade in through the
       // back half of the space third, hold through the whole sky third, then
@@ -3584,6 +3623,22 @@
       aichatInputEl.placeholder = currentLang === 'en' ? 'Ask me anything…' : '궁금한 걸 물어보세요…';
     }
   });
+
+  /* ---- CHANGELOG TOGGLE (collapsed by default) ---- */
+  const changelogToggle = document.getElementById('changelogToggle');
+  const changeList = document.getElementById('changeList');
+  if (changelogToggle && changeList) {
+    const toggleLabel = changelogToggle.querySelector('span[data-en]');
+    changelogToggle.addEventListener('click', () => {
+      const open = changeList.classList.toggle('is-open');
+      changelogToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (toggleLabel) {
+        toggleLabel.dataset.kr = open ? '업데이트 기록 접기' : '업데이트 기록 보기';
+        toggleLabel.dataset.en = open ? 'Hide update history' : 'Show update history';
+        toggleLabel.textContent = currentLang === 'en' ? toggleLabel.dataset.en : toggleLabel.dataset.kr;
+      }
+    });
+  }
 
   /* ---- FONT SIZE TOGGLE (zoom-based, Chrome/Safari/Edge) ---- */
   const fsButtons = document.querySelectorAll('.fontsize-panel button');
