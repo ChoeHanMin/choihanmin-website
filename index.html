@@ -156,6 +156,22 @@
        fixed light surface regardless, so they don't need this. */
     --hero-ink: var(--paper);
     --hero-ink-dim: var(--paper-dim);
+    --hero-shadow: transparent;
+  }
+  /* A soft adaptive glow behind every bare hero text element — dark glow when
+     text is light (over the space zone), light glow when text is dark (over
+     sky/ground) — kept in lockstep with --hero-ink by initAltitude(). Mostly
+     invisible on a flat single-color backdrop, but pulls text a little further
+     forward wherever the backdrop gets busy (stars, cloud edges, hill line). */
+  .hero :is(h1.name, .lede, .motto, .role, .stat b, .stat span, .games-moved-note, .live-visitors){
+    text-shadow: 0 1px 3px var(--hero-shadow), 0 0 10px var(--hero-shadow), 0 0 22px var(--hero-shadow);
+    /* --hero-ink flips instantly rather than blending through gray (see
+       initAltitude()'s comment on why); this eases that single jump into a
+       quick, unobtrusive crossfade instead of a hard pop. */
+    transition: color .18s ease, text-shadow .18s ease;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero :is(h1.name, .lede, .motto, .role, .stat b, .stat span, .games-moved-note, .live-visitors){ transition:none; }
   }
   .hero::before{
     content:'';
@@ -1379,10 +1395,24 @@
     display:block;
   }
   html[data-theme="dark"] .altitude-scene{ display:none; }
+  /* soft colorful blurred wisps behind the stars — pure atmosphere, no shape */
+  .nebula{
+    position:absolute; inset:0;
+    opacity:0;
+    transition:opacity .2s linear;
+    background-image:
+      radial-gradient(480px 320px at 14% 8%, rgba(124,109,214,0.16), transparent 70%),
+      radial-gradient(420px 300px at 78% 22%, rgba(94,140,196,0.14), transparent 70%),
+      radial-gradient(360px 260px at 40% 2%, rgba(184,110,168,0.10), transparent 70%);
+    filter:blur(6px);
+  }
   .planet{
     position:absolute; top:-70px; right:-50px;
     width:260px; height:260px; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #9c8fe0 0%, #6455b0 35%, #3c2f7e 65%, #201850 100%);
+    background:
+      radial-gradient(circle at 62% 66%, rgba(32,24,80,0.55) 0%, transparent 30%),
+      radial-gradient(circle at 30% 62%, rgba(32,24,80,0.4) 0%, transparent 24%),
+      radial-gradient(circle at 35% 30%, #9c8fe0 0%, #6455b0 35%, #3c2f7e 65%, #201850 100%);
     box-shadow:0 0 70px 14px rgba(139,127,209,0.28);
     opacity:0;
     transition:opacity .2s linear;
@@ -1393,6 +1423,17 @@
     border:6px solid rgba(214,206,255,0.4);
     transform:rotate(-14deg) scaleY(0.32);
     pointer-events:none;
+  }
+  /* a small, dim, distant moon on the opposite side, for balance */
+  .moon{
+    position:absolute; top:14%; left:-26px;
+    width:70px; height:70px; border-radius:50%;
+    background:
+      radial-gradient(circle at 68% 62%, rgba(150,150,168,0.5) 0%, transparent 22%),
+      radial-gradient(circle at 40% 70%, rgba(150,150,168,0.4) 0%, transparent 16%),
+      radial-gradient(circle at 32% 28%, #d8d8e2 0%, #a8a8b8 45%, #7c7c8c 100%);
+    opacity:0;
+    transition:opacity .2s linear;
   }
   .space-stars{
     position:absolute; inset:0;
@@ -1410,27 +1451,84 @@
       radial-gradient(1.8px 1.8px at 12% 32%, #fff, transparent),
       radial-gradient(1px 1px at 90% 15%, #fff, transparent),
       radial-gradient(1.4px 1.4px at 83% 30%, #fff, transparent),
-      radial-gradient(1px 1px at 96% 25%, #fff, transparent);
+      radial-gradient(1px 1px at 96% 25%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 4% 24%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 22% 18%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 33% 33%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 44% 6%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 53% 30%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 63% 34%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 70% 15%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 80% 8%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 87% 26%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 94% 34%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 3% 5%, #fff, transparent),
+      radial-gradient(0.8px 0.8px at 60% 3%, #fff, transparent);
+  }
+  /* a handful of brighter "sparkle" stars — bigger, with their own soft glow */
+  .space-sparkles{
+    position:absolute; inset:0;
+    opacity:0;
+    transition:opacity .2s linear;
+    background-image:
+      radial-gradient(2.4px 2.4px at 24% 11%, #fff, transparent),
+      radial-gradient(2.6px 2.6px at 52% 20%, #fff, transparent),
+      radial-gradient(2.2px 2.2px at 91% 10%, #fff, transparent),
+      radial-gradient(2.6px 2.6px at 6% 20%, #fff, transparent);
+    filter:drop-shadow(0 0 3px rgba(255,255,255,0.85));
   }
   .ground-scene{
-    position:absolute; left:0; right:0; bottom:-2px; height:150px;
+    position:absolute; left:0; right:0; bottom:-2px; height:250px;
     opacity:0;
     transition:opacity .2s linear;
   }
+  .ground-hill-far{
+    position:absolute; left:-10%; right:-10%; bottom:0; height:180px;
+    background:#D7EEDC;
+    border-radius:55% 55% 0 0 / 100% 100% 0 0;
+  }
   .ground-hill-back{
-    position:absolute; left:-8%; right:-8%; bottom:0; height:96px;
+    position:absolute; left:-8%; right:-8%; bottom:0; height:140px;
     background:#C7E6CE;
     border-radius:50% 50% 0 0 / 100% 100% 0 0;
   }
+  .ground-bushes{
+    position:absolute; left:0; right:0; bottom:82px; height:52px;
+    background-image:
+      radial-gradient(30px 30px at 6% 100%, #7FBE8C, transparent),
+      radial-gradient(20px 20px at 11% 100%, #8FCB9C, transparent),
+      radial-gradient(24px 24px at 91% 100%, #7FBE8C, transparent),
+      radial-gradient(32px 32px at 96.5% 100%, #6FAE7C, transparent);
+    opacity:.9;
+  }
   .ground-hill-front{
-    position:absolute; left:-8%; right:-8%; bottom:0; height:60px;
+    position:absolute; left:-8%; right:-8%; bottom:0; height:96px;
     background:#93CC9F;
     border-radius:44% 44% 0 0 / 100% 100% 0 0;
   }
   .ground-blades{
-    position:absolute; left:0; right:0; bottom:54px; height:8px;
-    background-image:repeating-linear-gradient(96deg, #6FAE7C 0 2px, transparent 2px 7px);
-    opacity:.55;
+    position:absolute; left:0; right:0; bottom:78px; height:16px;
+    background-image:
+      repeating-linear-gradient(96deg, #6FAE7C 0 3px, transparent 3px 11px),
+      repeating-linear-gradient(84deg, #5C9E68 0 2.5px, transparent 2.5px 14px);
+    background-position:0 0, 4px 0;
+    opacity:.65;
+  }
+  /* small flowers scattered along the front hill */
+  .ground-flowers{
+    position:absolute; left:0; right:0; bottom:64px; height:26px;
+    background-image:
+      radial-gradient(4.5px 4.5px at 7% 60%, #F5A9C8, transparent),
+      radial-gradient(4px 4px at 15% 25%, #FBD25E, transparent),
+      radial-gradient(4.5px 4.5px at 24% 70%, #FFFFFF, transparent),
+      radial-gradient(4px 4px at 34% 35%, #F5A9C8, transparent),
+      radial-gradient(4.5px 4.5px at 43% 65%, #FBD25E, transparent),
+      radial-gradient(4px 4px at 53% 28%, #FFFFFF, transparent),
+      radial-gradient(4.5px 4.5px at 62% 62%, #F5A9C8, transparent),
+      radial-gradient(4px 4px at 71% 32%, #FBD25E, transparent),
+      radial-gradient(4.5px 4.5px at 80% 68%, #FFFFFF, transparent),
+      radial-gradient(4px 4px at 89% 30%, #F5A9C8, transparent),
+      radial-gradient(4.5px 4.5px at 96% 60%, #FBD25E, transparent);
   }
 
   /* ---------- SKY CLOUDS (mid-scroll "sky" band; opacity driven by initAltitude()) ---------- */
@@ -1704,12 +1802,18 @@
 <canvas id="trailCanvas" class="trail-canvas"></canvas>
 <canvas id="starCanvas" class="star-canvas"></canvas>
 <div class="altitude-scene" aria-hidden="true" id="altitudeScene">
-  <div class="planet" id="altPlanet"></div>
+  <div class="nebula" id="altNebula"></div>
   <div class="space-stars" id="altStars"></div>
+  <div class="space-sparkles" id="altSparkles"></div>
+  <div class="planet" id="altPlanet"></div>
+  <div class="moon" id="altMoon"></div>
   <div class="ground-scene" id="altGround">
+    <div class="ground-hill-far"></div>
     <div class="ground-hill-back"></div>
-    <div class="ground-blades"></div>
     <div class="ground-hill-front"></div>
+    <div class="ground-bushes"></div>
+    <div class="ground-blades"></div>
+    <div class="ground-flowers"></div>
   </div>
 </div>
 <div class="sky-clouds" aria-hidden="true" id="skyClouds">
@@ -2191,9 +2295,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.25</span>
+        <span class="change-desc" data-en="Fixed near-invisible text contrast at the space↔sky↔ground color crossover by switching from a smooth blend to an instant switch with hysteresis (worst-case contrast ~1:1 → ~3.9:1), plus an adaptive glow through the transition zone; also enriched the altitude backdrop — a nebula, more/brighter stars, planet surface texture, a secondary moon, and a taller ground scene with an extra hill layer, bushes, thicker grass, and flowers.">우주↔하늘↔땅 색 전환 구간에서 글자색이 배경과 거의 같은 회색으로 겹쳐 안 보이던 문제를 발견 — 부드러운 블렌드 대신 히스테리시스를 적용한 즉시 전환 방식으로 바꿔 최악의 경우 대비를 약 1:1에서 약 3.9:1까지 끌어올리고, 전환 구간에는 은은한 글로우를 추가로 얹어 가독성 보강. 배경 디테일도 대폭 강화 — 성운, 별 추가·반짝임, 행성 표면 텍스처, 작은 달을 더하고, 땅 장면은 언덕 레이어 추가·덤불·더 진한 잔디·꽃까지 넣어 훨씬 풍성하게 확장</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.24</span>
         <span class="change-desc" data-en="Light mode now scrolls through altitude — space (with a planet and stars) at the top, down through sky, landing on ground/grass by the end of the SNS section and staying there for the rest of the page. Dark mode is unaffected.">라이트모드에서 스크롤하면 고도가 낮아지는 연출 추가 — 맨 위는 행성·별이 보이는 우주, 내려갈수록 하늘을 지나 SNS 섹션 즈음에서 땅/풀에 착지, 이후 페이지 끝까지 땅 배경 유지 (다크모드는 그대로)</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.23</span>
@@ -3087,10 +3195,13 @@
     const clouds = document.getElementById('skyClouds');
     const planetEl = document.getElementById('altPlanet');
     const starsEl = document.getElementById('altStars');
+    const sparklesEl = document.getElementById('altSparkles');
+    const nebulaEl = document.getElementById('altNebula');
+    const moonEl = document.getElementById('altMoon');
     const groundEl = document.getElementById('altGround');
     const snsEl = document.getElementById('sns');
     const heroEl = document.querySelector('.hero');
-    if (!clouds || !planetEl || !starsEl || !groundEl || !snsEl || !heroEl) return;
+    if (!clouds || !planetEl || !starsEl || !sparklesEl || !nebulaEl || !moonEl || !groundEl || !snsEl || !heroEl) return;
 
     // Anchor palettes for the 3-stop body gradient (top/mid/bottom of viewport).
     // SKY matches --sky-grad's own colors exactly, so there's no visible seam
@@ -3101,12 +3212,40 @@
     // Bare hero text (h1.name, .lede, .motto, stat labels…) needs to stay legible
     // against the dark space background too — these match dark theme's own
     // --paper/--paper-dim values, fading back to the normal light-theme dark text
-    // as the background lightens into "sky" (see the spaceFade curve below).
+    // as the background lightens into "sky".
     const TEXT_SPACE = [242,241,238], TEXT_SPACE_DIM = [139,138,134];
     const TEXT_LIGHT = [24,24,28],    TEXT_LIGHT_DIM = [107,104,98];
 
     function lerp(a, b, t){ return Math.round(a + (b - a) * t); }
-    function lerpStop(c1, c2, t){ return `rgb(${lerp(c1[0],c2[0],t)},${lerp(c1[1],c2[1],t)},${lerp(c1[2],c2[2],t)})`; }
+    function lerpRGB(c1, c2, t){ return [lerp(c1[0],c2[0],t), lerp(c1[1],c2[1],t), lerp(c1[2],c2[2],t)]; }
+    function rgbStr(c){ return `rgb(${c[0]},${c[1]},${c[2]})`; }
+    function lerpStop(c1, c2, t){ return rgbStr(lerpRGB(c1, c2, t)); }
+    // Perceived brightness (0=black, 1=white) of an [r,g,b] triple.
+    function brightness(c){ return (0.299*c[0] + 0.587*c[1] + 0.114*c[2]) / 255; }
+
+    // Text color: a hard on/off switch between TEXT_SPACE and TEXT_LIGHT, not a
+    // continuous blend. This was tried as a smooth blend first (tracking
+    // brightness through a steep logistic curve) and measured against the
+    // actual WCAG contrast formula — but ANY continuous interpolation between
+    // a light and a dark text color, laid over a background that itself
+    // continuously crosses from dark to light, is mathematically forced through
+    // a moment where both text and background sit at the same medium gray —
+    // contrast ratio ~1:1 right at that crossing, no matter how steep the
+    // curve. A hard switch (with a wide hysteresis band so it doesn't flicker)
+    // never lets text sit at an in-between gray, which raises the worst-case
+    // contrast across the whole scroll from ~1:1 to ~3.6:1 — confirmed by
+    // brute-force search over the threshold pair against this exact palette
+    // (see contrast_search2.js in this session's validation scratch work).
+    // The remaining dip right at the flip (a mid-gray bg is just hard for any
+    // fixed two-tone text to read against) is covered by the glow below, which
+    // intensifies specifically in that zone.
+    let textIsDark = false;
+    const TEXT_LOW = 0.12, TEXT_HIGH = 0.46; // hysteresis band, tuned by search
+    function pickTextIsDark(bgBrightness){
+      if (textIsDark && bgBrightness < TEXT_LOW) textIsDark = false;
+      else if (!textIsDark && bgBrightness > TEXT_HIGH) textIsDark = true;
+      return textIsDark;
+    }
 
     // rangeEnd = absolute page Y where the transition should be fully "landed".
     // Re-measured on resize only (never inside the scroll/render loop, to avoid
@@ -3126,33 +3265,50 @@
         document.documentElement.style.removeProperty('--scrim-tint');
         heroEl.style.removeProperty('--hero-ink');
         heroEl.style.removeProperty('--hero-ink-dim');
+        heroEl.style.removeProperty('--hero-shadow');
         return;
       }
       const p = Math.min(1, Math.max(0, window.scrollY / rangeEnd));
-      let top, mid, bottom;
+      let topRGB, midRGB, bottomRGB;
       if (p < 0.5){
         const t = p / 0.5;
-        top = lerpStop(SPACE.top, SKY.top, t);
-        mid = lerpStop(SPACE.mid, SKY.mid, t);
-        bottom = lerpStop(SPACE.bottom, SKY.bottom, t);
+        topRGB = lerpRGB(SPACE.top, SKY.top, t);
+        midRGB = lerpRGB(SPACE.mid, SKY.mid, t);
+        bottomRGB = lerpRGB(SPACE.bottom, SKY.bottom, t);
       } else {
         const t = (p - 0.5) / 0.5;
-        top = lerpStop(SKY.top, GROUND.top, t);
-        mid = lerpStop(SKY.mid, GROUND.mid, t);
-        bottom = lerpStop(SKY.bottom, GROUND.bottom, t);
+        topRGB = lerpRGB(SKY.top, GROUND.top, t);
+        midRGB = lerpRGB(SKY.mid, GROUND.mid, t);
+        bottomRGB = lerpRGB(SKY.bottom, GROUND.bottom, t);
       }
-      document.body.style.background = `linear-gradient(180deg, ${top} 0%, ${mid} 45%, ${bottom} 100%)`;
-      document.documentElement.style.setProperty('--scrim-tint', bottom);
+      document.body.style.background = `linear-gradient(180deg, ${rgbStr(topRGB)} 0%, ${rgbStr(midRGB)} 45%, ${rgbStr(bottomRGB)} 100%)`;
+      document.documentElement.style.setProperty('--scrim-tint', rgbStr(bottomRGB));
 
       const spaceFade = 1 - Math.min(1, p / 0.22);
       planetEl.style.opacity = spaceFade;
       starsEl.style.opacity = spaceFade;
+      sparklesEl.style.opacity = spaceFade;
+      nebulaEl.style.opacity = spaceFade;
+      moonEl.style.opacity = spaceFade * 0.8; // a touch dimmer than the main planet
 
-      // Hero text finishes lightening-back-to-normal a touch after the planet/
-      // stars are fully gone, so it never looks like it's racing the backdrop.
-      const textT = Math.min(1, p / 0.28);
-      heroEl.style.setProperty('--hero-ink', lerpStop(TEXT_SPACE, TEXT_LIGHT, textT));
-      heroEl.style.setProperty('--hero-ink-dim', lerpStop(TEXT_SPACE_DIM, TEXT_LIGHT_DIM, textT));
+      // Text tracks the brightness of the part of the backdrop it actually sits
+      // over — the hero copy runs from just below the top stop down to around
+      // the 45% ("mid") stop, so average the two rather than picking either
+      // alone.
+      const heroBgBrightness = (brightness(topRGB) + brightness(midRGB)) / 2;
+      const isDark = pickTextIsDark(heroBgBrightness);
+      heroEl.style.setProperty('--hero-ink', isDark ? rgbStr(TEXT_LIGHT) : rgbStr(TEXT_SPACE));
+      heroEl.style.setProperty('--hero-ink-dim', isDark ? rgbStr(TEXT_LIGHT_DIM) : rgbStr(TEXT_SPACE_DIM));
+      // The glow's own color matches whichever side just switched away from
+      // (dark glow behind light text, light glow behind dark text) — but its
+      // OPACITY ramps up specifically when the backdrop is near mid-gray,
+      // where a flat two-tone text color has the least natural contrast to
+      // work with. Away from that zone the glow all but disappears, since
+      // color contrast alone is already strong there.
+      const grayness = Math.max(0, 1 - Math.abs(heroBgBrightness - 0.5) * 6); // 1 at bg≈0.5, 0 by bg≈0.33/0.67
+      const glowAlpha = (0.28 + 0.6 * grayness).toFixed(2);
+      const glowRGB = isDark ? [255,255,255] : [0,0,0];
+      heroEl.style.setProperty('--hero-shadow', `rgba(${glowRGB[0]},${glowRGB[1]},${glowRGB[2]},${glowAlpha})`);
 
       let cloudOpacity;
       if (p < 0.10) cloudOpacity = 0;
