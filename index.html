@@ -98,7 +98,7 @@
        the mobile bottom scrim. */
     --sky-solid:#DCEEFC;
     --sky-grad: linear-gradient(180deg, #EAF6FF 0%, #DCEEFC 45%, #CDE7F8 100%);
-    --space-solid:#0A1128;
+    --space-solid:#08080D;
   }
   /* ---------- DARK THEME (alt): same restrained accent trio, refined
      near-black ground — no neon glow, just a quieter room ---------- */
@@ -1363,18 +1363,31 @@
   }
   .intro-name{
     font-family:var(--serif); font-weight:700;
-    font-size:clamp(28px, 6vw, 46px); color:var(--paper);
+    font-size:clamp(28px, 6vw, 46px);
+    /* Was var(--paper) — light theme's --paper is near-black, meant for text
+       on a light card, but this overlay's background is --space-solid (near
+       black). Near-black on near-black was almost invisible. Fixed gold reads
+       clearly against the dark curtain regardless of theme. */
+    color:#F4C542;
     letter-spacing:0.01em;
+    animation:introGoldGlow 2.4s ease-in-out infinite;
   }
   .intro-sub{
-    font-family:var(--mono); font-size:13px; color:var(--amber);
+    font-family:var(--mono); font-size:13px; color:#F4C542;
     letter-spacing:0.12em;
+    opacity:.85;
   }
   @keyframes introPulse{
     0%{ opacity:0; transform:scale(.85); }
     40%{ opacity:1; transform:scale(1.04); }
     100%{ opacity:1; transform:scale(1); }
   }
+  /* Subtle breathing glow, not a moving shine sweep */
+  @keyframes introGoldGlow{
+    0%,100%{ text-shadow:0 0 12px rgba(244,197,66,0.4), 0 0 26px rgba(244,197,66,0.18); }
+    50%{ text-shadow:0 0 20px rgba(244,197,66,0.7), 0 0 40px rgba(244,197,66,0.36); }
+  }
+  @media (prefers-reduced-motion: reduce){ .intro-name{ animation:none; text-shadow:0 0 16px rgba(244,197,66,0.5); } }
 
   /* ---------- STAR CANVAS (dark mode only) ---------- */
   .star-canvas{
@@ -1432,6 +1445,18 @@
       radial-gradient(circle at 68% 62%, rgba(150,150,168,0.5) 0%, transparent 22%),
       radial-gradient(circle at 40% 70%, rgba(150,150,168,0.4) 0%, transparent 16%),
       radial-gradient(circle at 32% 28%, #d8d8e2 0%, #a8a8b8 45%, #7c7c8c 100%);
+    opacity:0;
+    transition:opacity .2s linear;
+  }
+  /* a small, low, distant rock — off to the other side from the moon, so the
+     space band doesn't read as just "one planet, one moon" */
+  .asteroid{
+    position:absolute; top:58%; left:6%;
+    width:26px; height:22px; border-radius:60% 40% 55% 45% / 50% 55% 45% 50%;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12) 0%, transparent 40%),
+      radial-gradient(circle at 65% 60%, rgba(0,0,0,0.25) 0%, transparent 35%),
+      linear-gradient(135deg, #8a8478, #55503f);
     opacity:0;
     transition:opacity .2s linear;
   }
@@ -1530,6 +1555,16 @@
       radial-gradient(4px 4px at 89% 30%, #F5A9C8, transparent),
       radial-gradient(4.5px 4.5px at 96% 60%, #FBD25E, transparent);
   }
+  /* a few sunflowers standing a little taller than the small flower dots —
+     each a single hard-stop radial-gradient (brown center, yellow ring) */
+  .ground-sunflowers{
+    position:absolute; left:0; right:0; bottom:62px; height:34px;
+    background-image:
+      radial-gradient(circle 7px at 20% 55%, #6B4423 0%, #6B4423 38%, #FBD25E 38%, #FBD25E 78%, transparent 78%),
+      radial-gradient(circle 6px at 44% 30%, #6B4423 0%, #6B4423 38%, #FBD25E 38%, #FBD25E 78%, transparent 78%),
+      radial-gradient(circle 7px at 68% 58%, #6B4423 0%, #6B4423 38%, #FBD25E 38%, #FBD25E 78%, transparent 78%),
+      radial-gradient(circle 6px at 90% 32%, #6B4423 0%, #6B4423 38%, #FBD25E 38%, #FBD25E 78%, transparent 78%);
+  }
 
   /* ---------- SKY CLOUDS (mid-scroll "sky" band; opacity driven by initAltitude()) ---------- */
   .sky-clouds{
@@ -1555,6 +1590,36 @@
     100%{ transform:translate(-9%, 0%); }
   }
   @media (prefers-reduced-motion: reduce){ .cloud{ animation:none; } }
+
+  /* ---------- SKY BIRDS (share the clouds' fade timing, driven by initAltitude()) ---------- */
+  .sky-birds{
+    position:fixed; inset:0; z-index:-1;
+    overflow:hidden;
+    pointer-events:none;
+    display:block;
+    opacity:0;
+    transition:opacity .2s linear;
+  }
+  html[data-theme="dark"] .sky-birds{ display:none; }
+  /* a plain double-chevron silhouette — the classic minimal "flying bird" shape */
+  .bird{
+    position:absolute;
+    width:22px; height:8px;
+    background:rgba(70,74,94,0.45);
+    clip-path:polygon(0% 100%, 22% 15%, 50% 55%, 78% 15%, 100% 100%, 50% 68%);
+    animation:birdDrift linear infinite;
+    will-change:transform;
+  }
+  .bird-1{ top:16%; animation-duration:38s; }
+  .bird-2{ top:31%; width:16px; height:6px; animation-duration:52s; animation-delay:-16s; opacity:.8; }
+  .bird-3{ top:23%; width:18px; height:7px; animation-duration:45s; animation-delay:-30s; opacity:.7; }
+  @keyframes birdDrift{
+    0%{ transform:translate(-10vw, 0); }
+    50%{ transform:translate(60vw, -16px); }
+    100%{ transform:translate(130vw, 0); }
+  }
+  @media (prefers-reduced-motion: reduce){ .bird{ animation:none; display:none; } }
+
   /* Each shape layers three passes, FIRST-listed = frontmost in CSS background stacking:
      a small bright highlight (a hint of sunlight), graduated-stop white puffs (softer
      feathered edges instead of a hard cutoff), and — painted last, so it only peeks out
@@ -1807,6 +1872,7 @@
   <div class="space-sparkles" id="altSparkles"></div>
   <div class="planet" id="altPlanet"></div>
   <div class="moon" id="altMoon"></div>
+  <div class="asteroid" id="altAsteroid"></div>
   <div class="ground-scene" id="altGround">
     <div class="ground-hill-far"></div>
     <div class="ground-hill-back"></div>
@@ -1814,6 +1880,7 @@
     <div class="ground-bushes"></div>
     <div class="ground-blades"></div>
     <div class="ground-flowers"></div>
+    <div class="ground-sunflowers"></div>
   </div>
 </div>
 <div class="sky-clouds" aria-hidden="true" id="skyClouds">
@@ -1824,6 +1891,11 @@
   <div class="cloud cloud-a" style="width:180px;height:90px;top:63%;left:10%;opacity:.65;animation-duration:78s;animation-delay:-15s;"></div>
   <div class="cloud cloud-b" style="width:260px;height:110px;top:78%;left:52%;opacity:.6;animation-duration:88s;animation-delay:-42s;"></div>
   <div class="cloud cloud-c" style="width:130px;height:65px;top:91%;left:30%;opacity:.65;animation-duration:64s;animation-delay:-8s;"></div>
+</div>
+<div class="sky-birds" aria-hidden="true" id="skyBirds">
+  <span class="bird bird-1"></span>
+  <span class="bird bird-2"></span>
+  <span class="bird bird-3"></span>
 </div>
 <div id="scrollProgress" class="scroll-progress"></div>
 <div class="grain-overlay"></div>
@@ -2296,9 +2368,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.30</span>
+        <span class="change-desc" data-en="Fixed the intro splash name/subtitle, which used a near-black color against its own near-black backdrop in light mode — now a bright, gently-glowing gold on a properly dark curtain. Space/sky/ground now each get an equal third of the scroll range instead of ground dominating; also fixed a hysteresis bug that could leave hero text stuck dark over the space backdrop after scrolling back up partway. Added more scene detail — a distant asteroid in space, drifting birds in the sky, and a few sunflowers on the ground.">인트로 스플래시 이름/부제 텍스트가 라이트모드에서 배경(거의 검정)과 같은 색(거의 검정)을 쓰고 있어서 거의 안 보이던 문제 발견 — 은은하게 빛나는 밝은 골드색으로, 배경은 제대로 된 검정으로 수정. 우주·하늘·땅 배경 길이를 정확히 1/3씩 동일하게 재조정 (기존엔 땅이 과도하게 길었음), 스크롤을 일부만 되돌렸을 때 히어로 텍스트가 우주 배경 위에서 어두운 색으로 눌러붙어 안 보이던 히스테리시스 버그도 함께 수정. 배경 디테일 추가 — 우주에 멀리 있는 소행성, 하늘엔 날아다니는 새, 땅에는 해바라기 몇 송이</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.29</span>
         <span class="change-desc" data-en="Darkened card border color site-wide (light mode) — it was too faint to see clearly against the page background">사이트 전체 카드 테두리 색상을 진하게 조정 (라이트모드) — 배경과 대비가 약해서 잘 안 보이던 문제 수정</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.28</span>
@@ -3215,15 +3291,22 @@
     const sparklesEl = document.getElementById('altSparkles');
     const nebulaEl = document.getElementById('altNebula');
     const moonEl = document.getElementById('altMoon');
+    const asteroidEl = document.getElementById('altAsteroid');
+    const birdsEl = document.getElementById('skyBirds');
     const groundEl = document.getElementById('altGround');
     const snsEl = document.getElementById('sns');
     const heroEl = document.querySelector('.hero');
-    if (!clouds || !planetEl || !starsEl || !sparklesEl || !nebulaEl || !moonEl || !groundEl || !snsEl || !heroEl) return;
+    if (!clouds || !planetEl || !starsEl || !sparklesEl || !nebulaEl || !moonEl || !asteroidEl || !birdsEl || !groundEl || !snsEl || !heroEl) return;
+
+    // Space / sky / ground each get an equal third of the total scroll range.
+    const SPACE_END = 1/3, SKY_END = 2/3;
 
     // Anchor palettes for the 3-stop body gradient (top/mid/bottom of viewport).
     // SKY matches --sky-grad's own colors exactly, so there's no visible seam
-    // between the CSS fallback (pre-JS) and the first computed frame.
-    const SPACE  = { top:[10,17,40],    mid:[27,42,74],    bottom:[45,63,102] };
+    // between the CSS fallback (pre-JS) and the first computed frame. SPACE.top
+    // matches --space-solid (the intro overlay's curtain color) for the same
+    // reason — the overlay fades away right into this first frame.
+    const SPACE  = { top:[8,8,13],      mid:[16,17,28],    bottom:[26,29,48] };
     const SKY    = { top:[234,246,255], mid:[220,238,252], bottom:[205,231,248] };
     // Lightened ~25% toward white from the original saturated grass tones —
     // the ground background persists behind most of the page's body copy
@@ -3266,11 +3349,21 @@
     // The remaining dip right at the flip (a mid-gray bg is just hard for any
     // fixed two-tone text to read against) is covered by the glow below, which
     // intensifies specifically in that zone.
+    //
+    // The switch itself is keyed off scroll fraction (p), not live brightness.
+    // An earlier version compared bgBrightness to a threshold pair, but at the
+    // very top of the page brightness sat only ~0.005 below the "flip back to
+    // light text" threshold — so scrolling back up from the sky/ground even a
+    // few px short of literal scrollY=0 would fail to flip, leaving dark text
+    // stuck over the space backdrop (near-invisible, same failure mode this
+    // whole hard-switch was built to avoid). p moves in lockstep with
+    // brightness but isn't subject to that razor-thin margin, so the band
+    // below has real width regardless of exact palette values.
     let textIsDark = false;
-    const TEXT_LOW = 0.12, TEXT_HIGH = 0.46; // hysteresis band, tuned by search
-    function pickTextIsDark(bgBrightness){
-      if (textIsDark && bgBrightness < TEXT_LOW) textIsDark = false;
-      else if (!textIsDark && bgBrightness > TEXT_HIGH) textIsDark = true;
+    const P_FLIP_LIGHT = 0.08, P_FLIP_DARK = 0.24; // hysteresis band, in scroll fraction
+    function pickTextIsDark(p){
+      if (textIsDark && p < P_FLIP_LIGHT) textIsDark = false;
+      else if (!textIsDark && p > P_FLIP_DARK) textIsDark = true;
       return textIsDark;
     }
 
@@ -3296,14 +3389,20 @@
         return;
       }
       const p = Math.min(1, Math.max(0, window.scrollY / rangeEnd));
+      // Space / sky / ground each get an equal third of the scroll range —
+      // sky holds flat through the middle third rather than blending the
+      // whole way, so it reads as its own distinct band instead of a rushed
+      // midpoint between the other two.
       let topRGB, midRGB, bottomRGB;
-      if (p < 0.5){
-        const t = p / 0.5;
+      if (p < SPACE_END){
+        const t = p / SPACE_END;
         topRGB = lerpRGB(SPACE.top, SKY.top, t);
         midRGB = lerpRGB(SPACE.mid, SKY.mid, t);
         bottomRGB = lerpRGB(SPACE.bottom, SKY.bottom, t);
+      } else if (p < SKY_END){
+        topRGB = SKY.top; midRGB = SKY.mid; bottomRGB = SKY.bottom;
       } else {
-        const t = (p - 0.5) / 0.5;
+        const t = (p - SKY_END) / (1 - SKY_END);
         topRGB = lerpRGB(SKY.top, GROUND.top, t);
         midRGB = lerpRGB(SKY.mid, GROUND.mid, t);
         bottomRGB = lerpRGB(SKY.bottom, GROUND.bottom, t);
@@ -3311,19 +3410,21 @@
       document.body.style.background = `linear-gradient(180deg, ${rgbStr(topRGB)} 0%, ${rgbStr(midRGB)} 45%, ${rgbStr(bottomRGB)} 100%)`;
       document.documentElement.style.setProperty('--scrim-tint', rgbStr(bottomRGB));
 
-      const spaceFade = 1 - Math.min(1, p / 0.22);
+      const spaceFade = 1 - Math.min(1, p / SPACE_END);
       planetEl.style.opacity = spaceFade;
       starsEl.style.opacity = spaceFade;
       sparklesEl.style.opacity = spaceFade;
       nebulaEl.style.opacity = spaceFade;
       moonEl.style.opacity = spaceFade * 0.8; // a touch dimmer than the main planet
+      asteroidEl.style.opacity = spaceFade * 0.7;
 
       // Text tracks the brightness of the part of the backdrop it actually sits
       // over — the hero copy runs from just below the top stop down to around
       // the 45% ("mid") stop, so average the two rather than picking either
-      // alone.
+      // alone. (Still used for the glow's intensity below — only the on/off
+      // switch itself moved to scroll-fraction, see pickTextIsDark's comment.)
       const heroBgBrightness = (brightness(topRGB) + brightness(midRGB)) / 2;
-      const isDark = pickTextIsDark(heroBgBrightness);
+      const isDark = pickTextIsDark(p);
       heroEl.style.setProperty('--hero-ink', isDark ? rgbStr(TEXT_LIGHT) : rgbStr(TEXT_SPACE));
       heroEl.style.setProperty('--hero-ink-dim', isDark ? rgbStr(TEXT_LIGHT_DIM) : rgbStr(TEXT_SPACE_DIM));
       // The glow's own color matches whichever side just switched away from
@@ -3337,15 +3438,24 @@
       const glowRGB = isDark ? [255,255,255] : [0,0,0];
       heroEl.style.setProperty('--hero-shadow', `rgba(${glowRGB[0]},${glowRGB[1]},${glowRGB[2]},${glowAlpha})`);
 
+      // Clouds (and birds, which share the same sky band) fade in through the
+      // back half of the space third, hold through the whole sky third, then
+      // fade out again as the ground third takes over — FADE_W-wide crossfades
+      // straddling each zone boundary so nothing cuts in abruptly.
+      const FADE_W = 0.15;
       let cloudOpacity;
-      if (p < 0.10) cloudOpacity = 0;
-      else if (p < 0.30) cloudOpacity = (p - 0.10) / 0.20;
-      else if (p < 0.68) cloudOpacity = 1;
-      else if (p < 0.90) cloudOpacity = 1 - (p - 0.68) / 0.22;
+      if (p < SPACE_END - FADE_W) cloudOpacity = 0;
+      else if (p < SPACE_END) cloudOpacity = (p - (SPACE_END - FADE_W)) / FADE_W;
+      else if (p < SKY_END) cloudOpacity = 1;
+      else if (p < SKY_END + FADE_W) cloudOpacity = 1 - (p - SKY_END) / FADE_W;
       else cloudOpacity = 0;
       clouds.style.opacity = cloudOpacity;
+      birdsEl.style.opacity = cloudOpacity;
 
-      groundEl.style.opacity = Math.min(1, Math.max(0, (p - 0.62) / 0.3));
+      // Ground fades in a little early (starting just before the sky/ground
+      // boundary) so it's crossfading with the clouds' own fade-out above,
+      // and is fully in by a bit past the boundary.
+      groundEl.style.opacity = Math.min(1, Math.max(0, (p - (SKY_END - 0.06)) / 0.20));
     }
 
     let ticking = false;
