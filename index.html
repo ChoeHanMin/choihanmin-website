@@ -91,9 +91,14 @@
     --ease: cubic-bezier(.16,1,.3,1);
     --shadow-card: 0 1px 0 rgba(255,255,255,0.7) inset, 0 18px 40px -28px rgba(24,24,28,0.14);
     --shadow-lift: 0 30px 60px -24px rgba(24,24,28,0.18), 0 0 0 1px rgba(var(--amber-rgb),0.12);
-    /* Light-mode-only pastel sky backdrop (dark theme below neutralizes both to var(--ink)) */
+    /* Light-mode-only pastel sky backdrop (dark theme below neutralizes both to var(--ink)).
+       Also the fallback/pre-JS values for the scroll-driven altitude scene — see
+       initAltitude() in the script, which overrides body's background inline once it
+       runs and updates --scrim-tint to track the current altitude color underneath
+       the mobile bottom scrim. */
     --sky-solid:#DCEEFC;
     --sky-grad: linear-gradient(180deg, #EAF6FF 0%, #DCEEFC 45%, #CDE7F8 100%);
+    --space-solid:#0A1128;
   }
   /* ---------- DARK THEME (alt): same restrained accent trio, refined
      near-black ground — no neon glow, just a quieter room ---------- */
@@ -116,6 +121,7 @@
     --shadow-lift: 0 30px 60px -22px rgba(0,0,0,0.55), 0 0 0 1px rgba(var(--amber-rgb),0.18);
     --sky-solid: var(--ink);
     --sky-grad: var(--ink);
+    --space-solid: var(--ink);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
@@ -143,6 +149,13 @@
     justify-content:center;
     padding:96px 0 64px;
     position:relative;
+    /* Bare (non-card) hero text needs to stay legible through the "space" zone
+       at the top of the altitude scroll effect, where the page background goes
+       dark — initAltitude() interpolates these back to var(--paper)/(--paper-dim)
+       as the background lightens into "sky". Cards (.term etc.) keep their own
+       fixed light surface regardless, so they don't need this. */
+    --hero-ink: var(--paper);
+    --hero-ink-dim: var(--paper-dim);
   }
   .hero::before{
     content:'';
@@ -209,6 +222,7 @@
     letter-spacing:-0.015em;
     line-height:1.12;
     margin:0;
+    color:var(--hero-ink);
     animation:heroUp .8s var(--ease) both;
     animation-delay:.15s;
   }
@@ -293,7 +307,7 @@
   @media (prefers-reduced-motion: reduce){ .role-caret{ animation:none; } }
   .lede{
     max-width:560px;
-    color:var(--paper-dim);
+    color:var(--hero-ink-dim);
     font-size:16.5px;
     line-height:1.85;
     animation:heroUp .8s var(--ease) both; animation-delay:.28s;
@@ -324,10 +338,10 @@
     100%{ opacity:1; }
   }
   @media (prefers-reduced-motion: reduce){ .stat b.stat-pulse{ animation:none; } }
-  .stat span{font-size:12px; color:var(--paper-dim); letter-spacing:0.01em;}
+  .stat span{font-size:12px; color:var(--hero-ink-dim); letter-spacing:0.01em;}
   .live-visitors{
     text-align:center; margin-top:14px;
-    font-family:var(--mono); font-size:11px; color:var(--paper-dim);
+    font-family:var(--mono); font-size:11px; color:var(--hero-ink-dim);
     opacity:.7;
   }
   .live-visitors .dot{
@@ -564,7 +578,7 @@
     font-family:var(--serif);
     font-style:italic;
     font-size:clamp(16px, 2.6vw, 20px);
-    color:var(--paper);
+    color:var(--hero-ink);
     max-width:520px;
     animation:heroUp .8s var(--ease) both; animation-delay:.34s;
   }
@@ -851,7 +865,7 @@
 
   /* ---------- GAMES MOVED NOTE ---------- */
   .games-moved-note{
-    font-family:var(--mono); font-size:12px; color:var(--paper-dim);
+    font-family:var(--mono); font-size:12px; color:var(--hero-ink-dim);
     margin-top:14px;
   }
   .games-moved-note a{ color:var(--amber); border-bottom:1px solid transparent; transition:border-color .2s; }
@@ -1182,7 +1196,9 @@
   .shortcut-panel button:hover{color:var(--paper); border-color:var(--amber); transform:scale(1.05); background:var(--ink-2);}
   .mobile-bottom-scrim{
     position:fixed; left:0; right:0; bottom:0; height:76px;
-    background:linear-gradient(180deg, transparent, var(--sky-solid) 65%);
+    /* --scrim-tint is kept in sync with the current altitude color by initAltitude();
+       falls back to the static sky tint before JS runs or in dark mode. */
+    background:linear-gradient(180deg, transparent, var(--scrim-tint, var(--sky-solid)) 65%);
     z-index:14; pointer-events:none; display:none;
   }
   @media(max-width:640px){
@@ -1312,7 +1328,9 @@
   /* ---------- INTRO OVERLAY ---------- */
   .intro-overlay{
     position:fixed; inset:0; z-index:1000;
-    background:var(--sky-solid);
+    /* A fresh page load always starts scrolled to the top ("space"), so the curtain
+       matches that first frame rather than the sky tint. */
+    background:var(--space-solid);
     display:flex; align-items:center; justify-content:center;
     clip-path:circle(150% at 50% 50%);
     transition:clip-path .9s cubic-bezier(.76,0,.24,1), opacity .5s ease .5s;
@@ -1350,7 +1368,72 @@
   }
   html[data-theme="dark"] .star-canvas{ display:block; }
 
-  /* ---------- SKY CLOUDS (light-mode-only ambient backdrop) ---------- */
+  /* ---------- ALTITUDE SCENE (light-mode-only: scrolling from space, through
+     sky, down to ground — see initAltitude() in the script for the scroll-driven
+     color/opacity math. This layer holds the planet, space stars and ground/grass;
+     .sky-clouds below stays a separate layer for the mid (sky) band.) ---------- */
+  .altitude-scene{
+    position:fixed; inset:0; z-index:-2;
+    overflow:hidden;
+    pointer-events:none;
+    display:block;
+  }
+  html[data-theme="dark"] .altitude-scene{ display:none; }
+  .planet{
+    position:absolute; top:-70px; right:-50px;
+    width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #9c8fe0 0%, #6455b0 35%, #3c2f7e 65%, #201850 100%);
+    box-shadow:0 0 70px 14px rgba(139,127,209,0.28);
+    opacity:0;
+    transition:opacity .2s linear;
+  }
+  .planet::after{
+    content:''; position:absolute; left:-34px; right:-34px; top:47%;
+    height:28px; border-radius:50%;
+    border:6px solid rgba(214,206,255,0.4);
+    transform:rotate(-14deg) scaleY(0.32);
+    pointer-events:none;
+  }
+  .space-stars{
+    position:absolute; inset:0;
+    opacity:0;
+    transition:opacity .2s linear;
+    background-image:
+      radial-gradient(1.6px 1.6px at 8% 12%, #fff, transparent),
+      radial-gradient(1px 1px at 18% 22%, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 28% 7%, #fff, transparent),
+      radial-gradient(1px 1px at 37% 26%, #fff, transparent),
+      radial-gradient(1.8px 1.8px at 47% 14%, #fff, transparent),
+      radial-gradient(1px 1px at 58% 24%, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 66% 9%, #fff, transparent),
+      radial-gradient(1px 1px at 74% 28%, #fff, transparent),
+      radial-gradient(1.8px 1.8px at 12% 32%, #fff, transparent),
+      radial-gradient(1px 1px at 90% 15%, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 83% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 96% 25%, #fff, transparent);
+  }
+  .ground-scene{
+    position:absolute; left:0; right:0; bottom:-2px; height:150px;
+    opacity:0;
+    transition:opacity .2s linear;
+  }
+  .ground-hill-back{
+    position:absolute; left:-8%; right:-8%; bottom:0; height:96px;
+    background:#C7E6CE;
+    border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  }
+  .ground-hill-front{
+    position:absolute; left:-8%; right:-8%; bottom:0; height:60px;
+    background:#93CC9F;
+    border-radius:44% 44% 0 0 / 100% 100% 0 0;
+  }
+  .ground-blades{
+    position:absolute; left:0; right:0; bottom:54px; height:8px;
+    background-image:repeating-linear-gradient(96deg, #6FAE7C 0 2px, transparent 2px 7px);
+    opacity:.55;
+  }
+
+  /* ---------- SKY CLOUDS (mid-scroll "sky" band; opacity driven by initAltitude()) ---------- */
   .sky-clouds{
     position:fixed; inset:0; z-index:-1;
     overflow:hidden;
@@ -1620,7 +1703,16 @@
 
 <canvas id="trailCanvas" class="trail-canvas"></canvas>
 <canvas id="starCanvas" class="star-canvas"></canvas>
-<div class="sky-clouds" aria-hidden="true">
+<div class="altitude-scene" aria-hidden="true" id="altitudeScene">
+  <div class="planet" id="altPlanet"></div>
+  <div class="space-stars" id="altStars"></div>
+  <div class="ground-scene" id="altGround">
+    <div class="ground-hill-back"></div>
+    <div class="ground-blades"></div>
+    <div class="ground-hill-front"></div>
+  </div>
+</div>
+<div class="sky-clouds" aria-hidden="true" id="skyClouds">
   <div class="cloud cloud-a" style="width:220px;height:100px;top:5%;left:6%;opacity:.75;animation-duration:70s;"></div>
   <div class="cloud cloud-b" style="width:320px;height:130px;top:14%;left:58%;opacity:.6;animation-duration:95s;animation-delay:-20s;"></div>
   <div class="cloud cloud-c" style="width:150px;height:75px;top:29%;left:22%;opacity:.7;animation-duration:58s;animation-delay:-35s;"></div>
@@ -2099,9 +2191,13 @@
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
     <div class="change-list">
       <div class="change-row">
+        <span class="change-ver">v2.24</span>
+        <span class="change-desc" data-en="Light mode now scrolls through altitude — space (with a planet and stars) at the top, down through sky, landing on ground/grass by the end of the SNS section and staying there for the rest of the page. Dark mode is unaffected.">라이트모드에서 스크롤하면 고도가 낮아지는 연출 추가 — 맨 위는 행성·별이 보이는 우주, 내려갈수록 하늘을 지나 SNS 섹션 즈음에서 땅/풀에 착지, 이후 페이지 끝까지 땅 배경 유지 (다크모드는 그대로)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.23</span>
         <span class="change-desc" data-en="Reworked the sky clouds with fixed-radius puffs (fixes flattened rectangle rendering), added shading/highlight layers for more visible depth, and gave the drift a livelier organic float">구름 모양을 고정 반지름 원으로 다시 그려서(퍼져서 사각형처럼 보이던 문제 수정) 뭉게구름 디테일이 살도록 그림자·하이라이트 레이어 추가, 좀 더 은은하게 살아있는 느낌으로 드리프트 애니메이션 조정</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.22</span>
@@ -2618,6 +2714,10 @@
     if (v) accentRGB = v;
   }
   updateAccentRGB();
+  // Set by initAltitude() further down — re-run (or cleared) on every theme flip so
+  // the space/sky/ground scene appears immediately in light mode and disappears
+  // immediately in dark mode, instead of waiting for the next scroll event.
+  let renderAltitudeFn = null;
   themeBtn.addEventListener('click', () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) {
@@ -2631,6 +2731,7 @@
       unlockAchievement('darkmode', '다크모드 발견! 🌙', 'Discovered dark mode! 🌙');
     }
     updateAccentRGB();
+    if (renderAltitudeFn) renderAltitudeFn();
   });
 
   /* ---- OTTER EASTER EGG ---- */
@@ -2977,6 +3078,104 @@
   initStars();
   window.addEventListener('resize', debounce(initStars, 200));
   function isLightMode(){ return document.documentElement.getAttribute('data-theme') !== 'dark'; }
+
+  /* ---- ALTITUDE SCENE (light mode only): the page background scrolls from
+     space (top), through sky, down to ground — fully landed by the bottom of the
+     SNS section, then staying "ground" for the rest of the (very long) page.
+     Dark mode is untouched: it keeps its own fixed near-black + star-canvas look. */
+  function initAltitude(){
+    const clouds = document.getElementById('skyClouds');
+    const planetEl = document.getElementById('altPlanet');
+    const starsEl = document.getElementById('altStars');
+    const groundEl = document.getElementById('altGround');
+    const snsEl = document.getElementById('sns');
+    const heroEl = document.querySelector('.hero');
+    if (!clouds || !planetEl || !starsEl || !groundEl || !snsEl || !heroEl) return;
+
+    // Anchor palettes for the 3-stop body gradient (top/mid/bottom of viewport).
+    // SKY matches --sky-grad's own colors exactly, so there's no visible seam
+    // between the CSS fallback (pre-JS) and the first computed frame.
+    const SPACE  = { top:[10,17,40],    mid:[27,42,74],    bottom:[45,63,102] };
+    const SKY    = { top:[234,246,255], mid:[220,238,252], bottom:[205,231,248] };
+    const GROUND = { top:[199,230,206], mid:[147,204,159], bottom:[111,174,124] };
+    // Bare hero text (h1.name, .lede, .motto, stat labels…) needs to stay legible
+    // against the dark space background too — these match dark theme's own
+    // --paper/--paper-dim values, fading back to the normal light-theme dark text
+    // as the background lightens into "sky" (see the spaceFade curve below).
+    const TEXT_SPACE = [242,241,238], TEXT_SPACE_DIM = [139,138,134];
+    const TEXT_LIGHT = [24,24,28],    TEXT_LIGHT_DIM = [107,104,98];
+
+    function lerp(a, b, t){ return Math.round(a + (b - a) * t); }
+    function lerpStop(c1, c2, t){ return `rgb(${lerp(c1[0],c2[0],t)},${lerp(c1[1],c2[1],t)},${lerp(c1[2],c2[2],t)})`; }
+
+    // rangeEnd = absolute page Y where the transition should be fully "landed".
+    // Re-measured on resize only (never inside the scroll/render loop, to avoid
+    // forcing a layout read on every scroll tick).
+    let rangeEnd = 1;
+    function measure(){
+      const rect = snsEl.getBoundingClientRect();
+      rangeEnd = Math.max(1, window.scrollY + rect.bottom);
+    }
+    measure();
+    window.addEventListener('resize', debounce(measure, 200));
+
+    function render(){
+      if (!isLightMode()){
+        // Dark mode: let the CSS (--ink / --paper / star-canvas) take back over.
+        document.body.style.background = '';
+        document.documentElement.style.removeProperty('--scrim-tint');
+        heroEl.style.removeProperty('--hero-ink');
+        heroEl.style.removeProperty('--hero-ink-dim');
+        return;
+      }
+      const p = Math.min(1, Math.max(0, window.scrollY / rangeEnd));
+      let top, mid, bottom;
+      if (p < 0.5){
+        const t = p / 0.5;
+        top = lerpStop(SPACE.top, SKY.top, t);
+        mid = lerpStop(SPACE.mid, SKY.mid, t);
+        bottom = lerpStop(SPACE.bottom, SKY.bottom, t);
+      } else {
+        const t = (p - 0.5) / 0.5;
+        top = lerpStop(SKY.top, GROUND.top, t);
+        mid = lerpStop(SKY.mid, GROUND.mid, t);
+        bottom = lerpStop(SKY.bottom, GROUND.bottom, t);
+      }
+      document.body.style.background = `linear-gradient(180deg, ${top} 0%, ${mid} 45%, ${bottom} 100%)`;
+      document.documentElement.style.setProperty('--scrim-tint', bottom);
+
+      const spaceFade = 1 - Math.min(1, p / 0.22);
+      planetEl.style.opacity = spaceFade;
+      starsEl.style.opacity = spaceFade;
+
+      // Hero text finishes lightening-back-to-normal a touch after the planet/
+      // stars are fully gone, so it never looks like it's racing the backdrop.
+      const textT = Math.min(1, p / 0.28);
+      heroEl.style.setProperty('--hero-ink', lerpStop(TEXT_SPACE, TEXT_LIGHT, textT));
+      heroEl.style.setProperty('--hero-ink-dim', lerpStop(TEXT_SPACE_DIM, TEXT_LIGHT_DIM, textT));
+
+      let cloudOpacity;
+      if (p < 0.10) cloudOpacity = 0;
+      else if (p < 0.30) cloudOpacity = (p - 0.10) / 0.20;
+      else if (p < 0.68) cloudOpacity = 1;
+      else if (p < 0.90) cloudOpacity = 1 - (p - 0.68) / 0.22;
+      else cloudOpacity = 0;
+      clouds.style.opacity = cloudOpacity;
+
+      groundEl.style.opacity = Math.min(1, Math.max(0, (p - 0.62) / 0.3));
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { render(); ticking = false; });
+    }, { passive: true });
+
+    render();
+    renderAltitudeFn = render;
+  }
+  initAltitude();
 
   /* ---- OCCASIONAL SHOOTING STAR ---- */
   let shootingStars = [];
