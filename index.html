@@ -1071,8 +1071,8 @@
     margin-top:12px;
   }
 
-  /* ---------- CHANGELOG ---------- */
-  .changelog-toggle{
+  /* ---------- COLLAPSIBLE SECTION TOGGLE (changelog, commits, made-with) ---------- */
+  .section-toggle{
     display:inline-flex; align-items:center; gap:8px;
     font-family:var(--mono); font-size:13px; font-weight:600;
     color:var(--amber); background:transparent;
@@ -1080,9 +1080,11 @@
     padding:9px 18px; margin-bottom:22px; cursor:pointer;
     transition:background .2s, border-color .2s;
   }
-  .changelog-toggle:hover{ background:rgba(var(--amber-rgb),0.08); border-color:var(--amber); }
-  .changelog-toggle-caret{ display:inline-block; transition:transform .25s var(--ease); }
-  .changelog-toggle[aria-expanded="true"] .changelog-toggle-caret{ transform:rotate(180deg); }
+  .section-toggle:hover{ background:rgba(var(--amber-rgb),0.08); border-color:var(--amber); }
+  .section-toggle-caret{ display:inline-block; transition:transform .25s var(--ease); }
+  .section-toggle[aria-expanded="true"] .section-toggle-caret{ transform:rotate(180deg); }
+
+  /* ---------- CHANGELOG ---------- */
   .change-list{display:none; flex-direction:column; gap:14px;}
   .change-list.is-open{display:flex; animation:cardSettle .4s var(--ease) both;}
   @media (prefers-reduced-motion: reduce){ .change-list.is-open{ animation:none; } }
@@ -1140,7 +1142,9 @@
   }
 
   /* ---------- COMMIT LIST ---------- */
-  .commit-list{display:flex; flex-direction:column; gap:4px;}
+  .commit-list{display:none; flex-direction:column; gap:4px;}
+  .commit-list.is-open{display:flex; animation:cardSettle .4s var(--ease) both;}
+  @media (prefers-reduced-motion: reduce){ .commit-list.is-open{ animation:none; } }
   .commit-loading{color:var(--scroll-ink-dim); font-family:var(--mono); font-size:13px;}
   .commit-row{
     display:flex; gap:14px; align-items:baseline;
@@ -1162,8 +1166,10 @@
 
   /* ---------- MADE WITH ---------- */
   .stack-grid{
-    display:grid; grid-template-columns:repeat(2,1fr); gap:14px;
+    display:none; grid-template-columns:repeat(2,1fr); gap:14px;
   }
+  .stack-grid.is-open{display:grid; animation:cardSettle .4s var(--ease) both;}
+  @media (prefers-reduced-motion: reduce){ .stack-grid.is-open{ animation:none; } }
   @media(max-width:560px){ .stack-grid{grid-template-columns:1fr;} }
   .stack-item{
     border:1px solid var(--line); border-radius:var(--r-sm); padding:16px 18px;
@@ -1623,24 +1629,56 @@
     transition:opacity .2s linear;
   }
   html[data-theme="dark"] .sky-birds{ display:none; }
-  /* a plain double-chevron silhouette — the classic minimal "flying bird" shape */
-  .bird{
+  /* Two-part bird: .bird-wrap drifts across the sky (position only), the
+     inner .bird does the wing flap (scaleY only) — split into two elements
+     because one element can't run two animations on the same `transform`
+     property independently (the later one would just replace the earlier
+     one's value each frame instead of composing with it). */
+  .bird-wrap{
     position:absolute;
-    width:22px; height:8px;
-    background:rgba(70,74,94,0.45);
-    clip-path:polygon(0% 100%, 22% 15%, 50% 55%, 78% 15%, 100% 100%, 50% 68%);
     animation:birdDrift linear infinite;
     will-change:transform;
   }
-  .bird-1{ top:16%; animation-duration:38s; }
-  .bird-2{ top:31%; width:16px; height:6px; animation-duration:52s; animation-delay:-16s; opacity:.8; }
-  .bird-3{ top:23%; width:18px; height:7px; animation-duration:45s; animation-delay:-30s; opacity:.7; }
+  .bird-wrap-1{ top:16%; animation-duration:38s; }
+  .bird-wrap-2{ top:31%; animation-duration:52s; animation-delay:-16s; }
+  .bird-wrap-3{ top:23%; animation-duration:45s; animation-delay:-30s; }
+  .bird-wrap-4{ top:40%; animation-duration:60s; animation-delay:-8s; }
+  /* A double-chevron silhouette (the wings) plus a small round body dot
+     where they meet — flaps via scaleY around a pivot near the body, so the
+     wingtips do most of the moving, like the real motion. */
+  .bird{
+    position:relative;
+    display:block;
+    width:22px; height:8px;
+    background:rgba(68,72,92,0.55);
+    clip-path:polygon(0% 100%, 22% 12%, 50% 58%, 78% 12%, 100% 100%, 50% 72%);
+    transform-origin:50% 68%;
+    animation:birdFlap 0.85s ease-in-out infinite;
+  }
+  .bird::after{
+    content:'';
+    position:absolute; left:50%; top:52%;
+    width:3.5px; height:3px; border-radius:50%;
+    background:rgba(68,72,92,0.6);
+    transform:translate(-50%,-50%);
+  }
+  .bird-wrap-2 .bird{ width:16px; height:6px; opacity:.82; animation-duration:0.72s; }
+  .bird-wrap-3 .bird{ width:18px; height:7px; opacity:.72; animation-duration:0.8s; }
+  .bird-wrap-4 .bird{ width:13px; height:5px; opacity:.6; animation-duration:0.66s; }
+  @keyframes birdFlap{
+    0%, 100%{ transform:scaleY(1); }
+    45%{ transform:scaleY(0.4); }
+    60%{ transform:scaleY(1.08); }
+  }
   @keyframes birdDrift{
     0%{ transform:translate(-10vw, 0); }
     50%{ transform:translate(60vw, -16px); }
     100%{ transform:translate(130vw, 0); }
   }
-  @media (prefers-reduced-motion: reduce){ .bird{ animation:none; display:none; } }
+  @media (prefers-reduced-motion: reduce){
+    .bird-wrap{ animation:none; display:none; }
+    .bird{ animation:none; }
+  }
 
   /* Each shape layers three passes, FIRST-listed = frontmost in CSS background stacking:
      a small bright highlight (a hint of sunlight), graduated-stop white puffs (softer
@@ -1653,6 +1691,12 @@
   .cloud-a{
     background-image:
       radial-gradient(circle 10px at 62% 26%, rgba(255,255,255,0.9), transparent),
+      /* small cauliflower bumps along the top edge — pure CSS puffs on top of
+         the smooth main lobes below, so the silhouette reads as bumpy cumulus
+         texture instead of a few flat blobs merged together */
+      radial-gradient(circle 9px at 45% 18%, #fff 0, #fff 55%, transparent 100%),
+      radial-gradient(circle 7px at 66% 16%, #fff 0, #fff 55%, transparent 100%),
+      radial-gradient(circle 8px at 20% 40%, #fff 0, #fff 55%, transparent 100%),
       radial-gradient(circle 32px at 27% 58%, #fff 0, #fff 60%, rgba(255,255,255,0.6) 82%, transparent 100%),
       radial-gradient(circle 38px at 54% 34%, #fff 0, #fff 60%, rgba(255,255,255,0.6) 82%, transparent 100%),
       radial-gradient(circle 27px at 78% 56%, #fff 0, #fff 60%, rgba(255,255,255,0.6) 82%, transparent 100%),
@@ -1662,6 +1706,9 @@
   .cloud-b{
     background-image:
       radial-gradient(circle 9px at 44% 28%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(circle 8px at 30% 22%, #fff 0, #fff 55%, transparent 100%),
+      radial-gradient(circle 7px at 58% 20%, #fff 0, #fff 55%, transparent 100%),
+      radial-gradient(circle 6px at 76% 34%, #fff 0, #fff 55%, transparent 100%),
       radial-gradient(circle 26px at 17% 62%, #fff 0, #fff 58%, rgba(255,255,255,0.6) 80%, transparent 100%),
       radial-gradient(circle 34px at 41% 40%, #fff 0, #fff 58%, rgba(255,255,255,0.6) 80%, transparent 100%),
       radial-gradient(circle 30px at 66% 46%, #fff 0, #fff 58%, rgba(255,255,255,0.6) 80%, transparent 100%),
@@ -1673,6 +1720,8 @@
   .cloud-c{
     background-image:
       radial-gradient(circle 7px at 38% 30%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(circle 6px at 52% 22%, #fff 0, #fff 55%, transparent 100%),
+      radial-gradient(circle 5px at 74% 36%, #fff 0, #fff 55%, transparent 100%),
       radial-gradient(circle 28px at 34% 56%, #fff 0, #fff 60%, rgba(255,255,255,0.6) 82%, transparent 100%),
       radial-gradient(circle 22px at 69% 50%, #fff 0, #fff 60%, rgba(255,255,255,0.6) 82%, transparent 100%),
       radial-gradient(circle 20px at 37% 70%, rgba(150,178,206,0.2) 0, rgba(150,178,206,0.2) 55%, transparent 100%),
@@ -1681,6 +1730,10 @@
   .cloud-d{
     background-image:
       radial-gradient(circle 11px at 56% 22%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(circle 8px at 24% 34%, #fff 0, #fff 55%, transparent 100%),
+      radial-gradient(circle 9px at 44% 14%, #fff 0, #fff 55%, transparent 100%),
+      radial-gradient(circle 7px at 64% 12%, #fff 0, #fff 55%, transparent 100%),
+      radial-gradient(circle 6px at 82% 28%, #fff 0, #fff 55%, transparent 100%),
       radial-gradient(circle 24px at 16% 62%, #fff 0, #fff 58%, rgba(255,255,255,0.6) 80%, transparent 100%),
       radial-gradient(circle 32px at 34% 38%, #fff 0, #fff 58%, rgba(255,255,255,0.6) 80%, transparent 100%),
       radial-gradient(circle 36px at 54% 28%, #fff 0, #fff 58%, rgba(255,255,255,0.6) 80%, transparent 100%),
@@ -1915,9 +1968,10 @@
   <div class="cloud cloud-c" style="width:130px;height:65px;top:91%;left:30%;opacity:.65;animation-duration:64s;animation-delay:-8s;"></div>
 </div>
 <div class="sky-birds" aria-hidden="true" id="skyBirds">
-  <span class="bird bird-1"></span>
-  <span class="bird bird-2"></span>
-  <span class="bird bird-3"></span>
+  <span class="bird-wrap bird-wrap-1"><span class="bird"></span></span>
+  <span class="bird-wrap bird-wrap-2"><span class="bird"></span></span>
+  <span class="bird-wrap bird-wrap-3"><span class="bird"></span></span>
+  <span class="bird-wrap bird-wrap-4"><span class="bird"></span></span>
 </div>
 <div id="scrollProgress" class="scroll-progress"></div>
 <div class="grain-overlay"></div>
@@ -2354,6 +2408,10 @@
   <section id="commits" class="reveal slide-left">
     <div class="sec-head"><span class="tag">LIVE</span><h2 data-en="Recent Commits">최근 커밋</h2></div>
     <p class="sec-sub">$ git log --author=ChoeHanMin -5</p>
+    <button type="button" id="commitsToggle" class="section-toggle" aria-expanded="false" aria-controls="commitList">
+      <span data-en="Show recent commits">최근 커밋 보기</span>
+      <span class="section-toggle-caret" aria-hidden="true">▾</span>
+    </button>
     <div id="commitList" class="commit-list">
       <p class="commit-loading" data-en="Loading...">불러오는 중...</p>
     </div>
@@ -2368,7 +2426,11 @@
   <!-- MADE WITH -->
   <section id="madewith" class="reveal slide-right">
     <div class="sec-head"><span class="tag">STACK</span><h2 data-en="How This Site Was Made">이 사이트는 이렇게 만들었다</h2></div>
-    <div class="stack-grid">
+    <button type="button" id="madewithToggle" class="section-toggle" aria-expanded="false" aria-controls="stackGrid">
+      <span data-en="Show how this site was made">제작 방식 보기</span>
+      <span class="section-toggle-caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="stack-grid" id="stackGrid">
       <div class="stack-item"><b>Frontend</b><span data-en="Plain HTML / CSS / JS, single file">순수 HTML / CSS / JS, 단일 파일</span></div>
       <div class="stack-item"><b data-en="Typefaces">서체</b><span>Pretendard + Noto Serif KR</span></div>
       <div class="stack-item"><b data-en="Hosting">호스팅</b><span>GitHub Pages</span></div>
@@ -2388,15 +2450,19 @@
   <section id="changelog" class="reveal slide-left">
     <div class="sec-head"><span class="tag">CHANGELOG</span><h2 data-en="Site Changelog">사이트 업데이트 기록</h2></div>
     <p class="sec-sub">$ git log --oneline choihanmin-website</p>
-    <button type="button" id="changelogToggle" class="changelog-toggle" aria-expanded="false" aria-controls="changeList">
+    <button type="button" id="changelogToggle" class="section-toggle" aria-expanded="false" aria-controls="changeList">
       <span data-en="Show update history">업데이트 기록 보기</span>
-      <span class="changelog-toggle-caret" aria-hidden="true">▾</span>
+      <span class="section-toggle-caret" aria-hidden="true">▾</span>
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.32</span>
+        <span class="change-desc" data-en="Recent Commits and How This Site Was Made now also collapse behind a button, same as the changelog. Redrew clouds with extra small 'cauliflower' bumps along their edges for a bumpier, more textured cumulus look, and gave the sky birds a proper wing-flap animation plus a small body dot instead of a static flat silhouette.">'최근 커밋', '이 사이트는 이렇게 만들었다' 섹션도 체인지로그처럼 버튼을 눌러야 펼쳐지도록 변경. 구름 가장자리에 작은 뭉게뭉게 돌기를 더 그려 넣어 카우리플라워 같은 입체감 있는 질감으로 다시 그렸고, 하늘의 새들도 밋밋한 고정 실루엣 대신 실제로 날갯짓하는 애니메이션과 몸통 점을 추가</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.31</span>
         <span class="change-desc" data-en="This changelog is now collapsed by default behind a 'Show update history' button instead of always being expanded. Also: space/sky/ground now split the *entire* page's scroll into equal thirds (previously only the hero-to-SNS stretch, so ground still dominated everything below it) — this meant page text far beyond the hero also needed to adapt to the backdrop, so the same light/dark switch now covers the whole page, not just the hero, with a couple of real contrast bugs found and fixed in the process.">이 업데이트 기록도 이제 기본적으로 접혀 있고 '업데이트 기록 보기' 버튼을 눌러야 펼쳐짐. 그리고: 우주·하늘·땅이 이제 히어로~SNS 구간이 아니라 페이지 전체 스크롤을 기준으로 정확히 1/3씩 나눠 가짐 (기존엔 그 구간만 1/3씩이라 이후 페이지 전체는 계속 땅이었음) — 이제 히어로 밖의 본문 텍스트도 배경에 맞춰 색이 바뀌어야 해서, 밝기 전환에 따른 글자색 전환을 페이지 전체로 확장하면서 실제 대비 버그 몇 개를 발견해 함께 수정</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.30</span>
@@ -3624,21 +3690,25 @@
     }
   });
 
-  /* ---- CHANGELOG TOGGLE (collapsed by default) ---- */
-  const changelogToggle = document.getElementById('changelogToggle');
-  const changeList = document.getElementById('changeList');
-  if (changelogToggle && changeList) {
-    const toggleLabel = changelogToggle.querySelector('span[data-en]');
-    changelogToggle.addEventListener('click', () => {
-      const open = changeList.classList.toggle('is-open');
-      changelogToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (toggleLabel) {
-        toggleLabel.dataset.kr = open ? '업데이트 기록 접기' : '업데이트 기록 보기';
-        toggleLabel.dataset.en = open ? 'Hide update history' : 'Show update history';
-        toggleLabel.textContent = currentLang === 'en' ? toggleLabel.dataset.en : toggleLabel.dataset.kr;
+  /* ---- COLLAPSIBLE SECTIONS (changelog, commits, made-with — collapsed by default) ---- */
+  function initSectionToggle(btnId, listId, krShow, enShow, krHide, enHide){
+    const btn = document.getElementById(btnId);
+    const list = document.getElementById(listId);
+    if (!btn || !list) return;
+    const label = btn.querySelector('span[data-en]');
+    btn.addEventListener('click', () => {
+      const open = list.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (label) {
+        label.dataset.kr = open ? krHide : krShow;
+        label.dataset.en = open ? enHide : enShow;
+        label.textContent = currentLang === 'en' ? label.dataset.en : label.dataset.kr;
       }
     });
   }
+  initSectionToggle('changelogToggle', 'changeList', '업데이트 기록 보기', 'Show update history', '업데이트 기록 접기', 'Hide update history');
+  initSectionToggle('commitsToggle', 'commitList', '최근 커밋 보기', 'Show recent commits', '최근 커밋 접기', 'Hide recent commits');
+  initSectionToggle('madewithToggle', 'stackGrid', '제작 방식 보기', 'Show how this site was made', '제작 방식 접기', 'Hide how this site was made');
 
   /* ---- FONT SIZE TOGGLE (zoom-based, Chrome/Safari/Edge) ---- */
   const fsButtons = document.querySelectorAll('.fontsize-panel button');
