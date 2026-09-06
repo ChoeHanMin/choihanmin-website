@@ -3,14 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Resolve the starting theme synchronously, before any CSS paints, so a
+     visitor whose OS is set to dark mode doesn't see a flash of the light
+     theme first. An explicit choice from the toggle (saved to localStorage)
+     always wins; only a first-ever visit falls back to the OS preference. -->
+<script>
+(function(){
+  try {
+    var saved = localStorage.getItem('theme');
+    var dark = saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (dark) document.documentElement.setAttribute('data-theme', 'dark');
+  } catch(e) {}
+})();
+</script>
 <title>최한민 (Choi Hanmin) — 개발자 | 최한민닷컴</title>
 <meta name="description" content="최한민(Choi Hanmin) 개인 홈페이지, 최한민닷컴(한민닷컴). 한국외국어대학교 컴퓨터공학과 학생이자 인디 게임 스튜디오 Soodal Games 운영자(게임 목록은 soodalgames.com), 삼성 갤럭시 서포터즈·하나 소셜벤처 등 20건 이상의 대내외 활동 경험.">
 <meta name="keywords" content="최한민, Choi Hanmin, 최한민닷컴, 한민닷컴, choihanmin, Soodal Games, 한국외국어대학교, 컴퓨터공학과, 미니법정, Mini Court">
 <meta name="author" content="최한민 (Choi Hanmin)">
 <link rel="canonical" href="https://www.choihanmin.com/">
-<!-- 파비콘 (브라우저 탭/북마크/구글 검색결과 아이콘) -->
-<link rel="icon" href="images/profile.jpg" type="image/jpeg">
-<link rel="apple-touch-icon" href="images/profile.jpg">
+<!-- 파비콘 (브라우저 탭/북마크/구글 검색결과 아이콘) — 정사각형 프로필 사진을
+     16/32/180/192/512px로 각각 리샘플링한 버전. 브라우저가 원본 JPEG를 그때그때
+     축소하는 것보다 훨씬 또렷하게 보임 (특히 16px 탭 아이콘에서 차이가 큼). -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#A6752B">
 <!-- Open Graph (카카오톡/페이스북 등 링크 공유 시 미리보기) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="최한민 (Choi Hanmin)">
@@ -1979,7 +1998,7 @@
 <div class="side-rail left"><div class="rail-line"></div><span class="rail-label">SOODAL GAMES</span></div>
 <div class="side-rail right"><div class="rail-line"></div><span class="rail-label">CHOI HANMIN</span></div>
 
-<button id="themeToggle" class="theme-toggle" aria-label="테마 전환">🌙</button>
+<button id="themeToggle" class="theme-toggle" aria-label="테마 전환">☀️</button>
 <button id="langToggle" class="lang-toggle" aria-label="언어 전환">EN</button>
 <div class="fontsize-panel">
   <button id="fsSmall" data-size="sm" aria-label="작은 글씨">가</button>
@@ -2456,9 +2475,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.33</span>
+        <span class="change-desc" data-en="Redrew the browser tab/bookmark icon and Apple touch icon from a properly sized set (16/32/180/192/512px) instead of letting the browser scale one large photo on the fly — much crisper, especially at 16px. Added a web app manifest so 'Add to Home Screen' shows a proper app icon and name on mobile. Dark mode now also respects your OS/browser's dark mode setting by default on a first visit (an explicit toggle click is still remembered and always wins after that).">브라우저 탭/북마크 아이콘과 애플 홈 화면 아이콘을 원본 사진을 그때그때 축소하던 방식에서 16/32/180/192/512px 각각 제대로 리샘플링한 세트로 교체 (특히 16px 탭 아이콘이 훨씬 또렷해짐). 웹앱 매니페스트 추가로 모바일에서 '홈 화면에 추가' 했을 때 제대로 된 앱 아이콘·이름이 뜨도록 함. 다크모드도 첫 방문 시엔 기기/브라우저의 다크모드 설정을 기본으로 따르도록 변경 (한 번이라도 직접 토글을 누르면 그 선택이 항상 우선)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.32</span>
         <span class="change-desc" data-en="Recent Commits and How This Site Was Made now also collapse behind a button, same as the changelog. Redrew clouds with extra small 'cauliflower' bumps along their edges for a bumpier, more textured cumulus look, and gave the sky birds a proper wing-flap animation plus a small body dot instead of a static flat silhouette.">'최근 커밋', '이 사이트는 이렇게 만들었다' 섹션도 체인지로그처럼 버튼을 눌러야 펼쳐지도록 변경. 구름 가장자리에 작은 뭉게뭉게 돌기를 더 그려 넣어 카우리플라워 같은 입체감 있는 질감으로 다시 그렸고, 하늘의 새들도 밋밋한 고정 실루엣 대신 실제로 날갯짓하는 애니메이션과 몸통 점을 추가</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.31</span>
@@ -2996,13 +3019,12 @@
   /* ---- THEME TOGGLE ----
      Light (premium, warm off-white + deep ink) is now the default look —
      no data-theme attribute needed for it. data-theme="dark" opts into the
-     refined near-black alt palette. */
+     refined near-black alt palette. The actual starting theme (saved choice,
+     falling back to the OS's prefers-color-scheme on a first-ever visit) was
+     already resolved by the inline script in <head> — this only syncs the
+     button's icon to whichever theme that landed on. */
   const themeBtn = document.getElementById('themeToggle');
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeBtn.textContent = '🌙';
-  }
+  themeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '🌙' : '☀️';
   /* accentRGB tracks --amber-rgb so canvas-drawn effects (cursor trail, card tilt glow)
      stay in sync with the current theme's accent color instead of a hardcoded value. */
   let accentRGB = '166,117,43';
