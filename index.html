@@ -2593,9 +2593,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.37</span>
+        <span class="change-desc" data-en="Performance fix: the new card spotlight effect (v2.36) was calling getBoundingClientRect() — a forced synchronous layout read — on every single raw pointermove event with no throttling, which on a high-poll-rate mouse could mean dozens of layout reads a second while hovering a card, on top of the page's other animation loops. Rewrote it to match the same rect-cached, rAF-batched pattern already used everywhere else in this file for the identical problem (magnetic buttons, hero spotlight, gallery tilt) — confirmed via instrumentation: a 60-move hover session went from 60 forced layout reads down to 1, same visual result.">성능 수정: v2.36에서 추가한 카드 스포트라이트 효과가 마우스가 움직일 때마다(쓰로틀링 없이) getBoundingClientRect()를 호출하고 있었음 — 이건 강제 동기 레이아웃 계산이라, 폴링레이트가 높은 마우스에서는 카드 위에 있는 동안 초당 수십 번씩 레이아웃을 다시 계산했던 셈 (다른 애니메이션 루프들과 겹쳐서 버벅임의 원인이 될 수 있음). 이 파일의 다른 곳(매그네틱 버튼, 히어로 스포트라이트, 갤러리 틸트)에서 이미 쓰고 있던 것과 같은 방식 — hover 시작할 때 한 번만 좌표를 캐싱하고 실제 반영은 requestAnimationFrame으로 묶어서 처리 — 으로 다시 작성. 60번 움직이는 호버 세션 기준 강제 레이아웃 계산이 60회 → 1회로 줄어든 것을 직접 계측해서 확인, 화면에 보이는 결과는 동일</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.36</span>
         <span class="change-desc" data-en="The scroll progress bar at the very top now traces the page's own space→sky→ground journey (navy → sky-blue → soft green) instead of a generic amber-rose gradient unrelated to what's actually happening as you scroll. Highlight/SNS/tracker cards now catch a soft light that follows your cursor across them on hover (desktop only). Also added a 5th hidden achievement for anyone who still remembers a certain 30-year-old cheat code.">맨 위 스크롤 진행바가 실제 스크롤 배경(우주→하늘→지상)과 무관한 앰버-로즈 그라디언트 대신, 그 여정 자체를 그대로 따라가도록(네이비 → 하늘색 → 연두) 변경. 하이라이트/SNS/트래커 카드는 호버 시 마우스를 따라다니는 은은한 조명 효과 추가 (데스크톱 전용). 그리고 아직도 그 30년 된 치트코드를 기억하는 분들을 위한 5번째 숨겨진 업적 추가</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.35</span>
@@ -3460,18 +3464,32 @@
   }, { passive: true });
 
   /* ---- CARD SPOTLIGHT (cursor-tracked sheen, see matching CSS) ----
-     Only wired up on real-mouse devices: touch has no hover to reveal the
-     glow anyway, so listening for pointermove there would just be wasted
-     work on every scroll-drag. Reads getBoundingClientRect() per move, but
-     only while the pointer is actually over one of these (few, small)
-     cards — not a per-frame animation loop — so it's cheap. */
+     Was calling getBoundingClientRect() (a forced synchronous layout read)
+     directly inside the pointermove handler, on every raw event — on a
+     high-poll-rate mouse/trackpad that's a layout read + two style writes
+     far more often than the screen can even repaint, and was a real source
+     of hover jank stacking on top of the page's other rAF loops (star
+     canvas, cursor trail, altitude background). Fixed to match the same
+     rAF-batched pattern already used elsewhere in this file for the
+     identical problem (see "HERO CURSOR SPOTLIGHT" / "DYNAMIC LIGHTING +
+     TILT" below): cache the rect once per hover (not per move), and only
+     touch the DOM once per animation frame no matter how many raw events
+     land in between. */
   if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     document.querySelectorAll('.highlight-card, .sns-card, .tracker-item').forEach(card => {
+      let rect = null, lastX = 0, lastY = 0, scheduled = false;
+      function update(){
+        scheduled = false;
+        if (!rect) return;
+        card.style.setProperty('--mx', ((lastX - rect.left) / rect.width * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', ((lastY - rect.top) / rect.height * 100).toFixed(1) + '%');
+      }
+      card.addEventListener('pointerenter', () => { rect = card.getBoundingClientRect(); });
       card.addEventListener('pointermove', (e) => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
-        card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
-      });
+        if (!rect) rect = card.getBoundingClientRect();
+        lastX = e.clientX; lastY = e.clientY;
+        if (!scheduled){ scheduled = true; requestAnimationFrame(update); }
+      }, { passive: true });
     });
   }
 
