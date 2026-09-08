@@ -449,6 +449,8 @@
   }
   @media(max-width:700px){ .sns-grid{grid-template-columns:1fr;} }
   .sns-card{
+    position:relative;
+    overflow:hidden;
     display:flex; align-items:center; gap:14px;
     border:1px solid var(--line); border-radius:var(--r-sm);
     padding:18px 18px;
@@ -710,6 +712,7 @@
   @media(max-width:560px){ .highlights-grid{grid-template-columns:1fr;} }
   .highlight-card{
     position:relative;
+    overflow:hidden;
     display:flex; align-items:flex-start; gap:16px;
     border:1px solid var(--line); border-radius:var(--r-sm);
     padding:20px 20px;
@@ -770,6 +773,8 @@
   .tracker-group:first-of-type .tracker-label{ margin-top:0; }
   .tracker-list{ display:flex; flex-direction:column; gap:10px; }
   .tracker-item{
+    position:relative;
+    overflow:hidden;
     border:1px solid var(--line); border-radius:var(--r-sm);
     padding:16px 18px;
     background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
@@ -1401,11 +1406,48 @@
   @media(max-width:900px){ .trail-canvas{display:none;} }
 
   /* ---------- SCROLL PROGRESS ---------- */
+  /* Retinted to trace the page's own space→sky→ground altitude journey
+     (same three zones/stops as initAltitude()'s SPACE/SKY/GROUND palettes)
+     instead of a generic amber→rose bar unrelated to what's actually
+     happening as you scroll. background-size:100vw pins the gradient to
+     the viewport width regardless of the bar's own (growing) width, so the
+     visible slice always lines up with how far down that journey you are —
+     no JS change needed, it rides the same width update as before. */
   .scroll-progress{
     position:fixed; top:0; left:0; height:3px; width:0%;
-    background:linear-gradient(90deg, var(--amber), var(--rose));
+    background:linear-gradient(90deg,
+      #08080D 0%, #1A1D30 30%,
+      #EAF6FF 34%, #CDE7F8 63%,
+      #D5ECDA 67%, #93C29D 100%);
+    background-size:100vw 100%;
+    box-shadow:0 0 8px -1px rgba(147,194,157,0.5);
     z-index:300;
     transition:width .1s linear;
+  }
+
+  /* ---------- CARD SPOTLIGHT ---------- */
+  /* A soft light that follows the cursor across the highlight/SNS/tracker
+     cards, restricted to devices with a real mouse (touch has no hover to
+     drive it, so there's no point paying for the pointermove listeners —
+     see the matching matchMedia guard in JS). --mx/--my are set on
+     pointermove; the glow itself only shows on :hover so a card that was
+     never actually pointed at doesn't silently carry a stale glow position
+     into view (e.g. right after its cardSettle reveal animation). */
+  @media (hover:hover) and (pointer:fine){
+    .highlight-card::before, .sns-card::before, .tracker-item::before{
+      content:'';
+      position:absolute; inset:0;
+      background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.55), transparent 68%);
+      opacity:0;
+      transition:opacity .35s var(--ease);
+      pointer-events:none;
+    }
+    .highlight-card:hover::before, .sns-card:hover::before, .tracker-item:hover::before{ opacity:1; }
+    html[data-theme="dark"] .highlight-card::before,
+    html[data-theme="dark"] .sns-card::before,
+    html[data-theme="dark"] .tracker-item::before{
+      background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.12), transparent 68%);
+    }
   }
 
   /* ---------- FILM GRAIN ---------- */
@@ -2551,10 +2593,15 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
-        <span class="change-ver">v2.35</span>
-        <span class="change-desc" data-en="Darkened every card/box border site-wide so they read more clearly against the scroll background's mid-brightness zones. The SNS section's verified badge now pulses its glow, and that blue light visibly radiates down into the 3 SNS cards below it — a tinted border, a soft blue aura around the whole card group, and a gradient bridge connecting the badge to the cards.">스크롤 배경의 중간 밝기 구간에서도 잘 보이도록 사이트 전체 카드/박스 테두리를 더 진하게 조정. '최한민의 SNS' 섹션은 인증 뱃지가 은은하게 맥동하고, 그 파란 빛이 아래 3개 SNS 카드까지 실제로 뿜어져 나오는 것처럼 보이도록 카드 테두리에 파란 기운을 입히고 카드 그룹 전체에 은은한 파란 아우라 + 뱃지와 카드를 잇는 그라디언트를 추가</span>
+        <span class="change-ver">v2.36</span>
+        <span class="change-desc" data-en="The scroll progress bar at the very top now traces the page's own space→sky→ground journey (navy → sky-blue → soft green) instead of a generic amber-rose gradient unrelated to what's actually happening as you scroll. Highlight/SNS/tracker cards now catch a soft light that follows your cursor across them on hover (desktop only). Also added a 5th hidden achievement for anyone who still remembers a certain 30-year-old cheat code.">맨 위 스크롤 진행바가 실제 스크롤 배경(우주→하늘→지상)과 무관한 앰버-로즈 그라디언트 대신, 그 여정 자체를 그대로 따라가도록(네이비 → 하늘색 → 연두) 변경. 하이라이트/SNS/트래커 카드는 호버 시 마우스를 따라다니는 은은한 조명 효과 추가 (데스크톱 전용). 그리고 아직도 그 30년 된 치트코드를 기억하는 분들을 위한 5번째 숨겨진 업적 추가</span>
         <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
+      <div class="change-row">
+        <span class="change-ver">v2.35</span>
+        <span class="change-desc" data-en="Darkened every card/box border site-wide so they read more clearly against the scroll background's mid-brightness zones. The SNS section's verified badge now pulses its glow, and that blue light visibly radiates down into the 3 SNS cards below it — a tinted border, a soft blue aura around the whole card group, and a gradient bridge connecting the badge to the cards.">스크롤 배경의 중간 밝기 구간에서도 잘 보이도록 사이트 전체 카드/박스 테두리를 더 진하게 조정. '최한민의 SNS' 섹션은 인증 뱃지가 은은하게 맥동하고, 그 파란 빛이 아래 3개 SNS 카드까지 실제로 뿜어져 나오는 것처럼 보이도록 카드 테두리에 파란 기운을 입히고 카드 그룹 전체에 은은한 파란 아우라 + 뱃지와 카드를 잇는 그라디언트를 추가</span>
+      </div>
+
       <div class="change-row">
         <span class="change-ver">v2.34</span>
         <span class="change-desc" data-en="The mobile browser chrome (address bar color) now switches with the theme toggle instead of always staying the light theme's gold. Dark mode gets a few more atmospheric details to match light mode's richness: a small fixed crescent moon, a very faint distant nebula wisp, a handful of bigger glowing stars mixed into the star field, and a subtle scroll-tied parallax drift on the stars.">모바일 브라우저 주소창 색이 다크모드 토글에 맞춰 같이 바뀌도록 수정 (기존엔 항상 라이트모드 골드색으로 고정). 다크모드에도 라이트모드만큼은 아니어도 분위기 있는 디테일 추가 — 작은 초승달, 아주 은은한 성운, 별밭에 섞인 크고 반짝이는 별 몇 개, 스크롤에 따라 별들이 아주 살짝 흐르는 패럴랙스</span>
@@ -3147,6 +3194,26 @@
     if (renderAltitudeFn) renderAltitudeFn();
   });
 
+  /* ---- KONAMI CODE EASTER EGG ---- */
+  (function(){
+    const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let pos = 0;
+    document.addEventListener('keydown', (e) => {
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (key === KONAMI[pos]) {
+        pos++;
+        if (pos === KONAMI.length) {
+          pos = 0;
+          unlockAchievement('konami', '전설의 커맨드, 입력 완료 🎮', 'Entered the legendary command 🎮');
+        }
+      } else {
+        pos = (key === KONAMI[0]) ? 1 : 0;
+      }
+    });
+  })();
+
   /* ---- OTTER EASTER EGG ---- */
   const mascot = document.getElementById('mascotImg');
   const bubble = document.getElementById('mascotBubble');
@@ -3391,6 +3458,22 @@
       scrollBar.style.width = (window.scrollY / scrollMax * 100) + '%';
     });
   }, { passive: true });
+
+  /* ---- CARD SPOTLIGHT (cursor-tracked sheen, see matching CSS) ----
+     Only wired up on real-mouse devices: touch has no hover to reveal the
+     glow anyway, so listening for pointermove there would just be wasted
+     work on every scroll-drag. Reads getBoundingClientRect() per move, but
+     only while the pointer is actually over one of these (few, small)
+     cards — not a per-frame animation loop — so it's cheap. */
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('.highlight-card, .sns-card, .tracker-item').forEach(card => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+      });
+    });
+  }
 
   /* ---- COUNT-UP STATS ---- */
   const statEls = document.querySelectorAll('.stat b[data-target]');
@@ -4075,7 +4158,8 @@
     { key: 'darkmode', icon: '🌙', kr: '다크모드 발견!', en: 'Discovered dark mode!', hintKr: '다크모드로 전환해보세요', hintEn: 'Try switching to dark mode' },
     { key: 'otter5', icon: '🦦', kr: '최한민과 친해짐 — 5번 클릭 달성!', en: 'Got close with Hanmin — clicked 5 times!', hintKr: '프로필 사진을 5번 클릭해보세요', hintEn: 'Click the profile photo 5 times' },
     { key: 'terminal', icon: '⌨️', kr: '숨겨진 터미널 발견!', en: 'Found the hidden terminal!', hintKr: '<kbd>`</kbd> 키를 눌러보세요', hintEn: 'Try pressing <kbd>`</kbd>' },
-    { key: 'finished', icon: '🏁', kr: '완주 — 페이지 끝까지 다 보셨네요!', en: 'Finished — you made it all the way to the bottom!', hintKr: '페이지 맨 끝까지 스크롤해보세요', hintEn: 'Scroll all the way to the bottom' }
+    { key: 'finished', icon: '🏁', kr: '완주 — 페이지 끝까지 다 보셨네요!', en: 'Finished — you made it all the way to the bottom!', hintKr: '페이지 맨 끝까지 스크롤해보세요', hintEn: 'Scroll all the way to the bottom' },
+    { key: 'konami', icon: '🎮', kr: '전설의 커맨드, 입력 완료', en: 'Entered the legendary command', hintKr: '어디선가 본 것 같은 그 커맨드를 입력해보세요 (힌트: ↑↑↓↓←→←→BA)', hintEn: 'Try entering that command you might recognize (hint: ↑↑↓↓←→←→BA)' }
   ];
   const achievementsModal = document.getElementById('achievementsModal');
   const achievementsModalClose = document.getElementById('achievementsModalClose');
