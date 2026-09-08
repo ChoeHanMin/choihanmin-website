@@ -106,8 +106,8 @@
     --amber-rgb:166,117,43;
     --teal-rgb:62,122,108;
     --rose-rgb:156,90,69;
-    --line: rgba(24,24,28,0.16);
-    --line-strong: rgba(24,24,28,0.26);
+    --line: rgba(24,24,28,0.3);
+    --line-strong: rgba(24,24,28,0.46);
     --mono: 'JetBrains Mono', monospace;
     --sans: 'Pretendard', -apple-system, sans-serif;
     --serif: 'Noto Serif KR', serif;
@@ -406,15 +406,41 @@
   .verified-badge{
     width:20px; height:20px; flex-shrink:0; align-self:center;
     filter:drop-shadow(0 2px 8px rgba(29,155,240,0.4));
+    animation:verifiedPulse 2.6s ease-in-out infinite;
   }
+  @keyframes verifiedPulse{
+    0%, 100%{ filter:drop-shadow(0 2px 8px rgba(29,155,240,0.4)); }
+    50%{ filter:drop-shadow(0 2px 14px rgba(29,155,240,0.75)); }
+  }
+  @media (prefers-reduced-motion: reduce){ .verified-badge{ animation:none; } }
+  /* The verified badge "radiates" down into the card group below it: a
+     radial-gradient glow anchored at the wrap's top edge (roughly where the
+     badge sits, one line up) plus a soft all-around blue box-shadow, so the
+     three SNS cards read as sitting inside that light rather than the badge
+     being a disconnected decoration above them. */
   .sns-neon-wrap{
     position:relative;
     padding:22px;
     border-radius:var(--r-lg);
-    border:1px solid var(--line-strong);
+    border:1px solid rgba(29,155,240,0.35);
     background:linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
-    box-shadow:var(--shadow-card);
+    box-shadow:var(--shadow-card), 0 0 44px -8px rgba(29,155,240,0.4), 0 0 90px -20px rgba(29,155,240,0.28);
+    animation:snsAuraPulse 2.6s ease-in-out infinite;
   }
+  .sns-neon-wrap::before{
+    content:'';
+    position:absolute; top:-26px; left:50%; transform:translateX(-50%);
+    width:65%; height:70px;
+    background:radial-gradient(ellipse at 50% 0%, rgba(29,155,240,0.4), transparent 72%);
+    filter:blur(6px);
+    pointer-events:none;
+    z-index:-1;
+  }
+  @keyframes snsAuraPulse{
+    0%, 100%{ box-shadow:var(--shadow-card), 0 0 44px -8px rgba(29,155,240,0.4), 0 0 90px -20px rgba(29,155,240,0.28); }
+    50%{ box-shadow:var(--shadow-card), 0 0 56px -8px rgba(29,155,240,0.65), 0 0 110px -18px rgba(29,155,240,0.4); }
+  }
+  @media (prefers-reduced-motion: reduce){ .sns-neon-wrap{ animation:none; } }
   html[data-theme="dark"] .sns-neon-wrap{ background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); }
   .sns-grid{
     display:grid;
@@ -2525,9 +2551,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.35</span>
+        <span class="change-desc" data-en="Darkened every card/box border site-wide so they read more clearly against the scroll background's mid-brightness zones. The SNS section's verified badge now pulses its glow, and that blue light visibly radiates down into the 3 SNS cards below it — a tinted border, a soft blue aura around the whole card group, and a gradient bridge connecting the badge to the cards.">스크롤 배경의 중간 밝기 구간에서도 잘 보이도록 사이트 전체 카드/박스 테두리를 더 진하게 조정. '최한민의 SNS' 섹션은 인증 뱃지가 은은하게 맥동하고, 그 파란 빛이 아래 3개 SNS 카드까지 실제로 뿜어져 나오는 것처럼 보이도록 카드 테두리에 파란 기운을 입히고 카드 그룹 전체에 은은한 파란 아우라 + 뱃지와 카드를 잇는 그라디언트를 추가</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.34</span>
         <span class="change-desc" data-en="The mobile browser chrome (address bar color) now switches with the theme toggle instead of always staying the light theme's gold. Dark mode gets a few more atmospheric details to match light mode's richness: a small fixed crescent moon, a very faint distant nebula wisp, a handful of bigger glowing stars mixed into the star field, and a subtle scroll-tied parallax drift on the stars.">모바일 브라우저 주소창 색이 다크모드 토글에 맞춰 같이 바뀌도록 수정 (기존엔 항상 라이트모드 골드색으로 고정). 다크모드에도 라이트모드만큼은 아니어도 분위기 있는 디테일 추가 — 작은 초승달, 아주 은은한 성운, 별밭에 섞인 크고 반짝이는 별 몇 개, 스크롤에 따라 별들이 아주 살짝 흐르는 패럴랙스</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.33</span>
