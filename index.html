@@ -654,6 +654,8 @@
     max-width:520px;
     animation:heroUp .8s var(--ease) both; animation-delay:.34s;
   }
+  .motto p{ margin:0 0 8px; }
+  .motto p:last-child{ margin-bottom:0; }
   @media (prefers-reduced-motion: reduce){ .motto{ animation:none; } }
 
   /* ---------- INTERESTS ---------- */
@@ -1853,7 +1855,7 @@
         <div class="out" id="out1">
           <b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>
           인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 (게임 목록 → soodalgames.com)<br>
-          동시에 <span class="teal">15+ 대내외 활동</span>, 20+ 조직과 협업 중
+          동시에 <span class="teal">30+ 대내외 활동</span>, 20+ 조직과 협업 중
         </div>
         <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="git log --oneline -1"></span></div>
         <div class="out" id="out2">
@@ -1880,11 +1882,15 @@
       밤에는 게임을 만들며, 새벽에는 버그를 고칩니다. 참 재밌는 인생 같습니다.
     </p>
 
-    <blockquote class="motto" id="mottoText">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</blockquote>
+    <blockquote class="motto">
+      <p data-en="It's better to regret doing something than to regret not doing it.">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</p>
+      <p data-en="I'm the reason behind every success, and I'm responsible for every failure.">성공의 주역도 나, 실패의 책임도 나.</p>
+      <p data-en="The hardships that don't break me only make me stronger.">나를 무너뜨리지 못한 시련은 나를 단련시킨다.</p>
+    </blockquote>
 
     <div class="stats">
       <a class="stat" href="https://www.soodalgames.com/" target="_blank" rel="noopener"><b data-target="7" data-suffix="">0</b><span data-en="Games shipped (Play / Steam)">출시 게임 (Play / Steam)</span></a>
-      <div class="stat"><b data-target="15" data-suffix="+">0</b><span data-en="Outside activities">대내외 활동</span></div>
+      <div class="stat"><b data-target="30" data-suffix="+">0</b><span data-en="Outside activities">대내외 활동</span></div>
       <div class="stat"><b data-target="20" data-suffix="+">0</b><span data-en="Organizations collaborated">협업 조직</span></div>
     </div>
     <p class="games-moved-note" data-en="Games I've shipped and the dev timeline now live at soodalgames.com →">출시한 게임들과 개발 타임라인은 이제 <a href="https://www.soodalgames.com/" target="_blank" rel="noopener">soodalgames.com</a>에서 볼 수 있어요 →</p>
@@ -2284,9 +2290,12 @@
     <div class="sec-head"><span class="tag">SNAPSHOTS</span><h2 data-en="Daily Gallery">일상 갤러리</h2></div>
     <p class="sec-sub">$ ls ~/photos --recent</p>
     <div class="gallery-grid">
+      <div class="gitem"><img src="images/web/photo35.jpg" loading="lazy" alt="강아지 헨리와 함께" decoding="async"><span class="new-tag">NEW</span><span class="gcap" data-en="A shot with cute Henry">귀여운 헨리와 한 컷</span></div>
+      <div class="gitem"><img src="images/web/photo36.jpg" loading="lazy" alt="코더스 활동 동료들과 거울 셀카" decoding="async"><span class="new-tag">NEW</span><span class="gcap" data-en="With teammates from the Coders program">코더스 대외활동에서 동료들과</span></div>
+      <div class="gitem"><img src="images/web/photo37.jpg" loading="lazy" alt="옷가게 거울 셀카" decoding="async"><span class="new-tag">NEW</span><span class="gcap" data-en="Wondering, &quot;how about this color?&quot;">"이 색깔은 어떻지?" 생각 중</span></div>
       <div class="gitem"><img src="images/web/photo32.jpg" loading="lazy" alt="새 삼성 노트북과 함께" decoding="async"><span class="gcap" data-en="Excited about the new Samsung laptop I got to borrow #1">삼성 신형 노트북 대여받고 신남 #1</span></div>
       <div class="gitem"><img src="images/web/photo33.jpg" loading="lazy" alt="새 노트북으로 전공 공부" decoding="async"><span class="gcap" data-en="Excited about the new Samsung laptop I got to borrow #2">삼성 신형 노트북 대여받고 신남 #2</span></div>
-      <div class="gitem"><img src="images/web/photo34.jpg" loading="lazy" alt="헤드셋을 걸치고 브이" decoding="async"><span class="new-tag">NEW</span><span class="gcap" data-en="English mentoring, mission accomplished">영어멘토링 성공적</span></div>
+      <div class="gitem"><img src="images/web/photo34.jpg" loading="lazy" alt="헤드셋을 걸치고 브이" decoding="async"><span class="gcap" data-en="English mentoring, mission accomplished">영어멘토링 성공적</span></div>
       <div class="gitem"><img src="images/web/photo31.jpg" loading="lazy" alt="밤샘 코딩" decoding="async"><span class="gcap" data-en="Late-night coding session">밤샘코딩 중</span></div>
       <div class="gitem"><img src="images/web/photo23.jpg" loading="lazy" alt="승마 체험" decoding="async"><span class="gcap" data-en="Saying hi to a horse">말이랑 인사하기</span></div>
       <div class="gitem"><img src="images/web/photo29.jpg" loading="lazy" alt="특수분장 체험" decoding="async"><span class="gcap" data-en="Zombie makeup at the folk village">민속촌 좀비 분장 체험</span></div>
@@ -2827,8 +2836,8 @@
   }
 
   const heroOut1 = {
-    kr: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 (게임 목록 → soodalgames.com)<br>동시에 <span class="teal">15+ 대내외 활동</span>, 20+ 조직과 협업 중`,
-    en: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>Running the indie game studio <span class="amber">Soodal Games</span> (game list → soodalgames.com)<br>Currently juggling <span class="teal">15+ activities</span>, working with 20+ organizations`
+    kr: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 (게임 목록 → soodalgames.com)<br>동시에 <span class="teal">30+ 대내외 활동</span>, 20+ 조직과 협업 중`,
+    en: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>Running the indie game studio <span class="amber">Soodal Games</span> (game list → soodalgames.com)<br>Currently juggling <span class="teal">30+ activities</span>, working with 20+ organizations`
   };
   const heroOut2 = {
     kr: `<span class="amber">e7f3a91</span> feat: 스링 서포터즈 1기 활동 진행 중 — 소모임·카페 공간 매칭 서비스 런칭 SNS 콘텐츠 제작`,
@@ -2913,13 +2922,6 @@
     }
   }
   cycleRoles();
-
-  /* ---- MOTTO (fixed) ---- */
-  const quotes = ['안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.'];
-  const mottoEl = document.getElementById('mottoText');
-  if (mottoEl) {
-    mottoEl.textContent = quotes[0];
-  }
 
   /* ---- DISMISSIBLE TOASTS (click to close early) ---- */
   document.querySelectorAll('.achievement-toast, .guestbook-toast').forEach(toast => {
@@ -3521,7 +3523,6 @@
 
   /* ---- LANG TOGGLE (KR / EN) ---- */
   const langBtn = document.getElementById('langToggle');
-  const enMottos = ['It\'s better to regret doing something than to regret not doing it.'];
   let currentLang = 'kr';
   langBtn.addEventListener('click', () => {
     currentLang = currentLang === 'kr' ? 'en' : 'kr';
@@ -3531,9 +3532,6 @@
       if (!el.dataset.kr) el.dataset.kr = el.textContent;
       el.textContent = currentLang === 'en' ? el.dataset.en : el.dataset.kr;
     });
-    if (mottoEl) {
-      mottoEl.textContent = currentLang === 'en' ? enMottos[0] : quotes[0];
-    }
     renderHeroTerminalLang();
     renderVisitCount();
     renderLiveVisitors();
