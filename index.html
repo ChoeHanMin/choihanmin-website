@@ -1054,6 +1054,7 @@
     grid-auto-rows:140px;
     gap:10px;
   }
+  .cert-grid[hidden], .cert-lock[hidden]{ display:none; }
   @media(max-width:700px){
     .cert-grid{grid-template-columns:repeat(2, 1fr); grid-auto-rows:158px; gap:8px;}
   }
@@ -1081,6 +1082,30 @@
   .citem img.loaded{ opacity:1; }
   .citem:hover img{transform:scale(1.06);}
   .citem img:focus-visible{ outline:2px solid var(--amber); outline-offset:-2px; transform:scale(1.06); }
+
+  /* ---- cert gallery password lock: hidden by default, unfolds on correct password ---- */
+  .cert-lock{
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px;
+    padding:52px 24px;
+    border:1px solid var(--line); border-radius:var(--r-md);
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    box-shadow:var(--shadow-card);
+  }
+  .cert-lock-icon{ font-size:26px; }
+  .cert-lock p{ font-size:13px; color:var(--scroll-ink-dim); max-width:360px; line-height:1.6; }
+  .cert-lock-form{ display:flex; gap:8px; width:100%; max-width:280px; }
+  #certPwInput{
+    flex:1; min-width:0; padding:10px 14px; border-radius:8px; border:1px solid var(--line);
+    background:var(--ink); color:var(--paper); font-family:var(--mono); font-size:14px;
+  }
+  #certPwSubmit{
+    padding:10px 18px; border-radius:999px; border:none; white-space:nowrap;
+    background:var(--amber); color:var(--ink); font-family:var(--mono); font-size:13px;
+    cursor:pointer; font-weight:600;
+  }
+  #certPwSubmit:hover{opacity:.85;}
+  .cert-lock-err{display:none; color:var(--rose); font-size:12px;}
+  .cert-lock-err.show{display:block;}
 
   /* ---------- FOOTER ---------- */
   footer{
@@ -2079,8 +2104,17 @@
   <section id="certs" class="reveal slide-right">
     <div class="sec-head"><span class="tag">PROOF</span><h2 data-en="Appointments, Certificates &amp; Acceptances">임명장&amp;수료증&amp;합격증</h2></div>
     <p class="sec-sub">$ ls ~/credentials --verify</p>
-    <p class="cert-note"><span data-en="Full details on Instagram @hanmin.archive — want these verified? Send an ">인스타그램 @hanmin.archive 에서 자세히 확인 가능하며 </span><a href="mailto:rokafhanmin@gmail.com" data-en="email">메일</a><span data-en=" and I can confirm.">로 증명 부탁 시 입증 가능합니다</span></p>
-    <div class="cert-grid">
+    <p class="cert-note"><span data-en="Full details on Instagram ">인스타그램 </span><a href="https://www.instagram.com/hanmin.archive/" target="_blank" rel="noopener" data-en="@hanmin.archive">@hanmin.archive</a><span data-en=" — send me an "> 에서 자세히 확인 가능하며 </span><a href="mailto:rokafhanmin@gmail.com" data-en="email">메일</a><span data-en=" and I'll verify any activity on request.">로 활동 증명 요청 시 입증해 드립니다</span></p>
+    <div class="cert-lock" id="certLock">
+      <span class="cert-lock-icon" aria-hidden="true">🔒</span>
+      <p data-en="These are personal verification documents, so they stay locked by default. Enter the password to unfold them.">개인 활동 증빙 자료라 평소에는 잠가두었습니다. 비밀번호를 입력하면 펼쳐집니다.</p>
+      <div class="cert-lock-form">
+        <input type="password" id="certPwInput" placeholder="Password" autocomplete="off" aria-label="비밀번호">
+        <button id="certPwSubmit" type="button" data-en="Unlock">열기</button>
+      </div>
+      <p class="cert-lock-err" id="certPwErr" data-en="Incorrect password.">비밀번호가 틀렸습니다.</p>
+    </div>
+    <div class="cert-grid" id="certGrid" hidden>
       <div class="citem"><img src="images/web/cert01.jpg" loading="lazy" alt="삼성전자 갤럭시 대학생 서포터즈 6기 임명장" decoding="async"></div>
       <div class="citem"><img src="images/web/cert02.jpg" loading="lazy" alt="스페이스링크 스링 서포터즈 1기 활동인증서" decoding="async"></div>
       <div class="citem"><img src="images/web/cert03.jpg" loading="lazy" alt="LG CNS AI Genius 16기 서포터즈 임명장" decoding="async"></div>
@@ -2101,6 +2135,26 @@
       <div class="citem"><img src="images/web/cert18.jpg" loading="lazy" alt="인텔 서포터즈 최종 선발 서류 안내" decoding="async"></div>
       <div class="citem"><img src="images/web/cert19.jpg" loading="lazy" alt="다나와 체험단 당첨 안내 (인텔 코어 갤럭시 북6 서포터즈)" decoding="async"></div>
       <div class="citem"><img src="images/web/cert20.jpg" loading="lazy" alt="다나와 체험단 당첨 서류 제출 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert21.jpg" loading="lazy" alt="Google Play Console 프로덕션 액세스 권한 부여 안내 (Stealth Ops 앱)" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert22.jpg" loading="lazy" alt="한국중소벤처기업유통원 탑스(TOPS) 서포터즈 발대식 최종 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert23.jpg" loading="lazy" alt="해커스 해블리 17기 캠퍼스 서포터즈 최종 합격 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert24.jpg" loading="lazy" alt="굿네이버스 경기남부사업본부 AI 캠페인 크리에이터 2기 환영 메시지" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert25.jpg" loading="lazy" alt="2026 서울 디지털성범죄 안심 서포터즈 합격 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert26.jpg" loading="lazy" alt="2026년 농촌일손여행 수료증 (제2회 초롱이둥지마을)" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert27.jpg" loading="lazy" alt="2030 신메뉴 리서치 & 모니터링 서포터즈 선정 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert28.jpg" loading="lazy" alt="한국특수판매공제조합 제8기 홍보 서포터즈 K-ADitors 선정 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert29.jpg" loading="lazy" alt="Hana Power On 하나 소셜벤처 유니버시티 창업 심화 교육 수료증 (한국외국어대학교)" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert30.jpg" loading="lazy" alt="LiNK English Language Program English Buddy 환영 메시지" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert31.jpg" loading="lazy" alt="LG CNS AI Genius 서포터즈 16기 최종 합격 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert32.jpg" loading="lazy" alt="멈블 앰버서더 5기 최종 합격 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert33.jpg" loading="lazy" alt="2026 하나 소셜벤처 유니버시티 ESG지원형 수료증 (청년일경험 지원사업)" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert34.jpg" loading="lazy" alt="시대에듀 에듀메이트 2기 합격 및 활동안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert35.jpg" loading="lazy" alt="코더스 5기 최종 합격 및 발대식 안내 문자" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert36.jpg" loading="lazy" alt="갤럭시 캠퍼스 커뮤니티(갤캠스) 방장 활동인증서" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert37.jpg" loading="lazy" alt="2026 모아진 서포터즈 활동 증명서" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert38.jpg" loading="lazy" alt="갤캠스 1기 우수 방장 발표 게시글" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert39.jpg" loading="lazy" alt="하나 소셜벤처 유니버시티 학습현황 100% 완료 화면" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert40.jpg" loading="lazy" alt="KT&G장학재단 2026 AI 상상그라운드-상상클래스 수료증" decoding="async"></div>
     </div>
   </section>
 
@@ -2318,9 +2372,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.40</span>
+        <span class="change-desc" data-en="The '임명장&amp;수료증&amp;합격증' (Appointments, Certificates &amp; Acceptances) gallery now stays locked by default — only the lock card shows until the correct password is entered, at which point the full grid unfolds in place (same password as the portfolio PDF download). Doubled the gallery to 40 images with 20 more appointment letters, completion certificates, and acceptance notices. The note under the title now also links the Instagram handle @hanmin.archive itself to the profile, alongside the existing email link for verification requests.">'임명장&amp;수료증&amp;합격증' 갤러리를 평소엔 잠가두도록 변경 — 비밀번호를 입력하기 전까지는 잠금 카드만 보이다가, 올바른 비밀번호를 입력하면 그 자리에서 그리드 전체가 펼쳐짐 (포트폴리오 PDF 다운로드와 동일한 비밀번호 사용). 임명장·수료증·합격 안내 20장을 추가해 총 40장으로 확대. 제목 아래 안내문에서 이메일 링크뿐 아니라 인스타그램 핸들 @hanmin.archive 자체도 프로필로 바로 이동하는 링크로 변경</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.39</span>
         <span class="change-desc" data-en="Added an '임명장&amp;수료증&amp;합격증' (Appointments, Certificates &amp; Acceptances) section right below the skills section — a 20-image grid of appointment letters, completion certificates, and acceptance notices, click/tap to enlarge with its own prev/next lightbox (kept fully independent from the daily gallery's lightbox, so navigating one never bleeds into the other). A note under the title points to Instagram @hanmin.archive for more and links an email address for verification requests.">기술 스택 섹션 바로 아래에 '임명장&amp;수료증&amp;합격증' 섹션 추가 — 임명장·수료증·합격 안내 20장을 그리드로 보여주고, 클릭/탭하면 확대해서 보여주는 자체 이전/다음 라이트박스 적용 (일상 갤러리의 라이트박스와는 완전히 분리되어 있어서 한쪽에서 넘기는 게 다른 쪽에 영향 안 줌). 제목 아래에는 인스타그램 @hanmin.archive 안내와, 증명 요청용 이메일 링크를 추가</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.38</span>
@@ -3587,6 +3645,31 @@
   }
   if (portfolioPwSubmit) portfolioPwSubmit.addEventListener('click', tryUnlockPortfolio);
   if (portfolioPwInput) portfolioPwInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlockPortfolio(); });
+
+  /* ---- 2c. CERTIFICATES GALLERY PASSWORD LOCK ----
+     같은 비밀번호를 재사용 — 클라이언트 사이드 체크라 캐주얼 노출 방지용입니다.
+     잠금 해제 시 .cert-grid 가 [hidden] → 보이기로 바뀌면서 .reveal.in-view .citem 의
+     cardSettle 애니메이션이 자동으로 다시 재생되어 "펼쳐지는" 느낌을 줍니다. */
+  const CERTS_PW_B64 = 'Q2FuaXNoYXJlODM2ITcyNg==';
+  const certLock = document.getElementById('certLock');
+  const certGrid = document.getElementById('certGrid');
+  const certPwInput = document.getElementById('certPwInput');
+  const certPwSubmit = document.getElementById('certPwSubmit');
+  const certPwErr = document.getElementById('certPwErr');
+
+  function tryUnlockCerts(){
+    const correct = atob(CERTS_PW_B64);
+    if (certPwInput.value.trim() === correct){
+      certLock.hidden = true;
+      certGrid.hidden = false;
+    } else {
+      certPwErr.classList.add('show');
+      certPwInput.value = '';
+      certPwInput.focus();
+    }
+  }
+  if (certPwSubmit) certPwSubmit.addEventListener('click', tryUnlockCerts);
+  if (certPwInput) certPwInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlockCerts(); });
 
   /* ---- 4. TEXT SCRAMBLE ON SECTION TITLES ---- */
   const scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ가나다라마바사아자차카타파하#$%&';
