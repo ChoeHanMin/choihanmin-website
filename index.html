@@ -3361,7 +3361,6 @@
 
   /* ---- LANG TOGGLE (KR / EN) ---- */
   const langBtn = document.getElementById('langToggle');
-  const enMottos = ['It\'s better to regret doing something than to regret not doing it.'];
   let currentLang = 'kr';
   langBtn.addEventListener('click', () => {
     currentLang = currentLang === 'kr' ? 'en' : 'kr';
@@ -3371,9 +3370,6 @@
       if (!el.dataset.kr) el.dataset.kr = el.textContent;
       el.textContent = currentLang === 'en' ? el.dataset.en : el.dataset.kr;
     });
-    if (mottoEl) {
-      mottoEl.textContent = currentLang === 'en' ? enMottos[0] : quotes[0];
-    }
     renderHeroTerminalLang();
     renderVisitCount();
     renderLiveVisitors();
