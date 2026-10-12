@@ -82,7 +82,6 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="dns-prefetch" href="https://api.open-meteo.com">
 <link rel="dns-prefetch" href="https://api.github.com">
 <link rel="dns-prefetch" href="https://api.countapi.xyz">
 <link rel="dns-prefetch" href="https://api.qrserver.com">
@@ -250,10 +249,7 @@
   .out b{color:var(--paper); font-weight:600;}
   .out .amber{color:var(--amber);}
   .out .teal{color:var(--teal);}
-  .paper-dim-note{color:var(--paper-dim); font-size:11px;}
-  /* Same look, but for the "cached" note in the (bare-page, not card) commit
-     list — .paper-dim-note above is also used inside the always-light
-     terminal card, so it has to stay fixed; this one needs to track scroll. */
+  /* For the "cached" note in the recent-commits list — tracks the scroll theme. */
   .scroll-dim-note{color:var(--scroll-ink-dim); font-size:11px;}
   .caret{display:inline-block; width:8px; height:16px; background:var(--amber); vertical-align:middle; animation:blink 1s step-end infinite;}
   @keyframes appear{to{opacity:1;}}
@@ -1857,14 +1853,8 @@
           인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 (게임 목록 → soodalgames.com)<br>
           동시에 <span class="teal">30+ 대내외 활동</span>, 20+ 조직과 협업 중
         </div>
-        <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="git log --oneline -1"></span></div>
-        <div class="out" id="out2">
-          <span class="amber">e7f3a91</span> feat: 스링 서포터즈 1기 활동 진행 중 — 소모임·카페 공간 매칭 서비스 런칭 SNS 콘텐츠 제작
-        </div>
-        <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="curl wttr.in/seongnam"></span></div>
-        <div class="out" id="out3">불러오는 중<span class="caret"></span></div>
         <div class="term-line"><span class="prompt">~$</span> <span class="cmd" data-cmd="echo $STATUS"></span></div>
-        <div class="out" id="out4"></div>
+        <div class="out" id="out2"></div>
       </div>
     </div>
 
@@ -2364,7 +2354,7 @@
       <div class="stack-item"><b data-en="Hosting">호스팅</b><span>GitHub Pages</span></div>
       <div class="stack-item"><b data-en="Domain">도메인</b><span>Porkbun · DNS ALIAS/CNAME</span></div>
       <div class="stack-item"><b data-en="How it's made">제작 방식</b><span data-en="Blood, sweat, and tears of Choi Hanmin">최한민의 피 땀 눈물</span></div>
-      <div class="stack-item"><b data-en="Weather / Commits">날씨/커밋</b><span data-en="Live via Open-Meteo & GitHub Public API">Open-Meteo · GitHub Public API 실시간 연동</span></div>
+      <div class="stack-item"><b data-en="Commits">커밋</b><span data-en="Live via GitHub Public API">GitHub Public API 실시간 연동</span></div>
     </div>
   </section>
 
@@ -2765,7 +2755,7 @@
     });
   })();
 
-  /* ---- TERMINAL TYPEWRITER + WEATHER ---- */
+  /* ---- TERMINAL TYPEWRITER ---- */
   function typeText(el, text, speed){
     return new Promise(resolve => {
       let i = 0;
@@ -2778,70 +2768,9 @@
     });
   }
 
-  const weatherCodeMap = {
-    0:{kr:'☀️ 맑음',en:'☀️ Clear'},1:{kr:'🌤️ 대체로 맑음',en:'🌤️ Mostly clear'},2:{kr:'⛅ 구름 조금',en:'⛅ Partly cloudy'},3:{kr:'☁️ 흐림',en:'☁️ Cloudy'},
-    45:{kr:'🌫️ 안개',en:'🌫️ Foggy'},48:{kr:'🌫️ 안개',en:'🌫️ Foggy'},
-    51:{kr:'🌦️ 이슬비',en:'🌦️ Light drizzle'},53:{kr:'🌦️ 이슬비',en:'🌦️ Drizzle'},55:{kr:'🌧️ 이슬비',en:'🌧️ Dense drizzle'},
-    61:{kr:'🌧️ 비',en:'🌧️ Rain'},63:{kr:'🌧️ 비',en:'🌧️ Rain'},65:{kr:'🌧️ 강한 비',en:'🌧️ Heavy rain'},
-    71:{kr:'🌨️ 눈',en:'🌨️ Snow'},73:{kr:'🌨️ 눈',en:'🌨️ Snow'},75:{kr:'❄️ 강한 눈',en:'❄️ Heavy snow'},
-    80:{kr:'🌦️ 소나기',en:'🌦️ Showers'},81:{kr:'🌦️ 소나기',en:'🌦️ Showers'},82:{kr:'⛈️ 강한 소나기',en:'⛈️ Heavy showers'},95:{kr:'⛈️ 뇌우',en:'⛈️ Thunderstorm'}
-  };
-  let weatherData = null, weatherFailed = false, weatherFromCache = false, weatherCacheTs = null;
-  const out3El = document.getElementById('out3');
-  function timeAgoText(ts){
-    const mins = Math.max(1, Math.round((Date.now() - ts) / 60000));
-    if (mins < 60) return currentLang === 'en' ? `${mins}m ago` : `${mins}분 전`;
-    const hrs = Math.round(mins / 60);
-    return currentLang === 'en' ? `${hrs}h ago` : `${hrs}시간 전`;
-  }
-  function renderWeather(){
-    if (!out3El) return;
-    if (weatherFailed) {
-      out3El.innerHTML = currentLang === 'en'
-        ? "🌡️ The weather API's throwing a tantrum. Just check the window instead."
-        : '🌡️ 날씨 API가 삐졌나 봐요. 그냥 창문 한 번 열어보세요.';
-      return;
-    }
-    if (!weatherData) return;
-    const entry = weatherCodeMap[weatherData.weathercode];
-    const desc = entry ? (currentLang === 'en' ? entry.en : entry.kr) : (currentLang === 'en' ? 'Weather info' : '날씨 정보');
-    const city = currentLang === 'en' ? 'Seongnam' : '성남시';
-    const staleNote = weatherFromCache
-      ? ` <span class="paper-dim-note">(${currentLang === 'en' ? 'cached, ' : '캐시됨, '}${timeAgoText(weatherCacheTs)})</span>`
-      : '';
-    out3El.innerHTML = `<span class="teal">${city}</span> ${desc} · ${Math.round(weatherData.temperature)}°C${staleNote}`;
-  }
-  function getWeatherHTML(){
-    return fetch('https://api.open-meteo.com/v1/forecast?latitude=37.3826&longitude=127.1189&current_weather=true')
-      .then(r => r.json())
-      .then(data => {
-        weatherData = data.current_weather;
-        weatherFromCache = false;
-        localStorage.setItem('weatherCache', JSON.stringify({ data: weatherData, ts: Date.now() }));
-        return true;
-      })
-      .catch(() => {
-        try {
-          const cached = JSON.parse(localStorage.getItem('weatherCache'));
-          if (cached && cached.data) {
-            weatherData = cached.data;
-            weatherFromCache = true;
-            weatherCacheTs = cached.ts;
-            return true;
-          }
-        } catch (e) { /* ignore malformed cache */ }
-        weatherFailed = true;
-        return false;
-      });
-  }
-
   const heroOut1 = {
     kr: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>인디 게임 스튜디오 <span class="amber">Soodal Games</span> 운영 (게임 목록 → soodalgames.com)<br>동시에 <span class="teal">30+ 대내외 활동</span>, 20+ 조직과 협업 중`,
     en: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>Running the indie game studio <span class="amber">Soodal Games</span> (game list → soodalgames.com)<br>Currently juggling <span class="teal">30+ activities</span>, working with 20+ organizations`
-  };
-  const heroOut2 = {
-    kr: `<span class="amber">e7f3a91</span> feat: 스링 서포터즈 1기 활동 진행 중 — 소모임·카페 공간 매칭 서비스 런칭 SNS 콘텐츠 제작`,
-    en: `<span class="amber">e7f3a91</span> feat: Sling Supporters 1st ongoing — SNS content for a meetup×cafe space matching service launch`
   };
 
   /* ---- TIME-OF-DAY STATUS LINE (KST-based, echoes the hero lede's daily loop) ---- */
@@ -2866,17 +2795,13 @@
   function renderHeroTerminalLang(){
     const out1El = document.getElementById('out1');
     const out2El = document.getElementById('out2');
-    const out4El = document.getElementById('out4');
     if (out1El) out1El.innerHTML = currentLang === 'en' ? heroOut1.en : heroOut1.kr;
-    if (out2El) out2El.innerHTML = currentLang === 'en' ? heroOut2.en : heroOut2.kr;
-    if (out4El) { const s = heroOut4(); out4El.innerHTML = currentLang === 'en' ? s.en : s.kr; }
-    renderWeather();
+    if (out2El) { const s = heroOut4(); out2El.innerHTML = currentLang === 'en' ? s.en : s.kr; }
   }
 
   async function runTerminal(){
     const lines = document.querySelectorAll('.term-line');
     const outs = document.querySelectorAll('.out');
-    const weatherPromise = getWeatherHTML();
 
     for (let i = 0; i < lines.length; i++) {
       lines[i].classList.add('appear');
@@ -2884,12 +2809,7 @@
       await typeText(cmdEl, cmdEl.dataset.cmd, 35);
       await new Promise(r => setTimeout(r, 150));
       if (i === 0) outs[i].innerHTML = currentLang === 'en' ? heroOut1.en : heroOut1.kr;
-      if (i === 1) outs[i].innerHTML = currentLang === 'en' ? heroOut2.en : heroOut2.kr;
-      if (i === 2) {
-        await weatherPromise;
-        renderWeather();
-      }
-      if (i === 3) { const s = heroOut4(); outs[i].innerHTML = currentLang === 'en' ? s.en : s.kr; }
+      if (i === 1) { const s = heroOut4(); outs[i].innerHTML = currentLang === 'en' ? s.en : s.kr; }
       outs[i].classList.add('appear');
       await new Promise(r => setTimeout(r, 300));
     }
@@ -3059,6 +2979,13 @@
       renderVisitCount();
     })
     .catch(() => {});
+
+  function timeAgoText(ts){
+    const mins = Math.max(1, Math.round((Date.now() - ts) / 60000));
+    if (mins < 60) return currentLang === 'en' ? `${mins}m ago` : `${mins}분 전`;
+    const hrs = Math.round(mins / 60);
+    return currentLang === 'en' ? `${hrs}h ago` : `${hrs}시간 전`;
+  }
 
   /* ---- RECENT COMMITS (localStorage-cached; witty fallback if the API and the cache both miss) ---- */
   function commitLoadFailText(){
