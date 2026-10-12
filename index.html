@@ -1037,6 +1037,51 @@
     z-index:2;
   }
 
+  /* ---------- CERTIFICATES GRID ----------
+     Same grid/hover language as .gallery-grid/.gitem above, but
+     object-fit:contain instead of cover — these are documents meant to be
+     read, not photos meant to be nicely cropped, so nothing at the edges
+     (dates, seals, signatures) should ever get cut off in the thumbnail. */
+  .cert-note{
+    margin:-6px 0 18px;
+    font-size:13px;
+    color:var(--scroll-ink-dim);
+  }
+  .cert-note a{ color:var(--amber); text-decoration:underline; text-underline-offset:2px; }
+  .cert-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    grid-auto-rows:140px;
+    gap:10px;
+  }
+  @media(max-width:700px){
+    .cert-grid{grid-template-columns:repeat(2, 1fr); grid-auto-rows:158px; gap:8px;}
+  }
+  .citem{
+    position:relative;
+    overflow:hidden;
+    border-radius:var(--r-sm);
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    transition:box-shadow .35s var(--ease), border-color .35s var(--ease);
+  }
+  .citem:hover{ border-color:rgba(var(--amber-rgb),0.4); box-shadow:0 16px 36px -14px rgba(var(--amber-rgb),0.35); }
+  .reveal.in-view .citem{ animation:cardSettle .5s var(--ease) both; }
+  .reveal.in-view .citem:nth-child(4n+1){ animation-delay:.03s; }
+  .reveal.in-view .citem:nth-child(4n+2){ animation-delay:.08s; }
+  .reveal.in-view .citem:nth-child(4n+3){ animation-delay:.13s; }
+  .reveal.in-view .citem:nth-child(4n+4){ animation-delay:.18s; }
+  .citem img{
+    width:100%; height:100%; object-fit:contain;
+    display:block;
+    cursor:zoom-in;
+    opacity:0;
+    transition:opacity .5s var(--ease), transform .4s ease;
+  }
+  .citem img.loaded{ opacity:1; }
+  .citem:hover img{transform:scale(1.06);}
+  .citem img:focus-visible{ outline:2px solid var(--amber); outline-offset:-2px; transform:scale(1.06); }
+
   /* ---------- FOOTER ---------- */
   footer{
     border-top:1px solid var(--line);
@@ -1757,6 +1802,7 @@
   <button data-target="highlights"><span class="dot-label" data-en="Highlights">하이라이트</span></button>
   <button data-target="tracker"><span class="dot-label" data-en="Tracker">진행현황</span></button>
   <button data-target="skills"><span class="dot-label" data-en="Skills">기술스택</span></button>
+  <button data-target="certs"><span class="dot-label" data-en="Proof">증명자료</span></button>
   <button data-target="interests"><span class="dot-label" data-en="Interests">관심사</span></button>
   <button data-target="favsong"><span class="dot-label" data-en="Song">좋아하는 노래</span></button>
   <button data-target="aichat"><span class="dot-label" data-en="AI Chat">AI 챗봇</span></button>
@@ -2029,6 +2075,41 @@
     <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
   </svg></div>
 
+  <!-- CERTIFICATES -->
+  <section id="certs" class="reveal slide-right">
+    <div class="sec-head"><span class="tag">PROOF</span><h2 data-en="Appointments, Certificates &amp; Acceptances">임명장&amp;수료증&amp;합격증</h2></div>
+    <p class="sec-sub">$ ls ~/credentials --verify</p>
+    <p class="cert-note"><span data-en="Full details on Instagram @hanmin.archive — want these verified? Send an ">인스타그램 @hanmin.archive 에서 자세히 확인 가능하며 </span><a href="mailto:rokafhanmin@gmail.com" data-en="email">메일</a><span data-en=" and I can confirm.">로 증명 부탁 시 입증 가능합니다</span></p>
+    <div class="cert-grid">
+      <div class="citem"><img src="images/web/cert01.jpg" loading="lazy" alt="삼성전자 갤럭시 대학생 서포터즈 6기 임명장" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert02.jpg" loading="lazy" alt="스페이스링크 스링 서포터즈 1기 활동인증서" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert03.jpg" loading="lazy" alt="LG CNS AI Genius 16기 서포터즈 임명장" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert04.jpg" loading="lazy" alt="시대에듀 에듀메이트 2기 이수 수료증" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert05.jpg" loading="lazy" alt="멈블 팀 리워드 기프티콘 및 네이버페이 포인트" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert06.jpg" loading="lazy" alt="Campus Blind 서포터즈 1기 합격 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert07.jpg" loading="lazy" alt="굿네이버스 AI 캠페인 크리에이터 2기 우수 아이디어 선정" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert08.jpg" loading="lazy" alt="한국저작권위원회 컴퓨터프로그램 저작권 등록증 (미니법정)" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert09.jpg" loading="lazy" alt="삼성 멤버스 스타즈 2027 멤버 소개" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert10.jpg" loading="lazy" alt="삼성 멤버스 스타즈 2027 선발 결과 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert11.jpg" loading="lazy" alt="HUFS 2026 여름 알고리즘 캠프 Code Master 수료증" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert12.jpg" loading="lazy" alt="나도기브 대학생 서포터즈 1기 합격 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert13.jpg" loading="lazy" alt="LilysAI 대학생 앰버서더 선정 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert14.jpg" loading="lazy" alt="법무법인 해율 청년봉사단 4기 최종 선발 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert15.jpg" loading="lazy" alt="스페이스링크 스링 서포터즈 합격 및 활동 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert16.jpg" loading="lazy" alt="세이브더칠드런 아동권리영화제 서포터즈 선발 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert17.jpg" loading="lazy" alt="굿네이버스 경북사업본부 나눔활동 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert18.jpg" loading="lazy" alt="인텔 서포터즈 최종 선발 서류 안내" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert19.jpg" loading="lazy" alt="다나와 체험단 당첨 안내 (인텔 코어 갤럭시 북6 서포터즈)" decoding="async"></div>
+      <div class="citem"><img src="images/web/cert20.jpg" loading="lazy" alt="다나와 체험단 당첨 서류 제출 안내" decoding="async"></div>
+    </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
   <!-- INTERESTS -->
   <section id="interests" class="reveal slide-left">
     <div class="sec-head"><span class="tag">OFFLINE</span><h2 data-en="Things I Enjoy">좋아하는 것들</h2></div>
@@ -2237,9 +2318,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.39</span>
+        <span class="change-desc" data-en="Added an '임명장&amp;수료증&amp;합격증' (Appointments, Certificates &amp; Acceptances) section right below the skills section — a 20-image grid of appointment letters, completion certificates, and acceptance notices, click/tap to enlarge with its own prev/next lightbox (kept fully independent from the daily gallery's lightbox, so navigating one never bleeds into the other). A note under the title points to Instagram @hanmin.archive for more and links an email address for verification requests.">기술 스택 섹션 바로 아래에 '임명장&amp;수료증&amp;합격증' 섹션 추가 — 임명장·수료증·합격 안내 20장을 그리드로 보여주고, 클릭/탭하면 확대해서 보여주는 자체 이전/다음 라이트박스 적용 (일상 갤러리의 라이트박스와는 완전히 분리되어 있어서 한쪽에서 넘기는 게 다른 쪽에 영향 안 줌). 제목 아래에는 인스타그램 @hanmin.archive 안내와, 증명 요청용 이메일 링크를 추가</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.38</span>
         <span class="change-desc" data-en="Retired the scroll-driven space→sky→ground background entirely — it was rewriting the page's background on nearly every scroll frame (measured, reproducible main-thread longtasks on mobile viewports), which is exactly what mobile scroll jank/flicker looks like. Replaced with a single static, warm off-white page background (deep near-black in dark mode, unchanged) that costs nothing on scroll. Text color, the scroll progress bar, and the intro splash screen all switched from the old scroll-tracked/space-themed colors to the site's existing calm bronze/teal accent palette. Dark mode's star field, moon and nebula are untouched — they were never the problem.">스크롤에 따라 우주→하늘→땅으로 바뀌던 배경을 완전히 걷어냄 — 스크롤할 때마다 거의 매 프레임 배경을 다시 그리고 있었고, 실제로 모바일 화면 크기에서 재현 가능한 메인 스레드 롱태스크로 측정됨 (모바일에서 버벅이거나 화면이 깜빡이는 증상의 원인). 대신 스크롤과 무관한 단일하고 차분한 웜톤 오프화이트 배경으로 교체 (다크모드는 원래도 정적이었던 근흑색 그대로 유지) — 스크롤 중 아무 비용도 들지 않음. 글자색, 스크롤 진행바, 인트로 스플래시 화면도 예전의 스크롤 추적/우주 테마 색상 대신 사이트에 원래 있던 차분한 브론즈·틸 액센트 팔레트로 통일. 다크모드의 별밭·달·성운은 그대로 유지 (문제의 원인이 아니었음)</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.37</span>
@@ -2777,7 +2862,7 @@
   });
 
   /* ---- IMAGE FADE-IN ON LOAD ---- */
-  document.querySelectorAll('.gitem img').forEach(img => {
+  document.querySelectorAll('.gitem img, .citem img').forEach(img => {
     if (img.complete && img.naturalWidth > 0) {
       img.classList.add('loaded');
     } else {
@@ -3031,7 +3116,11 @@
     if (e.key === 'Escape') { closeShortcutsModal(); closePortfolioModal(); closeAchievementsModal(); closeMiniTerminal(); }
   });
 
-  /* ---- LIGHTBOX (with gallery prev/next + captions) ---- */
+  /* ---- LIGHTBOX (with gallery prev/next + captions) ----
+     Shared by the daily gallery and the certificates grid — each has its
+     own image list, but only one is "active" (the one last opened), so
+     prev/next and the counter stay scoped to whichever grid you clicked
+     into instead of bleeding across both. */
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxCaption = document.getElementById('lightboxCaption');
@@ -3039,32 +3128,39 @@
   const lightboxNext = document.getElementById('lightboxNext');
 
   const galleryImgs = Array.from(document.querySelectorAll('.gallery-grid .gitem img'));
+  const certImgs = Array.from(document.querySelectorAll('.cert-grid .citem img'));
+  let activeImgs = galleryImgs;
   let galleryIndex = -1;
 
   function showGalleryAt(i){
-    if (!galleryImgs.length) return;
-    galleryIndex = (i + galleryImgs.length) % galleryImgs.length;
-    const img = galleryImgs[galleryIndex];
+    if (!activeImgs.length) return;
+    galleryIndex = (i + activeImgs.length) % activeImgs.length;
+    const img = activeImgs[galleryIndex];
     lightboxImg.src = img.src;
     lightboxImg.alt = img.alt || '';
     const cap = img.parentElement.querySelector('.gcap');
     const capText = cap ? cap.textContent : (img.alt || '');
-    lightboxCaption.textContent = `${capText} · ${galleryIndex + 1}/${galleryImgs.length}`;
+    lightboxCaption.textContent = `${capText} · ${galleryIndex + 1}/${activeImgs.length}`;
     lightboxPrev.hidden = false;
     lightboxNext.hidden = false;
   }
 
-  galleryImgs.forEach((img, i) => {
-    img.style.cursor = 'zoom-in';
-    img.tabIndex = 0;
-    img.setAttribute('role', 'button');
-    img.setAttribute('aria-label', `${img.alt || '사진'} 크게 보기`);
-    const open = () => { showGalleryAt(i); lightbox.classList.add('show'); };
-    img.addEventListener('click', open);
-    img.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+  function wireLightboxGallery(imgs){
+    imgs.forEach((img, i) => {
+      img.style.cursor = 'zoom-in';
+      img.tabIndex = 0;
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', `${img.alt || '사진'} 크게 보기`);
+      const open = () => { activeImgs = imgs; showGalleryAt(i); lightbox.classList.add('show'); };
+      img.addEventListener('click', open);
+      img.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+      });
     });
-  });
+  }
+  wireLightboxGallery(galleryImgs);
+  wireLightboxGallery(certImgs);
+
   lightbox.addEventListener('click', () => lightbox.classList.remove('show'));
   document.getElementById('lightboxClose').addEventListener('click', (e) => {
     e.stopPropagation();
