@@ -1946,7 +1946,7 @@
           <span class="f-label" data-en="Role">역할</span>
           <span class="f-value" data-en="Created hands-on Intel tech-experience content at an academy and promoted the new laptop on Instagram.">아카데미에서 인텔 기술 체험 콘텐츠를 제작하고 인스타그램으로 신제품을 홍보</span>
           <span class="f-label" data-en="Result">성과</span>
-          <span class="f-value f-metric" data-en="Drove 5,000+ cumulative views on the Instagram promotional content">인스타그램 조회수 5,000회 이상 달성</span>
+          <span class="f-value f-metric" data-en="Drove 5,000+ cumulative views on the Instagram promotional content · published 6 posts total across blog, Instagram, and Danawa">인스타그램 조회수 5,000회 이상 달성 · 블로그·인스타그램·다나와에 총 6건의 글 발행</span>
         </div>
       </div>
       <div class="featured-card">
@@ -1957,7 +1957,7 @@
           <span class="f-label" data-en="Role">역할</span>
           <span class="f-value" data-en="Planned a myth-busting campaign and wrote the proposal and pitch deck for improving public perception, myself.">오해를 바로잡는 캠페인을 기획하고, 인식 개선 방안을 담은 기획안과 발표용 PPT를 직접 제작</span>
           <span class="f-label" data-en="Result">성과</span>
-          <span class="f-value f-metric" data-en="Authored the campaign proposal and pitch deck, then helped carry the campaign through to execution">캠페인 기획안·발표 자료 완성 → 실제 캠페인 집행까지 참여</span>
+          <span class="f-value f-metric" data-en="Authored the campaign proposal and pitch deck, then helped carry the campaign through to execution · published 4 posts on blog and Instagram, earning a top-manuscript fee">캠페인 기획안·발표 자료 완성 → 실제 캠페인 집행까지 참여 · 우수원고료 받으며 블로그·인스타그램에 4건의 글 발행</span>
         </div>
       </div>
     </div>
@@ -2354,9 +2354,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.45</span>
+        <span class="change-desc" data-en="Trimmed the hero terminal's 'cat stamina.log' output down to just the battery bar, dropping the 3 extra status lines (this week / this month / coming up) to keep the first screen focused. Also added the publishing numbers to 2 of the '3 Featured Activities' cards: Intel Supporters (6 posts total across blog, Instagram, and Danawa) and K-ADitors Supporters (4 posts on blog and Instagram, plus a top-manuscript fee).">히어로 터미널의 'cat stamina.log' 출력을 체력 바 한 줄만 남기고, 나머지 3줄(이번 주 작업 중/이번 달 배운 것/다음 업데이트 예고)은 첫 화면이 번잡해지지 않도록 제거. '대표 활동 3가지' 카드 중 인텔 서포터즈(블로그·인스타그램·다나와 총 6건 발행)와 K-ADitors 서포터즈(블로그·인스타그램 4건 발행, 우수원고료 수상) 성과에 발행 건수 추가</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.44</span>
         <span class="change-desc" data-en="Added a '3 Featured Activities' block at the top of the Highlights section — Samsung Galaxy Campus Supporters, Intel Supporters, and K-ADitors Supporters, each broken into background / my role / measurable result instead of a one-line blurb, so a recruiter can see what problem existed and what I actually did about it, not just that I 'participated.' Moved these two out of the quick-glance grid below to avoid repeating them twice.">'활동 하이라이트' 섹션 맨 위에 '대표 활동 3가지' 블록 추가 — 삼성 갤럭시 대학생 서포터즈, 인텔 서포터즈, K-ADitors 서포터즈를 한 줄 요약 대신 배경/내 역할/정량적 성과로 나눠서 보여줌. '참여했다'가 아니라 어떤 문제가 있었고 실제로 뭘 했는지가 보이도록. 아래 한눈에 보는 그리드에서는 중복을 피하려고 이 두 활동을 뺌</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.43</span>
@@ -2765,8 +2769,8 @@
     en: `<b>Choi Hanmin (최한민)</b> — Computer Engineering &amp; Science, HUFS<br>Running the indie game studio <span class="amber">Soodal Games</span> (game list → soodalgames.com)<br>Currently juggling <span class="teal">30+ activities</span>, working with 20+ organizations`
   };
   const heroOut2 = {
-    kr: `<span class="rose">[███░░░░░░░░░░░░░░░░░] 15%</span> 방전 직전 · 재충전 필요<br>🔧 이번 주 작업 중: Stealth Ops 신규 스테이지 밸런싱<br>📚 이번 달 배운 것: 스크롤 리빌 애니메이션 (Intersection Observer)<br>🔮 다음 업데이트 예고: Time Heist 24 신규 모드 스크린샷 공개 예정`,
-    en: `<span class="rose">[███░░░░░░░░░░░░░░░░░] 15%</span> about to die, needs recharging<br>🔧 Working on this week: balancing Stealth Ops' new stage<br>📚 Learned this month: scroll-reveal animation (Intersection Observer)<br>🔮 Coming up next: Time Heist 24 new-mode screenshots`
+    kr: `<span class="rose">[███░░░░░░░░░░░░░░░░░] 15%</span> 방전 직전 · 재충전 필요`,
+    en: `<span class="rose">[███░░░░░░░░░░░░░░░░░] 15%</span> about to die, needs recharging`
   };
 
   /* ---- TIME-OF-DAY STATUS LINE (KST-based, echoes the hero lede's daily loop) ---- */
@@ -4174,8 +4178,8 @@
         a: '삼성 갤럭시 대학생 서포터즈 6기에서 갤럭시 캠퍼스 스토어 방장을 맡아 7인 팀을 이끌었어요. 꿀팁 게시글 15개·이벤트 3개를 직접 기획했고, 최다 댓글·BEST 게시글에 1기 우수 방장(네이버페이 10만P)까지 선정됐어요.',
         aEn: "As Samsung Galaxy Campus Supporters 6th, I served as store captain of the Galaxy Campus Store, leading a 7-person team. I planned 15 tip posts and 3 events myself, landed the most-commented & BEST-pinned post, and was selected as a top-performing 1st-term captain (₩100,000 NaverPay reward)." },
       { kw: ['인텔', 'intel'],
-        a: '인텔 서포터즈로 아카데미에서 인텔 기술 체험 콘텐츠를 만들고 신형 삼성 노트북(인텔 칩 탑재)을 인스타그램으로 홍보했어요. 누적 조회수 5,000회 이상 달성했어요.',
-        aEn: "As an Intel Supporter, I created hands-on Intel tech-experience content at an academy and promoted Samsung's new Intel-chip laptop on Instagram, driving 5,000+ cumulative views." },
+        a: '인텔 서포터즈로 아카데미에서 인텔 기술 체험 콘텐츠를 만들고 신형 삼성 노트북(인텔 칩 탑재)을 인스타그램으로 홍보했어요. 누적 조회수 5,000회 이상, 블로그·인스타그램·다나와에 총 6건의 글을 발행했어요.',
+        aEn: "As an Intel Supporter, I created hands-on Intel tech-experience content at an academy and promoted Samsung's new Intel-chip laptop on Instagram, driving 5,000+ cumulative views and publishing 6 posts total across blog, Instagram, and Danawa." },
       { kw: ['안녕', 'hi', 'hello', '반가워', 'hey'],
         a: '안녕하세요! 전공, 게임, 대외활동, 연락처, 취미… 뭐든 편하게 물어보세요 🙂',
         aEn: "Hi there! Ask me anything — my major, games, activities, contact info, hobbies… 🙂" }
