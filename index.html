@@ -1842,9 +1842,9 @@
     </blockquote>
 
     <div class="stats">
-      <a class="stat" href="https://www.soodalgames.com/" target="_blank" rel="noopener"><b data-target="7" data-suffix="">0</b><span data-en="Games shipped (Play / Steam)">출시 게임 (Play / Steam)</span></a>
-      <div class="stat"><b data-target="30" data-suffix="+">0</b><span data-en="Outside activities">대내외 활동</span></div>
-      <div class="stat"><b data-target="20" data-suffix="+">0</b><span data-en="Organizations collaborated">협업 조직</span></div>
+      <a class="stat" href="https://www.soodalgames.com/" target="_blank" rel="noopener"><b data-target="7" data-suffix="">7</b><span data-en="Games shipped (Play / Steam)">출시 게임 (Play / Steam)</span></a>
+      <div class="stat"><b data-target="30" data-suffix="+">30+</b><span data-en="Outside activities">대내외 활동</span></div>
+      <div class="stat"><b data-target="20" data-suffix="+">20+</b><span data-en="Organizations collaborated">협업 조직</span></div>
     </div>
     <p class="games-moved-note" data-en="Games I've shipped and the dev timeline now live at soodalgames.com →">출시한 게임들과 개발 타임라인은 이제 <a href="https://www.soodalgames.com/" target="_blank" rel="noopener">soodalgames.com</a>에서 볼 수 있어요 →</p>
     <div id="liveVisitors" class="live-visitors"></div>
@@ -2293,9 +2293,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.43</span>
+        <span class="change-desc" data-en="The hero stats (games shipped, activities, organizations) used to render as a hardcoded 0 and only show the real number once JavaScript ran and scrolled them into view — meaning a crawler, a slow connection, or anyone with JS disabled saw permanent zeros. The markup now carries the real numbers from the start; the count-up animation resets to 0 and plays only once it's confirmed JS is actually running, as a bonus rather than a dependency.">히어로 스탯(출시 게임·대내외 활동·협업 조직)이 마크업에는 0으로 박혀 있다가, JS가 실행되고 화면에 들어와야만 실제 숫자로 바뀌는 구조였음 — 크롤러나 느린 연결, JS 꺼진 환경에서는 0이 그대로 남아있던 셈. 이제 마크업 자체에 실제 숫자를 넣어두고, 카운트업 애니메이션은 JS가 정상 작동하는 게 확인된 경우에만 0으로 리셋 후 재생되도록 변경 (필수가 아니라 보너스 연출로)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.42</span>
         <span class="change-desc" data-en="Each line of the hero motto now gets its own amber bar instead of one long bar running past all 3 lines, so the 3 quotes read as separate lines at a glance. Retired the standalone 'Hanmin's Battery Level' section (the fuel-gauge SVG) and folded its status into the hero terminal instead, as a 3rd 'cat stamina.log' command between whoami and echo $STATUS — same info (current battery level, this week/month/next-update notes), just living where the rest of the profile status already does, as a small text gauge instead of a full section with its own heading and divider.">히어로 모토가 3줄 전부를 관통하는 긴 바 하나였던 걸, 줄마다 각자의 짧은 앰버 바를 갖도록 수정 — 한눈에 3개의 문장으로 구분되어 보임. 독립 섹션이었던 '최한민의 체력바'(연료 게이지 SVG)를 없애고, 히어로 터미널에 whoami와 echo $STATUS 사이 'cat stamina.log' 명령으로 흡수 — 내용(현재 체력 수준, 이번 주/이번 달/다음 업데이트 메모)은 그대로, 별도 제목·구분선이 있는 섹션 대신 작은 텍스트 게이지로 터미널 안에 자리만 옮김</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.41</span>
@@ -3164,6 +3168,7 @@
       const target = parseInt(el.dataset.target, 10);
       const suffix = el.dataset.suffix || '';
       const duration = 900;
+      el.textContent = '0' + suffix; // real value is already in the markup; only reset to animate once JS is confirmed running
       const start = performance.now();
       function tick(now){
         const p = Math.min((now - start) / duration, 1);
