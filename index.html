@@ -355,6 +355,32 @@
   }
   @media (prefers-reduced-motion: reduce){ .role, .lede{ animation:none; } }
 
+  /* ---------- ENTRY PATH SPLIT ---------- */
+  .entry-split{
+    margin:22px 0 0;
+    padding:14px 18px;
+    max-width:560px;
+    border:1px solid var(--line);
+    border-radius:var(--r-md);
+    background:linear-gradient(165deg, rgba(var(--amber-rgb),0.06), transparent 65%);
+    display:flex; flex-wrap:wrap; align-items:center; gap:12px;
+    animation:heroUp .8s var(--ease) both; animation-delay:.31s;
+  }
+  .entry-split.dismissed{ display:none; }
+  .entry-split-label{
+    font-family:var(--mono); font-size:12px; color:var(--scroll-ink-dim); flex-shrink:0;
+  }
+  .entry-split-btns{ display:flex; gap:8px; flex-wrap:wrap; }
+  .entry-split-btns button{
+    font-family:inherit; font-size:12.5px; font-weight:600;
+    padding:8px 14px; border-radius:999px; cursor:pointer;
+    border:1px solid var(--line); background:var(--ink-2); color:var(--scroll-ink);
+    transition:border-color .2s var(--ease), transform .2s var(--ease);
+  }
+  .entry-split-btns button:hover{ border-color:var(--amber); transform:translateY(-1px); }
+  #entryRecruiter{ border-color:rgba(var(--amber-rgb),0.4); color:var(--amber); }
+  @media (prefers-reduced-motion: reduce){ .entry-split{ animation:none; } }
+
   /* ---------- STATS ---------- */
   .stats{
     display:grid;
@@ -1868,6 +1894,14 @@
       밤에는 게임을 만들며, 새벽에는 버그를 고칩니다. 참 재밌는 인생 같습니다.
     </p>
 
+    <div class="entry-split" id="entrySplit">
+      <span class="entry-split-label" data-en="What brings you here?">어떤 걸 보러 오셨나요?</span>
+      <div class="entry-split-btns">
+        <button type="button" id="entryRecruiter" data-en="👔 Recruiting — show me the highlights">👔 채용 담당자예요 — 핵심만 빠르게</button>
+        <button type="button" id="entryBrowsing" data-en="👋 Just looking around">👋 그냥 구경하는 중이에요</button>
+      </div>
+    </div>
+
     <blockquote class="motto">
       <p data-en="It's better to regret doing something than to regret not doing it.">안 하고 후회하는 것보다, 하고 후회하는 것이 낫다.</p>
       <p data-en="I'm the reason behind every success, and I'm responsible for every failure.">성공의 주역도 나, 실패의 책임도 나.</p>
@@ -2354,9 +2388,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.46</span>
+        <span class="change-desc" data-en="Added a small 'what brings you here?' prompt right under the hero intro — a recruiter can jump straight to the Highlights section (where the 3 Featured Activities live), while someone just browsing can dismiss it and keep reading top to bottom like before.">히어로 인트로 바로 아래에 '어떤 걸 보러 오셨나요?' 분기 추가 — 채용 담당자는 바로 '활동 하이라이트'(대표 활동 3가지가 있는 곳)로 점프할 수 있고, 그냥 구경하는 중이면 배너를 닫고 기존처럼 위에서 아래로 쭉 읽으면 됨</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.45</span>
         <span class="change-desc" data-en="Trimmed the hero terminal's 'cat stamina.log' output down to just the battery bar, dropping the 3 extra status lines (this week / this month / coming up) to keep the first screen focused. Also added the publishing numbers to 2 of the '3 Featured Activities' cards: Intel Supporters (6 posts total across blog, Instagram, and Danawa) and K-ADitors Supporters (4 posts on blog and Instagram, plus a top-manuscript fee).">히어로 터미널의 'cat stamina.log' 출력을 체력 바 한 줄만 남기고, 나머지 3줄(이번 주 작업 중/이번 달 배운 것/다음 업데이트 예고)은 첫 화면이 번잡해지지 않도록 제거. '대표 활동 3가지' 카드 중 인텔 서포터즈(블로그·인스타그램·다나와 총 6건 발행)와 K-ADitors 서포터즈(블로그·인스타그램 4건 발행, 우수원고료 수상) 성과에 발행 건수 추가</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.44</span>
@@ -2934,6 +2972,18 @@
       }
     });
   })();
+
+  /* ---- ENTRY PATH SPLIT (recruiter quick-jump vs just browsing) ---- */
+  const entrySplit = document.getElementById('entrySplit');
+  const entryRecruiter = document.getElementById('entryRecruiter');
+  const entryBrowsing = document.getElementById('entryBrowsing');
+  if (entryRecruiter) entryRecruiter.addEventListener('click', () => {
+    document.getElementById('highlights').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    entrySplit.classList.add('dismissed');
+  });
+  if (entryBrowsing) entryBrowsing.addEventListener('click', () => {
+    entrySplit.classList.add('dismissed');
+  });
 
   /* ---- OTTER EASTER EGG ---- */
   const mascot = document.getElementById('mascotImg');
