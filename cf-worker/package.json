@@ -1,0 +1,12 @@
+{
+  "name": "choihanmin-protected-files",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "secret:password": "wrangler secret put SITE_PASSWORD",
+    "secret:signing-key": "wrangler secret put TOKEN_SIGNING_KEY"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
