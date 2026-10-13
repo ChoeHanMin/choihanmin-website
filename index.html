@@ -759,6 +759,8 @@
     background:rgba(var(--teal-rgb),0.08);
   }
   .highlight-card span.h-desc{display:block; font-size:13px; color:var(--scroll-ink-dim); line-height:1.55;}
+  .highlight-card a.h-more{display:inline-block; margin-top:6px; font-size:12px; font-weight:600; color:var(--amber); text-decoration:none;}
+  .highlight-card a.h-more:hover{text-decoration:underline;}
   .reveal.in-view .highlight-card{ animation:cardSettle .5s var(--ease) both; }
   .reveal.in-view .highlight-card:nth-child(1){ animation-delay:.05s; }
   .reveal.in-view .highlight-card:nth-child(2){ animation-delay:.12s; }
@@ -1843,6 +1845,7 @@
   <button data-target="hero-top"><span class="dot-label">home</span></button>
   <button data-target="sns"><span class="dot-label">SNS</span></button>
   <button data-target="highlights"><span class="dot-label" data-en="Highlights">하이라이트</span></button>
+  <button data-target="projects"><span class="dot-label" data-en="Projects">프로젝트</span></button>
   <button data-target="tracker"><span class="dot-label" data-en="Tracker">진행현황</span></button>
   <button data-target="skills"><span class="dot-label" data-en="Skills">기술스택</span></button>
   <button data-target="certs"><span class="dot-label" data-en="Proof">증명자료</span></button>
@@ -2003,6 +2006,7 @@
         <div>
           <div class="h-top"><b data-en="Hana Social Venture University 5th">하나 소셜벤처 유니버시티 5기</b><span class="h-role" data-en="CORPORATE">대기업</span></div>
           <span class="h-desc" data-en="Planned and built an AI investment-guide service, TutoGen, in Hana Financial Group's startup program">하나금융그룹 소셜벤처 프로그램에서 AI 투자 지원 서비스 TutoGen 기획·개발</span>
+          <a href="#projects" class="h-more" data-en="See project detail →">프로젝트 상세 보기 →</a>
         </div>
       </div>
       <div class="highlight-card">
@@ -2034,6 +2038,63 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
+    <path d="M0,8 Q75,0 150,8 T300,8" fill="none" style="stroke:var(--line)" stroke-width="1"/>
+    <circle cx="150" cy="8" r="3" style="fill:var(--amber)"/>
+    <circle class="divider-glow" cx="0" cy="8" r="3.2" style="fill:var(--amber)"/>
+  </svg></div>
+
+  <!-- DEV PROJECT DETAIL -->
+  <section id="projects" class="reveal slide-left">
+    <div class="sec-head"><span class="tag">CASE STUDY</span><h2 data-en="Project Deep Dive">대표 개발 프로젝트</h2></div>
+    <p class="sec-sub">$ cd ~/projects/tutogen &amp;&amp; git log --stat</p>
+
+    <div class="featured-head">
+      <h3 data-en="TutoGen — From an Investing Guide to a Reading-Flow Tool">TutoGen — 투자 가이드에서 학습 도구로</h3>
+      <p class="featured-sub" data-en="Hana Social Venture University 5th. Planned and built as a 3-person team: Hanmin Choi, Song☆☆, and Kwon♧♧.">하나 소셜벤처 유니버시티 5기, 최한민·송☆☆·권♧♧ 3인 팀으로 기획·개발</p>
+    </div>
+
+    <div class="featured-grid">
+      <div class="featured-card">
+        <div class="f-head"><span class="f-icon">📈</span><span class="f-title" data-en="Phase 1 — Investing-beginner Guide">1단계 — 투자 초보자 가이드</span><span class="h-role" data-en="BEFORE PIVOT">피벗 전</span></div>
+        <div class="f-rows">
+          <span class="f-label" data-en="Concept">컨셉</span>
+          <span class="f-value" data-en="A Chrome extension overlaying step-by-step natural-language guidance on a brokerage site — no stock picks or trade execution, only procedural guidance. Built as an extension rather than a mobile app because of brokerage apps' security constraints.">증권 사이트 화면 위에 자연어 기반 단계별 안내를 띄우는 크롬 확장 — 종목 추천이나 매매 대행 없이 절차 안내만 제공. 모바일 앱이 아니라 크롬 확장으로 만든 이유는 증권 앱의 보안 제약 때문</span>
+          <span class="f-label" data-en="Differentiator">차별점</span>
+          <span class="f-value" data-en="Unlike WalkMe or Pendo's pre-scripted static scenarios, it takes natural-language intent and guides dynamically — specialized for Korean brokerage sites.">WalkMe·Pendo가 미리 짠 정적 시나리오를 쓰는 것과 달리, 자연어 의도를 받아 동적으로 안내하도록 설계. 한국 증권 도메인에 특화</span>
+          <span class="f-label" data-en="Build">구현</span>
+          <span class="f-value" data-en="Manifest V3 extension targeting stock.naver.com. DOM snapshot extraction → a Claude API call from a background service worker, with a keyword-matched demo fallback mode when no API key is present, plus overlay highlighting, a glossary popup, and step tracking.">Manifest V3 기반, 대상 사이트 stock.naver.com. DOM 스냅샷을 추출해 백그라운드 서비스 워커에서 Claude API를 호출하고, API 키가 없을 땐 키워드 매칭 데모 폴백 모드로 동작. 오버레이 하이라이트·용어 팝업·단계 추적 기능도 구현</span>
+          <span class="f-label" data-en="Risk check">한계</span>
+          <span class="f-value" data-en="Mentor feedback flagged open risks: whether brokerages would allow an external overlay, whether it could be read as regulated investment advisory under Korean financial consumer law, and the maintenance load when brokerage UIs change.">멘토 피드백으로 증권사가 외부 오버레이를 허용할지, 금융소비자보호법상 자문업으로 볼 여지가 있는지, 증권사 UI 개편 시 유지보수가 감당될지 등의 리스크를 짚었음</span>
+        </div>
+      </div>
+      <div class="featured-card">
+        <div class="f-head"><span class="f-icon">📖</span><span class="f-title" data-en="Phase 2 — Pivot to a Reading-Flow Tool">2단계 — 학습 효율화 오버레이로 피벗</span><span class="h-role" data-en="AFTER PIVOT">피벗 후</span></div>
+        <div class="f-rows">
+          <span class="f-label" data-en="New direction">방향 전환</span>
+          <span class="f-value" data-en="Pivoted to a tool that keeps reading flow from breaking while reading English papers or technical documents.">영어 논문이나 전문 문서를 읽을 때 읽기 흐름이 끊기지 않도록 돕는 도구로 방향을 바꿈</span>
+          <span class="f-label" data-en="Metric redesign">지표 재설계</span>
+          <span class="f-value" data-en="The original 4 metrics (vocabulary-access delay, context-switch frequency, cognitive-load score, re-engagement delay) were hard to measure in-app or raised privacy concerns, so they were replaced with 4 actually measurable signals: Inference Initiation Rate, Contextual Engagement Duration, Review Initiation Rate, and Delayed Recall Rate.">처음 제안한 4개 지표(어휘 접근 지연, 맥락 전환 빈도, 인지부하 점수, 재몰입 지연)가 앱 안에서 측정하기 어렵거나 프라이버시 문제가 있어, 실제로 측정 가능한 4개 신호(Inference Initiation Rate·Contextual Engagement Duration·Review Initiation Rate·Delayed Recall Rate)로 교체</span>
+          <span class="f-label" data-en="Validation plan">실증 로드맵</span>
+          <span class="f-value" data-en="Designed a 5-stage validation roadmap — problem validation → flow validation → A/B test → MVP beta → scale-up — with a pass bar and fallback plan at each stage.">문제 검증 → 플로우 검증 → A/B 테스트 → MVP 베타 → 확장으로 이어지는 5단계 실증 로드맵을 설계, 단계마다 통과 기준과 실패 시 대안을 넣음</span>
+          <span class="f-label" data-en="Pitch deck">사업계획서</span>
+          <span class="f-value" data-en="Built a 28-slide pitch deck by generating it with pptxgenjs, converting it to PDF, rendering each slide to an image, and repeating visual review passes.">pptxgenjs로 28장 분량의 사업계획서 PPT를 생성 → PDF 변환 → 슬라이드 이미지 렌더링 → 육안 점검을 반복하는 파이프라인으로 제작</span>
+        </div>
+      </div>
+      <div class="featured-card">
+        <div class="f-head"><span class="f-icon">🛠️</span><span class="f-title" data-en="Technical problems solved">기술적으로 풀었던 문제</span></div>
+        <div class="f-rows">
+          <span class="f-label" data-en="Korean font">한글 폰트</span>
+          <span class="f-value" data-en="The pitch deck PDF's Korean text kept breaking — fixed by rebuilding the pipeline around wkhtmltopdf + HTML instead.">사업계획서 PDF를 만드는 과정에서 한국어 폰트가 깨지는 문제를 wkhtmltopdf + HTML 변환 방식으로 해결</span>
+          <span class="f-label" data-en="Demo fallback">데모 폴백</span>
+          <span class="f-value" data-en="Built a keyword-matched preset-scenario fallback so the demo still runs end to end without a live API key.">API 키가 없는 환경에서도 데모가 끝까지 동작하도록 키워드 매칭 기반 프리셋 시나리오 폴백을 따로 구현</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="featured-sub" style="margin-top:4px;" data-en="This case study only includes what's confirmed from actual files and chat records — not any figure or detail that couldn't be verified.">이 정리는 실제 작업물과 대화 기록으로 확인되는 내용만 담았고, 검증되지 않는 수치나 세부사항은 넣지 않았어요.</p>
   </section>
 
   <div class="divider"><svg viewBox="0 0 300 16" preserveAspectRatio="none" style="width:100%;height:16px;display:block;">
@@ -2388,9 +2449,13 @@
     </button>
     <div class="change-list" id="changeList">
       <div class="change-row">
+        <span class="change-ver">v2.47</span>
+        <span class="change-desc" data-en="Added a Project Deep Dive section right after Highlights, covering TutoGen — the AI reading/investment-guide service from Hana Social Venture University 5th. It's written from verified chat/file records only: Phase 1's Chrome-extension investing guide, the pivot to a reading-flow tool with a redesigned metric set and 5-stage validation roadmap, and the Korean-font PDF fix. Teammates other than myself are shown masked (Song☆☆, Kwon♧♧) since this is my personal site.">'활동 하이라이트' 바로 다음에 프로젝트 상세 섹션 추가 — 하나 소셜벤처 유니버시티 5기에서 만든 AI 학습/투자 가이드 서비스 TutoGen. 실제 대화·파일 기록으로 검증되는 내용만 담아서, 1단계 크롬 확장 투자 가이드부터 지표를 재설계한 학습 도구로의 피벗, 5단계 실증 로드맵, 한국어 폰트 PDF 수정까지 정리. 제 개인 사이트라 저 외 팀원은 이름을 가려서 표기(송☆☆, 권♧♧)</span>
+        <span class="log-cursor" aria-hidden="true">▍</span>
+      </div>
+      <div class="change-row">
         <span class="change-ver">v2.46</span>
         <span class="change-desc" data-en="Added a small 'what brings you here?' prompt right under the hero intro — a recruiter can jump straight to the Highlights section (where the 3 Featured Activities live), while someone just browsing can dismiss it and keep reading top to bottom like before.">히어로 인트로 바로 아래에 '어떤 걸 보러 오셨나요?' 분기 추가 — 채용 담당자는 바로 '활동 하이라이트'(대표 활동 3가지가 있는 곳)로 점프할 수 있고, 그냥 구경하는 중이면 배너를 닫고 기존처럼 위에서 아래로 쭉 읽으면 됨</span>
-        <span class="log-cursor" aria-hidden="true">▍</span>
       </div>
       <div class="change-row">
         <span class="change-ver">v2.45</span>
