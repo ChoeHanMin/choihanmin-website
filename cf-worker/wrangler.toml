@@ -1,0 +1,14 @@
+name = "choihanmin-protected-files"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+[[r2_buckets]]
+binding = "PROTECTED_BUCKET"
+bucket_name = "choihanmin-protected"
+
+# After the worker is deployed once (`wrangler deploy`), attach it to a route
+# in the Cloudflare dashboard (Workers & Pages → choihanmin-protected-files →
+# Settings → Triggers → Add route), or uncomment and fill in below:
+# routes = [
+#   { pattern = "api.choihanmin.com/*", custom_domain = true }
+# ]
