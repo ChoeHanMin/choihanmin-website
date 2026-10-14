@@ -6,13 +6,14 @@
 
 사용자가 새 경력/대외활동/봉사활동 "스펙"을 추가해달라고 하면, **아래 항목을 전부 다** 처리한다. 하나라도 빼먹지 말 것.
 
-### 1. `files/portfolio-locked.pdf` (필수, 항상 수정)
-- 사이트 맨 아래 "전체 포트폴리오 다운로드 🔒" 버튼이 주는 실제 파일. index.html의 `portfolioBtn` → 비밀번호 모달(`PORTFOLIO_PW_B64`, base64) 통과 시 `portfolioRealLink`(href=`files/portfolio-locked.pdf`)를 클릭시켜 다운로드시킨다.
+### 1. `portfolio-locked.pdf` (필수, 항상 수정)
+- 사이트 맨 아래 "전체 포트폴리오 다운로드 🔒" 버튼이 주는 실제 파일. **더 이상 이 git 리포 안에 없음** — Cloudflare R2(`choihanmin-protected` 버킷)에 있고, `cf-worker`(api.choihanmin.com)가 비밀번호를 서버에서 검증한 뒤에만 내려준다. index.html의 `portfolioBtn` → 비밀번호 모달 → `PROTECTED_API_BASE/auth`에 POST해서 토큰을 받고 → `portfolioRealLink.href`를 `PROTECTED_API_BASE/file/portfolio-locked.pdf?token=...`로 채워서 클릭시켜 다운로드시킨다.
 - 활동 성격에 따라 "경력 및 대외활동" 표 또는 "봉사활동" 표에 **날짜순으로** 행 삽입.
 - 상단 스탯 바의 "경력 및 대외활동" 건수(예: "21+")를 표의 실제 행 수에 맞게 갱신.
 - 협회/NGO 소속이면 "많은 기업들과 여러 단체 및 협회들이 찾는 인재" 문단의 조직 나열에도 이름 추가.
 - **사용자가 이미 만들어둔 원본 PDF(같은 LibreOffice 소스로 만든 최종본)를 준다면 그걸 그대로 씀** — 내가 재구성한 버전보다 항상 우선.
 - 사용자가 텍스트로만 스펙을 준 경우, 기존 디자인(navy `#1F2A44` / blue `#2E5AAC`, Pretendard + Noto Serif KR, A4 5페이지)을 그대로 재현해서 새로 생성. (`pdftoppm`으로 원본을 렌더링해 비교하며 검증한 전례 있음.)
+- **파일을 수정했으면 git에는 커밋하지 말 것** (공개 리포에 올리면 잠금 의미가 없어짐). 대신 수정한 PDF를 세션 스크래치패드/산출물로 사용자에게 전달하고, 사용자가 직접 `files/portfolio-locked.pdf`에 덮어쓴 뒤 `bash cf-worker/upload-to-r2.sh`(또는 `wrangler r2 object put choihanmin-protected/portfolio-locked.pdf --file=files/portfolio-locked.pdf --remote`)로 R2에 재업로드해야 한다고 안내할 것 — Claude Code 세션은 사용자의 Cloudflare 자격 증명이 없어 직접 업로드할 수 없다.
 
 ### 2. `files/resume-1page.pdf` (선택 — 매번 자동으로 건들지 말고 사용자에게 물어볼 것)
 - 무료 1페이지 요약본. 핵심 활동 8개 정도만 추린 큐레이션이라, 웬만한 활동은 안 넣는 게 맞음.
