@@ -21,7 +21,8 @@ wrangler r2 bucket create choihanmin-protected
 
 ```
 wrangler secret put SITE_PASSWORD
-# 프롬프트에 현재 사이트 비밀번호 입력 (Canishare836!726)
+# 프롬프트에 현재 사이트 비밀번호 입력 (이 파일에는 절대 실제 값을 적지 말 것 —
+# 공개 리포에 평문으로 남으면 서버 사이드 인증으로 바꾼 의미가 없어짐)
 
 wrangler secret put TOKEN_SIGNING_KEY
 # 아무 긴 무작위 문자열 입력 (토큰 서명 전용, 비밀번호와 다른 값으로)
@@ -59,7 +60,7 @@ Porkbun에서 `api` 서브도메인을 Cloudflare로 향하도록 DNS를 먼저 
 ```
 curl -X POST https://api.choihanmin.com/auth \
   -H 'Content-Type: application/json' \
-  -d '{"password":"Canishare836!726"}'
+  -d '{"password":"<실제 사이트 비밀번호>"}'
 # {"token":"...","exp":...} 가 나오면 성공
 
 curl "https://api.choihanmin.com/file/cert01.jpg?token=<위에서 받은 token>" -o test.jpg
@@ -78,3 +79,16 @@ API를 쓰도록 바꾸고 공개 리포에서 민감 파일들을 제거하는 
 - Cloudflare 대시보드 → Security → WAF → Rate limiting rules 에서
   `/auth` 경로에 비밀번호 brute-force 방지용 요청 제한을 걸어두면 더 안전합니다
   (예: 같은 IP에서 1분에 5회 초과 시 차단).
+
+## 비밀번호 교체(로테이션)
+
+비밀번호가 어딘가(커밋, 캡처, 메시지 등)에 노출됐다고 판단되면 아래만 하면 됩니다
+— Worker를 다시 배포할 필요는 없습니다, `secret put`은 즉시 반영됩니다.
+
+```
+cd cf-worker
+wrangler secret put SITE_PASSWORD
+# 프롬프트에 새 비밀번호 입력
+```
+
+새 비밀번호를 index.html의 비밀번호 입력창에 바로 테스트해보면 됩니다.
