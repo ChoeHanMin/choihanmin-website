@@ -37,7 +37,7 @@ wrangler secret put TOKEN_SIGNING_KEY
 bash cf-worker/upload-to-r2.sh
 ```
 
-`files/portfolio-locked.pdf`와 `images/web/cert01.jpg`~`cert43.jpg`를
+`files/portfolio-locked.pdf`와 `images/web/cert01.jpg`~`cert45.jpg`를
 R2 버킷에 올립니다.
 
 ## 4. Worker 배포
