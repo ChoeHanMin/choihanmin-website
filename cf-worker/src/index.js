@@ -17,7 +17,7 @@ const ALLOWED_ORIGIN = 'https://www.choihanmin.com';
 
 const ALLOWED_FILES = new Set([
   'portfolio-locked.pdf',
-  ...Array.from({ length: 45 }, (_, i) => `cert${String(i + 1).padStart(2, '0')}.jpg`),
+  ...Array.from({ length: 47 }, (_, i) => `cert${String(i + 1).padStart(2, '0')}.jpg`),
 ]);
 
 function corsHeaders() {
