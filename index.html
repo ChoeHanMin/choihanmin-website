@@ -3743,9 +3743,26 @@
       });
       if (!res.ok) throw new Error('auth failed');
       const { token } = await res.json();
-      certGrid.querySelectorAll('img[data-cert]').forEach((img) => {
+      const certImgs = certGrid.querySelectorAll('img[data-cert]');
+      /* 49장을 한꺼번에 다 요청하면 모바일에서 체감 로딩이 느려지므로,
+         화면에 보이거나 곧 보일 사진만 순서대로 불러온다. */
+      const loadCert = (img) => {
+        if (img.src) return;
         img.src = `${PROTECTED_API_BASE}/file/${img.dataset.cert}?token=${encodeURIComponent(token)}`;
-      });
+      };
+      if ('IntersectionObserver' in window) {
+        const certIO = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              loadCert(entry.target);
+              certIO.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: '600px 0px' });
+        certImgs.forEach((img) => certIO.observe(img));
+      } else {
+        certImgs.forEach(loadCert);
+      }
       certLock.hidden = true;
       certGrid.hidden = false;
     } catch (err) {
